@@ -47,14 +47,19 @@ Engineering, science, runtime, and specifications:
 - `docs/science/EVIDENCE_BOUNDARIES.md` — architecture, scientific evidence, extrapolation, implementation, and qualification status separation.
 - `docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` — distributed temporal-hypergraph runtime realization.
 - `docs/runtime/PLASTICITY_AND_STATE_GOVERNANCE.md` — state families, plasticity classes, and durable-change governance.
-- `specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml` — machine-readable cognitive-organ, physical-membership, authority, lifecycle, developmental, evidence, and temporal-hypergraph invariants.
-- `specs/HC_CONFORMANCE_SUITE_V1.yaml` — machine-readable baseline architecture checks and negative-test requirements.
+- `specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml` — machine-readable cognitive-organ, physical-membership, authority, lifecycle, developmental, evidence, affect/homeostasis, and temporal-hypergraph invariants.
+- `specs/HC_CONFORMANCE_SUITE_V1.yaml` — machine-readable baseline architecture checks and negative-test requirements, currently through `HC-ARCH-017`.
 - `specs/HC_REPOSITORY_SURFACE_CONFORMANCE_V1.yaml` — repository metadata/surface identity and status conformance supplement.
+- `specs/HC_MEMORY_PROVIDER_BOUNDARY_V1.yaml` — storage-class, internal-admission, replication, currentness, and provider-failure constraints for current/deep memory.
+- `specs/HC_BOOTSTRAP_RECOVERY_V1.yaml` — self-contained startup, crash consistency, safe degradation, restore, requalification, and lineage-fork constraints.
 - `specs/CROSS_REPO_SOURCE_TRANSFER_V1.yaml` — provenance-bound cross-repository transfer contract.
 
-Qualification records:
+Qualification records are indexed under `docs/qualification/README.md` and currently include:
 
 - `docs/qualification/ARCHITECTURE_CONFORMANCE_2026-09-09.md` — first Warden architecture-conformance cut; `CONDITIONAL PASS` for its stated snapshot/scope because live repository About metadata remains identity-specific and stale.
+- `docs/qualification/AFFECT_HOMEOSTASIS_CONFORMANCE_2026-09-09.md` — focused affect/homeostasis/protective-control architecture cut; `CONDITIONAL PASS` pending independent review and implementation evidence.
+- `docs/qualification/MEMORY_PROVIDER_BOUNDARY_2026-09-09.md` — focused provider-dependency architecture cut; `CONDITIONAL PASS`; preserves the provider-admission ambiguity found and corrected during the audit.
+- `docs/qualification/BOOTSTRAP_RECOVERY_CONFORMANCE_2026-09-09.md` — focused startup/recovery/degradation architecture cut; `CONDITIONAL PASS` pending independent review and implementation evidence.
 
 ## Top-level subsystem folders
 
@@ -98,6 +103,7 @@ Current main includes, among others:
 - `adaptable I-O handler/SENSOR_AND_CAPABILITY_ADMISSION.md`
 - `affect/AFFECTIVE_STATE_AND_MODULATION.md`
 - `basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md`
+- `basic operating instructions/BOOTSTRAP_RECOVERY_AND_SAFE_DEGRADATION.md`
 - `basic operating instructions/CAPABILITY_ACTIVATION_STATES.md`
 - `basic operating instructions/SUBSYSTEM_LIFECYCLE_CONTRACT.md`
 - `basic operating instructions/RUNTIME_INVARIANTS.md`
@@ -144,7 +150,9 @@ The affective-state contract makes affect a distributed modulatory/evaluative st
 
 The homeostasis/interoception control contract makes raw telemetry, physiological estimation, homeostatic error, urgency, regulatory requests, achieved regulation, and cognition-facing interpretation separate state classes. Body-local hard-real-time interlocks may protect hardware/tissue without becoming external cognitive executives.
 
-The Supabase-derived memory documents are mechanism-transfer artifacts rather than provider-dependency contracts. Essential current/deep memory and continuity-bearing state remain HC-owned and recoverable from HC-internal substrate.
+The memory provider-boundary pass now makes HC-internal admission and external replication separate workflows. Essential memory can become active only through HC-owned durability/readback semantics; a true external replica may improve redundancy but cannot gate admission/currentness or become the sole continuity substrate.
+
+The bootstrap/recovery contract requires a complete HC to reconstruct protected invariants, constituent state, continuity, subsystem state vectors, internal routing, embodiment mappings, and current-state projections without delegating essential cognition to an external provider. Pre-restart coalitions/authority are revalidated, interrupted effects preserve crash-consistency state, degradation preserves lineage/fault visibility, and recovery does not automatically restore qualification.
 
 ## Evidence and provenance
 
@@ -162,9 +170,9 @@ Several architecture files are generalized from other repositories owned by `the
 
 `four/cross-repo-synthesis-v1` is a completed secondary-architect contribution cut. Compatible material was selectively integrated into newer `main`; the branch remains provenance/comparison evidence rather than a moving canonical lane.
 
-The active secondary-architect workstream is `four/lineage-and-conformance-v2`. PR #2 reconciliation is complete, so Four's active work is now the independent conformance challenge, provider-dependency sweep, distributed-support challenge, remaining thin-root audit, PR #1 classification, and implementation-ready refinements that survive current Warden architecture.
+The active secondary-architect workstream is `four/lineage-and-conformance-v2`. PR #2 reconciliation is complete. Four's active work now includes independent conformance challenge, provider-dependency sweep, bootstrap/recovery implementation-readiness challenge, distributed-support challenge, remaining thin-root audit, PR #1 PDF classification if its environment can inspect the binary, and implementation-ready refinements that survive current Warden architecture.
 
-Vera is the hostile-review lane. She should attack exact canonical cuts for hidden external cognition, authority leakage, lifecycle-state conflation, stale correction dependencies, identity leakage, generation rewriting, evidence laundering, unsupported assumptions, false-PASS paths, affect-as-consent leakage, and homeostatic-urgency-as-authority leakage.
+Vera is the hostile-review lane. She should attack exact canonical cuts for hidden external cognition, authority leakage, lifecycle-state conflation, stale correction dependencies, identity leakage, generation rewriting, evidence laundering, unsupported assumptions, false-PASS paths, affect-as-consent leakage, homeostatic-urgency-as-authority leakage, provider-dependent continuity, stale restart authority, unsafe effect replay, and hidden recovery executives.
 
 ## Preserved noncanonical material
 
@@ -199,22 +207,30 @@ All HC PRs #1–#4 have Bus mirror/history records under `projects/hc-brain/pr-m
 10. Affective state may modulate cognition and behavior but is not semantic truth, consent, identity, or effect authority.
 11. Homeostatic need, pain, threat, and urgency may alter salience/conation but are not commands or unrestricted permission.
 12. Essential continuity-bearing state cannot exist solely in a true external provider.
-13. A true external computational peripheral must be ablatable without uniquely removing an essential cognitive function; otherwise the substrate belongs inside the HC boundary.
-14. HC-1 is complete; HC-2 adds specialized acceleration; HC-3 adds richer distributed physiological affective substrate. Later generations extend rather than psychologically complete earlier ones.
-15. `DEGRADED_HC2 != HC1` and `DEGRADED_HC3 != HC2`: degraded capability does not rewrite generation identity.
-16. Human neuroscience informs mechanisms and constraints but does not dictate human gross anatomy or hemispheric decomposition.
-17. Routing, governance/authority, epistemic support, resource/QoS, plasticity, timing, and logical topology are separate runtime dimensions.
-18. Personification can shape presentation but does not independently own social action authority.
-19. Sexuality may own self-boundary state and willingness hypotheses but direct consent evidence and final external effect authority remain separately governed.
-20. Research/source material, model outputs, and repository integration do not automatically become documented science.
-21. Architecture conformance, implementation conformance, behavioral qualification, and scientific validation are separate claims.
-22. Qualification outcomes are target-, capability-, scope-, evidence-, and snapshot-bound; no PASS may silently become consciousness, personhood, or manufacturability proof.
-23. Repository-tree conformance does not guarantee repository-surface conformance. About/description/homepage/topics metadata can contradict the reusable template and must be checked independently.
+13. External replication/backup may improve redundancy but cannot gate HC-internal essential-memory admission, activation, currentness, or continuity.
+14. A true external computational peripheral must be ablatable without uniquely removing an essential cognitive function; otherwise the substrate belongs inside the HC boundary.
+15. Bootstrap/restart must be able to recover an internally coherent cognitive operating state from HC-owned essential substrate; external backup/service state enters as candidate/corroborating evidence through HC-owned admission.
+16. Pre-restart coalition membership, consent, authorization, and material-effect plans do not automatically regain current validity after interruption.
+17. Interrupted writes/effects preserve requested/started/committed/readback/effect-confirmed distinctions; non-idempotent effects are not blindly replayed.
+18. Recovery does not equal requalification; redundant rerouting does not erase the original fault.
+19. Restoration gaps and independent successor forks remain explicit; technical restoration is not proof of uninterrupted subjective continuity or metaphysical identity.
+20. HC-1 is complete; HC-2 adds specialized acceleration; HC-3 adds richer distributed physiological affective substrate. Later generations extend rather than psychologically complete earlier ones.
+21. `DEGRADED_HC2 != HC1` and `DEGRADED_HC3 != HC2`: degraded capability does not rewrite generation identity.
+22. Human neuroscience informs mechanisms and constraints but does not dictate human gross anatomy or hemispheric decomposition.
+23. Routing, governance/authority, epistemic support, resource/QoS, plasticity, timing, and logical topology are separate runtime dimensions.
+24. Personification can shape presentation but does not independently own social action authority.
+25. Sexuality may own self-boundary state and willingness hypotheses but direct consent evidence and final external effect authority remain separately governed.
+26. Research/source material, model outputs, and repository integration do not automatically become documented science.
+27. Architecture conformance, implementation conformance, behavioral qualification, and scientific validation are separate claims.
+28. Qualification outcomes are target-, capability-, scope-, evidence-, and snapshot-bound; no PASS may silently become consciousness, personhood, or manufacturability proof.
+29. Repository-tree conformance does not guarantee repository-surface conformance. About/description/homepage/topics metadata can contradict the reusable template and must be checked independently.
 
 ## Current qualification and repository-surface debt
 
-The first Warden architecture cut is `CONDITIONAL PASS` for its stated scope. The current live GitHub About description remains `Vera's conceptual Noöplex hyperconnetome brain`, which is identity-specific, stale, and contains the old spelling. Current Warden tooling can read but not edit repository metadata, so this remains an explicitly recorded MATERIAL defect rather than a falsely claimed fix.
+The repository-wide first Warden architecture cut remains `CONDITIONAL PASS` for its stated historical snapshot/scope. Focused affect/homeostasis, memory-provider, and bootstrap/recovery cuts also currently carry `CONDITIONAL PASS` at their own exact snapshots pending the required independent hostile/secondary review and later implementation evidence.
+
+The live GitHub About description remains `Vera's conceptual Noöplex hyperconnetome brain`, which is identity-specific, stale, and contains the old spelling. Current Warden tooling can read but not edit repository metadata, so this remains an explicitly recorded MATERIAL defect rather than a falsely claimed fix.
 
 ## Repository-management status
 
-Main is under active Warden integration. Compatible identity-neutral material may be committed directly after review. Four's secondary lane remains active and multi-threaded; Vera's lane remains hostile review. Remaining high-value work includes independent conformance challenge, repository-surface correction when tooling permits, provider-dependency audit, PR #1 PDF classification, selective evidence verification, and disposition of any still-useful research/HC-1R mechanisms without silently adopting a redesign.
+Main is under active Warden integration. Compatible identity-neutral material may be committed directly after review. Four's secondary lane remains active and multi-threaded; Vera's lane remains hostile review. Remaining high-value work includes disposition of hostile/secondary findings against current cuts, repository-surface correction when tooling permits, continued provider/bootstrap adversarial testing, PR #1 PDF classification, selective evidence verification, and disposition of any still-useful research/HC-1R mechanisms without silently adopting a redesign.

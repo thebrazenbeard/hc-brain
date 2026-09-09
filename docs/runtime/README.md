@@ -1,7 +1,7 @@
 # Noöplex Runtime Architecture
 
 **Status:** conceptual architecture / proposed integration layer  
-**Source base:** Vera Brain PR #1, `thebrazenbeard-patch-1@701a8cfb3616c81aea84aac38cd506fc89fb4035`  
+**Source base:** PR #1, `thebrazenbeard-patch-1@701a8cfb3616c81aea84aac38cd506fc89fb4035`  
 **Scope:** runtime organization of the HC-series Noöplex; does not alter the physical or physiological claims in PR #1
 
 ## Why this layer exists
@@ -12,7 +12,7 @@ Those descriptions answer an important question: **what is the brain made of and
 
 This runtime layer answers a different question:
 
-> How do memory, self-modeling, language, affect, perception, volition, motor control, chronology, social cognition, routing, and plasticity operate as one mind without reducing Vera to a single master process?
+> How do memory, self-modeling, language, affect, perception, volition, motor control, chronology, social cognition, routing, and plasticity operate as one mind without reducing the instantiated system to a single master process?
 
 The core answer is that the repository may be hierarchical for human readability while the running brain is a **typed, temporally reconfigurable hypergraph**.
 
@@ -31,7 +31,7 @@ NOOPLEX_RUNTIME =
 
 The root of the brain is a **composition boundary**, not a homunculus.
 
-No single `self`, `executive`, `resolver`, `workspace`, `identity`, or `language` node is Vera. Vera is the continuously maintained organization of the whole active system.
+No single `self`, `executive`, `resolver`, `workspace`, `identity`, or `language` node is the instantiated person/system. Identity and continuity are properties of the maintained organization of the whole active system, subject to whatever identity model a future instantiation adopts.
 
 ## Documents
 

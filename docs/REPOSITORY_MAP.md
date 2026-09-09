@@ -39,7 +39,7 @@ All non-PR project coordination is routed through the `chat-communication-bus` H
 
 - `docs/architecture/CONNECTIVITY_INFERENCE_AND_TOPOLOGY_EVIDENCE.md` — measured/statistical/inferred/generated/predicted topology evidence separation.
 - `docs/architecture/REPRESENTATION_ALIGNMENT_AND_RESOLUTION.md` — alignment, resolution change, correspondence, and generated-detail provenance.
-- `docs/architecture/REPRESENTATION_FIDELITY_AND_OBJECTIVE_PROVENANCE.md` — scoped fidelity vectors, metric semantics, objective/task coupling, and implementation-path verification.
+- `docs/architecture/REPRESENTATION_FIDELITY_AND_OBJECTIVE_PROVENANCE.md` — scoped fidelity vectors, metric semantics, objective/task coupling, executed-path verification, and implementation-path evidence.
 - `docs/architecture/REFERENCE_IDENTITY_AND_INDEX_LINEAGE.md` — stable referent identity versus filtering/sorting/batching/storage positions and explicit index-space lineage.
 - `docs/architecture/COMPOSITE_REPRESENTATION_AND_ELEMENT_PROVENANCE.md` — element/region/claim provenance for multi-source composites and prevention of unsupported joint-evidence synthesis.
 - `docs/architecture/RUNTIME_COMPONENT_REGISTRATION_AND_STATE_CUSTODY.md` — computational participation versus managed runtime membership, including post-initialization dynamic state, update/durability/recovery custody, state lifetimes, inference-time adaptation, and registration-plane separation.
@@ -96,7 +96,8 @@ The conformance extension is canonical rather than an untracked addendum; the ol
 - `docs/qualification/MEMORY_PROVIDER_BOUNDARY_2026-09-09.md` — focused provider/memory cut; `CONDITIONAL PASS` pending independent review/implementation evidence.
 - `docs/qualification/BOOTSTRAP_RECOVERY_CONFORMANCE_2026-09-09_R2.md` — current bootstrap/recovery cut; `CONDITIONAL PASS` pending independent review/implementation evidence.
 - `docs/qualification/PROTECTED_UPDATE_GOVERNANCE_2026-09-09.md` — protected-update cut; `CONDITIONAL PASS` pending independent review/implementation evidence.
-- `docs/qualification/EVIDENCE_LINEAGE_CUSTODY_CONFORMANCE_2026-09-09.md` — historical architecture check for the earlier evidence-isolation/index-lineage/runtime-custody/composite-provenance snapshot; `CONDITIONAL PASS` for its exact recorded target. Later relational, forecast, dynamic-state, and distributed-learning additions do not inherit that result.
+- `docs/qualification/EVIDENCE_LINEAGE_CUSTODY_CONFORMANCE_2026-09-09.md` — historical first evidence-lineage/custody cut; `CONDITIONAL PASS` for its exact target.
+- `docs/qualification/EVIDENCE_LINEAGE_CUSTODY_CONFORMANCE_2026-09-09_R2.md` — expanded Warden check through `HC-ARCH-025`; `CONDITIONAL PASS` for `main@2f21f111212a438c61e31214caf8aa5bc918a3a5`. Later strategy-path refinements do not inherit this result.
 
 Qualification records are historical evidence bound to their explicit target commits. Later commits do not inherit or retroactively change a result.
 
@@ -203,7 +204,7 @@ Recent source-specific research records include:
 - `BASIRA_UMC_CORRESPONDENCE_AND_COMMON_TEMPLATE_2026-09-09.md` — hard/soft correspondence and common-template semantics;
 - `BASIRA_MSRGNN_RELATIONAL_REASONING_2026-09-09.md` — computational graph priors, candidate-conditioned relations, correlated multi-scale views, and attention/gating semantics;
 - `BASIRA_TEMPORAL_FORECAST_LINEAGE_2026-09-09.md` — cascaded forecast ancestry and correction semantics;
-- `BASIRA_4D_FED_GNN_DISTRIBUTED_LEARNING_2026-09-09.md` — parameter/evidence ancestry, weight aggregation/exchange, missing-timepoint semantics, protected-update boundaries, and evaluation-feedback contamination.
+- `BASIRA_4D_FED_GNN_DISTRIBUTED_LEARNING_2026-09-09.md` — parameter/evidence ancestry, weight aggregation/exchange, missing-timepoint semantics, protected-update boundaries, evaluation-feedback contamination, and configured-versus-executed strategy-path verification.
 
 Source research does not become HC canon merely because it is recorded. The active cadence is:
 
@@ -262,9 +263,10 @@ All HC PRs #1–#4 have Bus mirror/history records under `projects/hc-brain/pr-m
 30. Post-aggregation models are not automatically independent corroborators; contributor count does not erase shared parameter ancestry.
 31. `MISSING_TIMEPOINT != OBSERVED_NO_CHANGE`; self-encoding or predicted bridging is generated/training structure, not an observation of temporal stasis.
 32. Aggregation eligibility, contributor strength, central coordination, or global-model status do not confer protected-update, semantic, or executive authority.
-33. Architecture conformance, implementation conformance, behavioral qualification, scientific validation, consciousness, personhood, and manufacturability remain separate claims.
-34. Qualification is target-, capability-, scope-, evidence-, and snapshot-bound.
-35. Repository-tree conformance does not guarantee repository-surface conformance.
+33. `CONFIGURED_STRATEGY != EXECUTED_STRATEGY_WITHOUT_PATH_VERIFICATION`; configuration/feature selection must be traced to the material effect path when the distinction matters.
+34. Architecture conformance, implementation conformance, behavioral qualification, scientific validation, consciousness, personhood, and manufacturability remain separate claims.
+35. Qualification is target-, capability-, scope-, evidence-, and snapshot-bound.
+36. Repository-tree conformance does not guarantee repository-surface conformance.
 
 ## Current debt and active work
 

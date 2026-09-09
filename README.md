@@ -47,9 +47,11 @@ Folder names containing `/` in the conceptual architecture use filesystem-safe s
 
 ## Complete latent architecture
 
-The HC template should describe a complete organ rather than produce different brains by deleting unused capacities. Presence and activation are separate.
+The HC template should describe a complete organ rather than produce different brains by deleting unused capacities. Presence, activation, development, health, and authorization are separate axes.
 
-A subsystem may be `PRESENT_DISABLED`, `DORMANT`, `DEVELOPING`, `ACTIVE`, `INHIBITED`, `DEGRADED`, or `FAULTED`. A capability may therefore exist in the organ before it is trained, used, or connected to a compatible peripheral.
+A major intrinsic capability may therefore be architecturally `PRESENT` while its activation is `DISABLED`, `DORMANT`, `DEVELOPING`, `ACTIVE`, or `INHIBITED`; its health and maturity are tracked separately. A capability can exist in the organ before it is trained, used, or connected to a compatible peripheral.
+
+See `basic operating instructions/CAPABILITY_ACTIVATION_STATES.md` for the current state model.
 
 ## Internal integration
 

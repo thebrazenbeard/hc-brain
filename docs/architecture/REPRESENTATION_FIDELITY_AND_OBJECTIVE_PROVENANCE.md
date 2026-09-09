@@ -20,6 +20,12 @@ Therefore:
 
 `ONE_METRIC_PASS != REPRESENTATION_FIDELITY_PASS`
 
+`EIGENVECTOR_CENTRALITY_MATCH != TOPOLOGY_EQUIVALENCE`
+
+`COMBINED_FIDELITY_OBJECTIVE != COMPLETE_REPRESENTATION_PRESERVATION`
+
+`TOPOLOGY_PRESERVING_LABEL != UNBOUNDED_TOPOLOGY_PROOF`
+
 `CENTERED_TEMPLATE != INSTANCE_STATE`
 
 `REPRESENTATIVE != COMPLETE`
@@ -100,11 +106,13 @@ Downstream systems should be able to determine what a transform was optimized to
 
 A representation trained for one task may still be useful elsewhere, but transfer requires evidence rather than an assumption of neutrality.
 
+A compound objective does not automatically broaden the claim to all properties suggested by its label. For example, reconstruction + correlation + one graph-centrality term remains evidence only for the tested dimensions and operating envelope.
+
 ## Metric semantics
 
 A topology metric is a projection of structure under declared conventions. Closeness, betweenness, eigenvector centrality, modularity, efficiency, participation, density, centeredness, distance measures, and related quantities do not describe the same property.
 
-Accordingly, labels such as `topology-aware`, `topology-preserving`, or `topologically sound` are insufficient implementation evidence by themselves.
+Accordingly, labels such as `topology-aware`, `topology-preserving`, `ground-truth-preserving`, or `topologically sound` are insufficient implementation evidence by themselves.
 
 A fidelity claim should identify:
 
@@ -163,15 +171,16 @@ Reproducibility strengthens the claim that a signal is stable under the tested p
 
 Architecture names and comments do not establish runtime behavior.
 
-If a component claims properties such as cluster-specific learning, source-specific routing, protected retention, or modality-specific processing, qualification should trace the actual data/state path and verify that the intended partition or routing occurs at runtime.
+If a component claims properties such as cluster-specific learning, source-specific routing, protected retention, modality-specific processing, topology preservation, or ground-truth preservation, qualification should trace the actual data/state path and inspect the exact objective/test implementation.
 
 `NAMED_BEHAVIOR != VERIFIED_EXECUTION`
 
-Instrumentation, controlled fixtures, negative controls, and state/index tracing are preferred over assuming that loop labels, class names, or diagrams match executed behavior.
+Instrumentation, controlled fixtures, negative controls, state/index tracing, and metric-specific counterexamples are preferred over assuming that loop labels, class names, paper terminology, or diagrams match executed behavior.
 
 ## Failure modes
 
 - one centrality metric is reported as preservation of topology generally;
+- a compound reconstruction/correlation/centrality objective is reported as complete topology preservation;
 - reconstruction accuracy hides loss of provenance or higher-order relations;
 - classifier-optimized fusion is reused as a neutral world representation;
 - centered template suppresses rare but critical evidence;
@@ -193,11 +202,14 @@ Instrumentation, controlled fixtures, negative controls, and state/index tracing
 8. Can rare but consequential evidence survive summary/fusion?
 9. Has claimed partition-specific or route-specific behavior been traced at runtime?
 10. Are causal or semantic claims being inferred from discrimination, attribution, or reproducibility alone?
+11. Can a counterexample preserve the reported fidelity metrics while materially changing an untested structural dimension?
 
 ## Evidence provenance
 
-This contract was motivated by source study of BASIRA Lab multigraph integration/generation methods and their evaluation implementations, including MultiGraphGAN, topoGAN, MGN-Net, MICNet, netNorm, SM-netFusion, NAGFS, ReMI-Net, and the comparative multigraph-integration survey.
+This contract was motivated by source study of BASIRA Lab multigraph integration/generation methods and their evaluation implementations, including MultiGraphGAN, topoGAN, MGN-Net, MICNet, netNorm, SM-netFusion, NAGFS, ReMI-Net, SG-Net, and the comparative multigraph-integration survey.
+
+The SG-Net code-level review provided a concrete example in which a claimed topology-preserving objective combines tensor L1 reconstruction, Pearson correlation, and eigenvector-centrality matching. This strengthens the requirement that fidelity claims remain scoped to the exact implemented metrics rather than the method label.
 
 The computational methods provide examples of scoped optimization and validation patterns. They do not prove HC's complete synthetic-organ design or elevate any graph metric into a cognitive primitive.
 
-See `docs/research/BASIRA_MULTIGRAPH_TOPOLOGY_FIDELITY_2026-09-09.md` for source-specific observations and transfer limits.
+See `docs/research/BASIRA_MULTIGRAPH_TOPOLOGY_FIDELITY_2026-09-09.md` and `docs/research/BASIRA_SGNET_FIDELITY_CODE_REVIEW_2026-09-09.md` for source-specific observations and transfer limits.

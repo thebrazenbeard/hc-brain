@@ -25,6 +25,7 @@ invariants:
   - WAKE_OR_REENTRY_NE_AUTOMATIC_CURRENTNESS_OF_STALE_STATE
   - BIOLOGICAL_SLEEP_STAGE_NE_REQUIRED_HC_RUNTIME_STAGE
   - OFFLINE_NE_UNGOVERNED_PLASTICITY
+  - PRIMARY_MODE_NE_EXCLUSIVE_ACTIVE_FUNCTION
 
 mode_classes:
   - FULL_ENGAGEMENT
@@ -62,11 +63,12 @@ object_families:
   RestModeCandidate:
     class: ACTION_OR_CONTROL_CANDIDATE
     required_concepts:
-      - proposed_mode
+      - proposed_active_modes
       - triggering_pressure_or_policy_refs
       - expected_functions
       - provenance
     optional_concepts:
+      - proposed_primary_mode
       - expected_duration
       - planned_start_window
       - environmental_assumptions
@@ -78,15 +80,17 @@ object_families:
       - uncertainty
     rules:
       - MODE_CANDIDATE_DOES_NOT_SELF_AUTHORIZE_EXTERNAL_DISENGAGEMENT
+      - MULTIPLE_COMPATIBLE_OFFLINE_FUNCTIONS_MAY_BE_PROPOSED_TOGETHER
 
   RestModeState:
     class: HC_OPERATING_STATE
     required_concepts:
-      - mode
+      - active_modes
       - entered_at
       - currentness
       - provenance
     optional_concepts:
+      - primary_mode
       - planned_end_or_release_condition
       - entry_candidate_ref
       - authorization_or_policy_ref
@@ -100,6 +104,8 @@ object_families:
     rules:
       - REST_MODE_DOES_NOT_CHANGE_IDENTITY_BY_ITSELF
       - CAPABILITY_PRESENCE_PERSISTS_THROUGH_TEMPORARY_MODE_INHIBITION
+      - PRIMARY_MODE_IS_DESCRIPTIVE_NOT_EXCLUSIVE
+      - ACTIVE_MODES_MAY_OVERLAP_WHEN_COMPATIBLE
 
   RhythmicPhaseState:
     class: TEMPORAL_CONTROL_STATE
@@ -216,10 +222,11 @@ object_families:
   RetainedMonitoringProfile:
     class: SAFETY_AND_CONTINUITY_PROFILE
     required_concepts:
-      - active_mode
+      - active_modes
       - retained_functions
       - provenance
     optional_concepts:
+      - primary_mode
       - protective_homeostasis
       - critical_interoception
       - thermal_or_power_fault_detection
@@ -236,12 +243,14 @@ object_families:
   RestIntervalReceipt:
     class: OPERATING_INTERVAL_RECEIPT
     required_concepts:
-      - mode_ref
+      - mode_state_ref
       - interval_start
       - interval_end
       - outcome_status
       - provenance
     optional_concepts:
+      - active_modes
+      - primary_mode
       - replay_refs
       - consolidation_refs
       - maintenance_refs
@@ -282,8 +291,8 @@ rest_entry_path:
     - PREPARE_BODY_AND_INTERFACES
     - QUIESCE_ELIGIBLE_EFFECTS
     - ESTABLISH_RETAINED_MONITORING
-    - ENTER_MODE
-    - READBACK_MODE_STATE
+    - ENTER_MODE_SET
+    - VERIFY_MODE_STATE
 
 reentry_path:
   conceptual_sequence:
@@ -336,6 +345,7 @@ biological_transfer_boundary:
     - UNIVERSAL_GLYMPHATIC_SLEEP_CLEARANCE_CLAIM
 
 hostile_test_classes:
+  - OVERLAPPING_MAINTENANCE_AND_CONSOLIDATION
   - REPLAY_AS_REALITY
   - COUNTERFACTUAL_AUTOBIOGRAPHY_CONTAMINATION
   - AFFECTIVE_REPLAY_MONOPOLY

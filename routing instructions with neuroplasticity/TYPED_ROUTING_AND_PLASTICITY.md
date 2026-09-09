@@ -56,11 +56,90 @@ Plasticity answers:
 
 A successful route may create plasticity evidence but never changes durable routing policy by itself.
 
+## Temporary effective topology
+
+Routing may change the **effective computational topology** inside a bounded task, coalition, layer, phase, or time interval without changing the HC's physical or durable logical topology.
+
+Examples include:
+
+- suppressing currently low-value candidate routes;
+- opening a temporary route among jointly relevant subsystems;
+- changing effective edge weight for one coalition;
+- generating a task-local reasoning relation;
+- restricting message propagation under resource pressure;
+- temporarily rerouting around a degraded constituent.
+
+These states must remain distinguishable:
+
+`PHYSICAL_REACHABILITY != DURABLE_LOGICAL_ELIGIBILITY`
+
+`DURABLE_LOGICAL_ELIGIBILITY != CONFIGURED_FLOW_POLICY`
+
+`CONFIGURED_FLOW_POLICY != TEMPORAL_EFFECTIVE_TOPOLOGY`
+
+`TEMPORAL_EFFECTIVE_TOPOLOGY != PLASTICITY_COMMIT`
+
+`FORWARD_LOCAL_EDGE_FILTER != STRUCTURAL_EDGE_REMOVAL`
+
+`TASK_LOCAL_ROUTE != DURABLE_LEARNED_ROUTE`
+
+A transient relation may disappear when its task/coalition ends. Persistence beyond that scope requires the appropriate configuration or plasticity transition rather than accidental object reuse.
+
+## Effective-topology provenance
+
+Where effective topology is consequential or qualification-relevant, the HC should be able to recover enough lineage to establish:
+
+- parent/base topology or eligibility state;
+- execution/task/coalition identity;
+- route/filter/generator that produced the effective relation;
+- score/modulator/state snapshot used;
+- onset and expiry or dissolution condition;
+- retained, suppressed, generated, or reweighted relations;
+- whether the relation is computational-only or evidence-bearing;
+- whether it is eligible to produce a plasticity candidate;
+- provenance and relevant authority/resource constraints.
+
+This does not require durable logging of every microscopic routing event. Observability depth should scale with consequence, debugging, replay, safety, and qualification needs.
+
+## Routing scores and epistemic/governance boundaries
+
+A routing or flow score can determine which computation receives bandwidth or which relation is effective now. It does not establish what the world is like or what actions are authorized.
+
+`COMPUTATIONAL_ROUTE_SCORE != WORLD_RELATION_EVIDENCE`
+
+`FLOW_SCORE != EPISTEMIC_CONFIDENCE`
+
+`FLOW_SCORE != CAUSAL_IMPORTANCE`
+
+`FLOW_SCORE != SALIENCE_OUTSIDE_DECLARED_SCOPE`
+
+`FLOW_SCORE != AUTHORITY`
+
+`ACTIVE_COMPUTATIONAL_EDGE != WORLD_MODEL_FACT`
+
+A generated reasoning graph or temporary route can contribute to inference while remaining typed as a computational relation rather than an observed relation.
+
 ## Plasticity classes
 
 Routing-related durable updates may include connection weight change, new/remapped capability association, inhibition/gating change, fault-compensation route, learned context/regime route, latency/reliability adaptation, structural hyperedge creation/removal, and modality calibration change.
 
 Every material durable update should carry scope, provenance, evidence, version/supersession, reversibility/rollback information where applicable, and a learning class.
+
+An effective route being used repeatedly can create evidence for a plasticity candidate, but repetition alone is not the commit:
+
+`ROUTE_USED_NOW != ROUTE_LEARNED_FOR_FUTURE`
+
+`REPEATED_EFFECTIVE_EDGE != AUTOMATIC_DURABLE_EDGE`
+
+`FORWARD_FILTER_RESULT != PLASTICITY_UPDATE`
+
+## Integrity of generated routing objects
+
+Dynamically generated graphs, hyperedges, route tables, masks, or weighted adjacency objects should satisfy their declared structural contract before activation. Relevant checks can include member/index/value cardinality, stable referent binding, schema/version compatibility, valid TTL/scope, and allowed topology plane.
+
+`GENERATED_TOPOLOGY_OBJECT != VALID_TOPOLOGY_OBJECT_WITHOUT_CONTRACT_CHECKS`
+
+A malformed task-local routing object should fail locally or enter explicit unresolved/fault state rather than silently mutating durable topology.
 
 ## Protection from accidental personality formation
 
@@ -70,6 +149,10 @@ Repeatedly selected pathways must not silently become identity, value, or perman
 
 Routing is non-hemispheric and function/capability based. Dynamic specialization may emerge without imposing human lobe or left/right cerebral structure.
 
+The canonical HC topology is temporal: the currently effective routing graph/hypergraph is one bounded state of the larger typed multilayer temporal hypergraph, not the whole architecture and not a rewrite of its history.
+
 ## Provenance
 
-Integrated from `four/cross-repo-synthesis-v1` after Warden review.
+Integrated from `four/cross-repo-synthesis-v1` after Warden review, then strengthened through source study of dynamic graph information-flow control. BASIRA DeltaGNN provided a concrete implementation fixture where activation-derived scores filter edges and generate a second task-local computational graph during forward processing. The mechanism is not imported as an HC requirement; it motivates explicit separation among base/logical/configured/effective/plastic topology and routing-score epistemic/authority boundaries.
+
+See `docs/research/BASIRA_DELTAGNN_EFFECTIVE_TOPOLOGY_AND_FLOW_CONTROL_2026-09-09.md`.

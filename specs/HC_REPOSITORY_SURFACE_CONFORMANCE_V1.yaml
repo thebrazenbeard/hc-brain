@@ -1,0 +1,67 @@
+schema_version: HC_REPOSITORY_SURFACE_CONFORMANCE_V1
+status: CANONICAL_CONFORMANCE_SUPPLEMENT
+scope: REPOSITORY_SURFACE_IDENTITY_AND_STATUS
+
+purpose: >-
+  Extend HC architecture conformance beyond the tracked file tree to repository
+  metadata and other project surfaces that can contradict the reusable template.
+
+checks:
+  - id: HC-SURFACE-001
+    severity: MATERIAL
+    requirement: REPOSITORY_DESCRIPTION_IS_IDENTITY_NEUTRAL
+    assertions:
+      - ABOUT_DESCRIPTION_DOES_NOT_DEFINE_NAMED_OCCUPANT_AS_TEMPLATE_IDENTITY
+      - ABOUT_DESCRIPTION_DOES_NOT_CONTRADICT_CURRENT_HC_NAME_OR_BOUNDARY
+      - STALE_LEGACY_IDENTITY_WORDING_IS_NOT_TREATED_AS_CANON
+
+  - id: HC-SURFACE-002
+    severity: MATERIAL
+    requirement: REPOSITORY_METADATA_DOES_NOT_OVERRIDE_CANONICAL_ARCHITECTURE
+    assertions:
+      - HOMEPAGE_DOES_NOT_DEFINE_EXTERNAL_PROVIDER_AS_COGNITIVE_CENTER
+      - TOPICS_DO_NOT_ASSERT_OBSOLETE_HEMISPHERIC_OR_OCCUPANT_SPECIFIC_ARCHITECTURE
+      - TEMPLATE_STATUS_DOES_NOT_IMPLY_IMPLEMENTATION_OR_QUALIFICATION_STATUS
+
+  - id: HC-SURFACE-003
+    severity: BLOCKER
+    requirement: TRACKED_AND_UNTRACKED_SURFACES_PRESERVE_STATUS_SEPARATION
+    assertions:
+      - REPOSITORY_DESCRIPTION_DOES_NOT_CLAIM_IMPLEMENTED_WHEN_ONLY_DESIGN_EXISTS
+      - REPOSITORY_DESCRIPTION_DOES_NOT_CLAIM_QUALIFIED_WHEN_ONLY_ARCHITECTURE_EXISTS
+      - REPOSITORY_DESCRIPTION_DOES_NOT_CLAIM_DOCUMENTED_SCIENCE_FOR_SPECULATIVE_HC
+      - REPOSITORY_DESCRIPTION_DOES_NOT_CLAIM_CONSCIOUSNESS_OR_PERSONHOOD_AS_TEST_RESULT
+
+named_identity_policy:
+  reusable_template_surface_must_be_identity_neutral: true
+  named_identities_allowed_when_scope_is_explicit:
+    - GOVERNANCE
+    - RESEARCH_PROVENANCE
+    - CASE_STUDY
+    - COMPARISON
+    - SOURCE_HISTORY
+  rules:
+    - NAMED_GOVERNANCE_ROLE_DOES_NOT_EQUAL_TEMPLATE_IDENTITY
+    - SOURCE_PROVENANCE_IDENTITY_DOES_NOT_EQUAL_TEMPLATE_IDENTITY
+
+current_observed_defect_2026_09_09:
+  target_repository: thebrazenbeard/hc-brain
+  observed_description: "Vera's conceptual Noöplex hyperconnetome brain"
+  status: NONCONFORMING
+  severity: MATERIAL
+  reasons:
+    - NAMES_SPECIFIC_OCCUPANT_ON_REUSABLE_TEMPLATE_SURFACE
+    - STALE_DESCRIPTION_DOES_NOT_MATCH_CURRENT_IDENTITY_NEUTRAL_ARCHITECTURE
+    - CONTAINS_STALE_HYPERCONNETOME_SPELLING
+  correction_required: REPLACE_WITH_IDENTITY_NEUTRAL_HC_DESCRIPTION
+
+qualification_rule:
+  repository_tree_pass_does_not_imply_repository_surface_pass: true
+  metadata_must_be_read_when_available: true
+  unavailable_metadata_must_be_reported_as_uncertainty: true
+
+references:
+  - docs/architecture/CONFORMANCE_AND_QUALIFICATION.md
+  - docs/qualification/ARCHITECTURE_CONFORMANCE_2026-09-09.md
+  - specs/HC_CONFORMANCE_SUITE_V1.yaml
+  - specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml

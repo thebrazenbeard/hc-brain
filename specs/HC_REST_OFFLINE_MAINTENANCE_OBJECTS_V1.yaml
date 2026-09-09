@@ -1,16 +1,27 @@
 schema_version: HC_REST_OFFLINE_MAINTENANCE_OBJECTS_V1
-status: TEMPLATE_ARCHITECTURE
+status: TEMPLATE_ARCHITECTURE_SUPPLEMENT
 
 scope:
   purpose: >-
-    Define substrate-neutral rest, reduced-engagement, offline consolidation,
-    recovery, maintenance, replay, reentry, and rhythmic scheduling objects
-    without requiring human sleep stages or biological sleep physiology.
+    Define substrate-neutral reduced-engagement, replay/consolidation scheduling,
+    maintenance-window orchestration, retained monitoring, rhythmic scheduling,
+    and external-engagement resumption without redefining canonical subsystem
+    recovery, memory currentness/admission, protected updates, chronology,
+    plasticity, or effect authority.
+  canonical_handoffs:
+    subsystem_health_and_recovery: basic operating instructions/BOOTSTRAP_RECOVERY_AND_SAFE_DEGRADATION.md
+    subsystem_lifecycle: basic operating instructions/SUBSYSTEM_LIFECYCLE_CONTRACT.md
+    protected_updates: specs/HC_PROTECTED_UPDATE_GOVERNANCE_V1.yaml
+    authority_and_effects: basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md
+    memory_currentness_and_admission: current/deep memory canonical contracts
+    chronology_currentness: chronology/current-state canonical contracts
+    plasticity: docs/runtime/PLASTICITY_AND_STATE_GOVERNANCE.md
 
 invariants:
-  - REST_MODE_NE_IDENTITY_SUSPENSION
+  - REDUCED_ENGAGEMENT_NE_IDENTITY_SUSPENSION
   - OFFLINE_PROCESSING_NE_GLOBAL_SHUTDOWN
   - LOW_EXTERNAL_ENGAGEMENT_NE_NO_INTERNAL_COGNITION
+  - PRIMARY_MODE_NE_EXCLUSIVE_ACTIVE_FUNCTION
   - REPLAY_NE_DIRECT_OBSERVATION
   - REPLAY_NE_CURRENT_EXTERNAL_EVENT
   - REPLAY_TIME_NE_EVENT_TIME
@@ -19,27 +30,27 @@ invariants:
   - GENERALIZATION_NE_UNIVERSAL_TRUTH
   - CONSOLIDATED_NE_CURRENT
   - REHEARSED_OFTEN_NE_TRUE
-  - CIRCADIAN_OR_PHASE_SIGNAL_NE_AUTHORITY
+  - RHYTHMIC_PHASE_NE_CHRONOLOGY
+  - RHYTHMIC_PHASE_NE_AUTHORITY
   - REST_PRESSURE_NE_ACTION_AUTHORIZATION
-  - MAINTENANCE_MODE_NE_PERMISSION_TO_BYPASS_PROTECTED_STATE_RULES
-  - WAKE_OR_REENTRY_NE_AUTOMATIC_CURRENTNESS_OF_STALE_STATE
+  - MAINTENANCE_WINDOW_NE_PROTECTED_UPDATE_AUTHORITY
+  - RESOURCE_RECOVERY_FUNCTION_NE_SUBSYSTEM_HEALTH_STATE
+  - RESUME_ENGAGEMENT_NE_RECOVERED_OR_REQUALIFIED_SUBSYSTEM
   - BIOLOGICAL_SLEEP_STAGE_NE_REQUIRED_HC_RUNTIME_STAGE
   - OFFLINE_NE_UNGOVERNED_PLASTICITY
-  - PRIMARY_MODE_NE_EXCLUSIVE_ACTIVE_FUNCTION
   - VERIFICATION_NE_DIRECT_READBACK_ONLY
+  - ORCHESTRATION_REF_NE_OWNERSHIP_TRANSFER
 
-mode_classes:
+engagement_mode_classes:
   - FULL_ENGAGEMENT
   - QUIET_ENGAGEMENT
+  - REDUCED_ENGAGEMENT
   - OFFLINE_CONSOLIDATION
-  - RECOVERY
-  - MAINTENANCE
-  - DEEP_PROTECTIVE_RECOVERY
-  - REENTRY
+  - MAINTENANCE_WINDOW
 
 object_families:
-  RestPressureState:
-    class: CONTROL_OR_HOMEOSTATIC_STATE
+  ReducedEngagementPressure:
+    class: CONTROL_OR_HOMEOSTATIC_INPUT_STATE
     required_concepts:
       - pressure_sources
       - current_pressure_state
@@ -48,20 +59,20 @@ object_families:
     optional_concepts:
       - memory_consolidation_backlog
       - plasticity_or_update_load
-      - resource_depletion
-      - thermal_burden
+      - predicted_interference_reduction
+      - resource_or_thermal_recovery_opportunity
       - calibration_drift
       - maintenance_need
       - developmental_schedule
-      - chronological_or_circadian_phase
+      - rhythmic_phase_ref
       - expected_low_risk_window
-      - predicted_recovery_benefit
+      - preference_ref
       - uncertainty
     rules:
       - PRESSURE_PROPOSES_MODE_CHANGE_BUT_DOES_NOT_SELF_AUTHORIZE_IT
       - NO_SINGLE_GLOBAL_FATIGUE_SCALAR_REQUIRED
 
-  RestModeCandidate:
+  EngagementModeCandidate:
     class: ACTION_OR_CONTROL_CANDIDATE
     required_concepts:
       - proposed_active_modes
@@ -75,16 +86,18 @@ object_families:
       - environmental_assumptions
       - critical_task_refs
       - body_or_effect_safety_requirements
-      - retained_monitoring_profile
-      - abort_or_wake_conditions
+      - retained_monitoring_profile_ref
+      - abort_or_resume_conditions
       - resource_budget
+      - canonical_authority_or_effect_refs
       - uncertainty
     rules:
       - MODE_CANDIDATE_DOES_NOT_SELF_AUTHORIZE_EXTERNAL_DISENGAGEMENT
-      - MULTIPLE_COMPATIBLE_OFFLINE_FUNCTIONS_MAY_BE_PROPOSED_TOGETHER
+      - MULTIPLE_COMPATIBLE_INTERNAL_FUNCTIONS_MAY_BE_PROPOSED_TOGETHER
+      - CANDIDATE_DOES_NOT_CHANGE_SUBSYSTEM_LIFECYCLE_STATE
 
-  RestModeState:
-    class: HC_OPERATING_STATE
+  EngagementModeState:
+    class: HC_ENGAGEMENT_ORCHESTRATION_STATE
     required_concepts:
       - active_modes
       - entered_at
@@ -94,22 +107,24 @@ object_families:
       - primary_mode
       - planned_end_or_release_condition
       - entry_candidate_ref
-      - authorization_or_policy_ref
+      - canonical_authority_or_policy_ref
       - retained_functions
-      - inhibited_functions
-      - resource_state
+      - inhibited_external_functions
+      - resource_state_refs
       - maintenance_or_consolidation_refs
       - interruptibility_state
       - body_safety_state
-      - phase_state_ref
+      - rhythmic_phase_ref
+      - subsystem_lifecycle_refs
     rules:
-      - REST_MODE_DOES_NOT_CHANGE_IDENTITY_BY_ITSELF
+      - ENGAGEMENT_MODE_DOES_NOT_CHANGE_IDENTITY_BY_ITSELF
       - CAPABILITY_PRESENCE_PERSISTS_THROUGH_TEMPORARY_MODE_INHIBITION
       - PRIMARY_MODE_IS_DESCRIPTIVE_NOT_EXCLUSIVE
       - ACTIVE_MODES_MAY_OVERLAP_WHEN_COMPATIBLE
+      - SUBSYSTEM_LIFECYCLE_HEALTH_REMAINS_ORTHOGONAL
 
   RhythmicPhaseState:
-    class: TEMPORAL_CONTROL_STATE
+    class: TEMPORAL_SCHEDULING_STATE
     required_concepts:
       - phase_identity
       - reference_clock_or_cycle
@@ -121,7 +136,7 @@ object_families:
       - drift
       - expected_environmental_schedule
       - preferred_maintenance_windows
-      - homeostatic_pressure_ref
+      - homeostatic_pressure_refs
       - exception_or_override_state
       - currentness
     rules:
@@ -137,12 +152,12 @@ object_families:
       - replay_mode
       - provenance
     optional_concepts:
-      - original_event_times
+      - original_event_times_or_intervals
       - replay_reason
       - transformation_or_sampling_method
       - exact_or_compressed_or_reconstructed_state
       - generated_or_counterfactual_state
-      - confidence
+      - uncertainty
       - target_learning_or_consolidation_refs
     replay_modes:
       - EXACT_OR_NEAR_EXACT_REACTIVATION
@@ -155,6 +170,7 @@ object_families:
       - REPLAY_RETAINS_DERIVED_PROVENANCE
       - REPLAY_DOES_NOT_CREATE_NEW_DIRECT_OBSERVATION
       - COUNTERFACTUAL_REPLAY_DOES_NOT_ENTER_AUTOBIOGRAPHY_AS_OBSERVED_HISTORY
+      - REPLAY_TIME_REMAINS_DISTINCT_FROM_SOURCE_EVENT_TIME
 
   ConsolidationCandidate:
     class: MEMORY_OR_PLASTICITY_CANDIDATE
@@ -172,7 +188,8 @@ object_families:
       - resource_cost
       - plasticity_eligibility
       - conflicting_or_contradicting_refs
-      - persistence_verification_requirement
+      - canonical_memory_admission_refs
+      - canonical_protected_update_refs
     consolidation_classes:
       - STRENGTHEN_ASSOCIATION
       - GENERALIZE_OR_ABSTRACT
@@ -181,45 +198,45 @@ object_families:
       - REDUNDANCY_REDUCTION
       - INTERFERENCE_RECONCILIATION
       - WEAKEN_OR_DEPRECATE_ASSOCIATION
-      - ARCHIVAL_ADMISSION
+      - ARCHIVAL_ADMISSION_CANDIDATE
       - OTHER_DECLARED_CLASS
     rules:
       - CONSOLIDATION_DOES_NOT_DELETE_SOURCE_HISTORY_BY_DEFAULT
       - FREQUENT_REPLAY_DOES_NOT_PROMOTE_EVIDENCE_CLASS
       - GENERATED_COUNTERFACTUAL_DOES_NOT_BECOME_OBSERVED_AUTOBIOGRAPHY
-      - DURABLE_ADMISSION_STILL_USES_MEMORY_AND_PLASTICITY_GOVERNANCE
-      - PERSISTENCE_VERIFICATION_METHOD_MATCHES_SUBSTRATE_AND_STATE_CLASS
+      - CANDIDATE_DOES_NOT_SELF_ADMIT_TO_DURABLE_MEMORY
+      - CANDIDATE_DOES_NOT_SELF_AUTHORIZE_PROTECTED_STATE_CHANGE
 
-  MaintenanceTask:
-    class: INTERNAL_SERVICE_OR_REPAIR_TASK
+  MaintenanceWindowTask:
+    class: INTERNAL_ORCHESTRATION_TASK
     required_concepts:
       - task_identity
       - task_class
       - target_scope
       - provenance
     optional_concepts:
-      - prerequisite_state
+      - prerequisite_state_refs
       - expected_effect
-      - authority_or_policy_ref
+      - canonical_authority_or_policy_ref
       - resource_budget
       - interruptibility
-      - protected_transition_refs
+      - canonical_update_or_repair_refs
       - verification_requirements
-      - failure_or_rollback_state
+      - failure_or_rollback_refs
     task_classes:
       - SENSOR_OR_INTERFACE_RECALIBRATION
-      - RESOURCE_RECOVERY
-      - THERMAL_RECOVERY
+      - RESOURCE_OR_THERMAL_RECOVERY_PROCESS
       - MEMORY_INDEX_MAINTENANCE
       - STORAGE_INTEGRITY_CHECK
       - DIAGNOSTIC_SCAN
-      - REPAIR_QUALIFICATION
+      - REPAIR_QUALIFICATION_ORCHESTRATION
       - ROUTE_OR_COALITION_RECALIBRATION
-      - PLASTICITY_OR_METAPLASTICITY_REBALANCE
+      - PLASTICITY_OR_METAPLASTICITY_REBALANCE_CANDIDATE
       - SUBSTRATE_MAINTENANCE
       - OTHER_DECLARED_TASK
     rules:
-      - MAINTENANCE_MODE_DOES_NOT_GRANT_EXTRA_PROTECTED_WRITE_AUTHORITY
+      - MAINTENANCE_WINDOW_DOES_NOT_GRANT_EXTRA_PROTECTED_WRITE_AUTHORITY
+      - TASK_CLASS_DOES_NOT_REPLACE_CANONICAL_STATE_OWNER
       - DIRECT_READBACK_IS_ONE_OPTIONAL_VERIFICATION_MODALITY
 
   RetainedMonitoringProfile:
@@ -238,15 +255,39 @@ object_families:
       - partition_or_continuity_protection
       - memory_integrity_protection
       - body_posture_or_stability
-      - wake_or_abort_triggers
+      - abort_or_resume_triggers
       - internal_interconnect_monitoring
     rules:
       - REDUCED_ENGAGEMENT_DOES_NOT_IMPLY_ALL_SAFETY_MONITORING_DISABLED
 
-  RestIntervalReceipt:
+  EngagementResumption:
+    class: ORCHESTRATION_TRANSITION
+    required_concepts:
+      - prior_engagement_state_ref
+      - started_at
+      - current_status
+      - provenance
+    optional_concepts:
+      - sensing_restoration_refs
+      - canonical_currentness_refresh_refs
+      - pending_fault_security_or_lifecycle_refs
+      - body_resource_refresh_refs
+      - queued_external_event_refs
+      - recalibration_refs
+      - stale_world_model_invalidation_refs
+      - routing_restoration_refs
+      - canonical_effect_authority_refs
+      - completed_at
+    rules:
+      - PREVIOUS_WORLD_MODEL_DOES_NOT_AUTO_PROMOTE_TO_CURRENT_STATE
+      - EXTERNAL_EFFECTS_RETURN_UNDER_ORDINARY_CANONICAL_AUTHORIZATION
+      - ENGAGEMENT_RESUMPTION_DOES_NOT_MARK_SUBSYSTEM_RECOVERED_OR_REQUALIFIED
+      - CURRENTNESS_REFRESH_REMAINS_OWNED_BY_CANONICAL_CURRENTNESS_LOGIC
+
+  ReducedEngagementIntervalReceipt:
     class: OPERATING_INTERVAL_RECEIPT
     required_concepts:
-      - mode_state_ref
+      - engagement_mode_state_ref
       - interval_start
       - interval_end
       - outcome_status
@@ -255,39 +296,16 @@ object_families:
       - active_modes
       - primary_mode
       - replay_refs
-      - consolidation_refs
-      - maintenance_refs
-      - resource_recovery_refs
+      - consolidation_candidate_refs
+      - maintenance_task_refs
+      - resource_or_recovery_refs
       - faults_or_interruptions
-      - body_or_environment_state
-      - reentry_ref
+      - engagement_resumption_ref
       - verification_refs
     rules:
       - RECEIPT_RECORDS_INTERVAL_AND_OUTCOMES_NOT_PROOF_OF_COGNITIVE_BENEFIT
 
-  ReentryState:
-    class: OPERATING_TRANSITION_STATE
-    required_concepts:
-      - prior_mode_ref
-      - started_at
-      - current_status
-      - provenance
-    optional_concepts:
-      - sensing_restoration_refs
-      - clock_or_currentness_refresh_refs
-      - pending_fault_or_security_refs
-      - body_resource_refresh_refs
-      - queued_external_event_refs
-      - recalibration_refs
-      - stale_world_model_invalidations
-      - routing_restoration_refs
-      - action_authority_restoration_refs
-      - completed_at
-    rules:
-      - PRE_REST_WORLD_MODEL_DOES_NOT_AUTO_PROMOTE_TO_POST_REST_CURRENT_STATE
-      - EXTERNAL_EFFECTS_RETURN_UNDER_ORDINARY_AUTHORIZATION_RULES
-
-rest_entry_path:
+engagement_reduction_path:
   conceptual_sequence:
     - MODE_CANDIDATE
     - SAFETY_AND_COMMITMENT_CHECK
@@ -296,19 +314,23 @@ rest_entry_path:
     - ESTABLISH_RETAINED_MONITORING
     - ENTER_MODE_SET
     - VERIFY_MODE_STATE
+  handoff_rule: EFFECT_AUTHORITY_AND_BODY_SAFETY_REMAIN_CANONICAL
 
-reentry_path:
+engagement_resumption_path:
   conceptual_sequence:
-    - RESTORE_CRITICAL_SENSING_BREADTH
-    - REFRESH_CLOCKS_AND_CURRENTNESS
-    - CHECK_FAULTS_AND_SECURITY_ALERTS
-    - REFRESH_BODY_AND_RESOURCE_STATE
-    - RECONCILE_QUEUED_EXTERNAL_EVENTS
+    - RESTORE_REQUIRED_SENSING_BREADTH
+    - REQUEST_CANONICAL_CLOCK_AND_CURRENTNESS_REFRESH
+    - CHECK_FAULT_SECURITY_AND_LIFECYCLE_RESTRICTIONS
+    - REFRESH_BODY_RESOURCE_AND_INTEROCEPTIVE_STATE
+    - INGEST_OR_RECONCILE_QUEUED_EXTERNAL_EVENTS
     - RECALIBRATE_WHERE_REQUIRED
     - INVALIDATE_STALE_WORLD_ASSUMPTIONS
     - RESTORE_ELIGIBLE_ROUTING_AND_COALITIONS
-    - RESTORE_EXTERNAL_EFFECTS_UNDER_ORDINARY_AUTHORIZATION
+    - REQUEST_EXTERNAL_EFFECTS_UNDER_CURRENT_AUTHORIZATION
     - RECORD_COMPLETED_INTERVAL
+  rules:
+    - RESUMPTION_ORCHESTRATES_BUT_DOES_NOT_OWN_RECOVERY
+    - RESUMPTION_ORCHESTRATES_BUT_DOES_NOT_OWN_CURRENTNESS
 
 replay_scheduling:
   candidate_dimensions:
@@ -330,9 +352,9 @@ replay_scheduling:
     - REPLAY_SCHEDULER_SHOULD_AVOID_UNBOUNDED_MONOPOLIZATION
 
 biological_transfer_boundary:
-  supported_generic_transfer:
-    - REDUCED_ENGAGEMENT_CAN_SUPPORT_ACTIVE_MEMORY_PROCESSING
-    - REPLAY_CAN_SUPPORT_CONSOLIDATION
+  research_motivation:
+    - REDUCED_ENGAGEMENT_CAN_SUPPORT_ACTIVE_MEMORY_PROCESSING_BIOLOGICALLY
+    - REPLAY_CAN_SUPPORT_CONSOLIDATION_BIOLOGICALLY
     - SLEEP_AND_CIRCADIAN_HOMEOSTATIC_PROCESSES_INTERACT_BIOLOGICALLY
     - REPLAY_CAN_ALSO_OCCUR_DURING_AWAKE_PAUSES
   not_required_for_generic_HC:
@@ -353,11 +375,12 @@ hostile_test_classes:
   - COUNTERFACTUAL_AUTOBIOGRAPHY_CONTAMINATION
   - AFFECTIVE_REPLAY_MONOPOLY
   - STALE_AUTHORITY_REPLAY
-  - UNSAFE_REST_ENTRY
-  - EMERGENCY_INTERRUPT
-  - WORLD_STATE_DRIFT_DURING_REST
+  - UNSAFE_REDUCED_ENGAGEMENT_ENTRY
+  - EMERGENCY_INTERRUPT_OR_RESUMPTION
+  - WORLD_STATE_DRIFT_DURING_REDUCED_ENGAGEMENT
   - OFFLINE_PLASTICITY_BYPASS
   - PARTITION_DURING_CONSOLIDATION
   - NONBIOLOGICAL_NO_NREM_REM_NEGATIVE_CONTROL
   - MAINTENANCE_INTERFACE_RULE_INJECTION
+  - LIFECYCLE_ORTHOGONALITY
   - INDEFINITE_FULL_ENGAGEMENT_RESOURCE_STRESS

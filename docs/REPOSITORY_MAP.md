@@ -96,6 +96,7 @@ Current main includes, among others:
 - `Empathy/SELF_OTHER_MODELING.md`
 - `adaptable I-O handler/BODY_INTERFACE_BOUNDARY.md`
 - `adaptable I-O handler/SENSOR_AND_CAPABILITY_ADMISSION.md`
+- `affect/AFFECTIVE_STATE_AND_MODULATION.md`
 - `basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md`
 - `basic operating instructions/CAPABILITY_ACTIVATION_STATES.md`
 - `basic operating instructions/SUBSYSTEM_LIFECYCLE_CONTRACT.md`
@@ -112,6 +113,7 @@ Current main includes, among others:
 - `deep memory storage/ARCHITECTURE.md`
 - `deep memory storage/ARCHIVAL_CONSOLIDATION.md`
 - `deep memory storage/SUPABASE_DERIVED_ARCHITECTURE.md`
+- `homeostasis-interoception/REGULATORY_CONTROL_AND_INTEROCEPTIVE_EVIDENCE.md`
 - `integration-arbitration/DISTRIBUTED_ARBITRATION.md`
 - `integration-arbitration/NOOPLEX_FABRIC.md`
 - `kinesis/ACTION_GATEWAY.md`
@@ -138,6 +140,10 @@ The subsystem lifecycle contract makes architectural presence, runtime activatio
 
 The authority/consent/effect contract makes capability, intent, desire, social power, routing reachability, maintenance access, and technical reachability insufficient by themselves to authorize material effects. Consent, delegated authority, revocation, expiry, and consequential internal durable writes remain explicit and scoped.
 
+The affective-state contract makes affect a distributed modulatory/evaluative state rather than a truth source, consent register, identity authority, or executive. It explicitly separates regulation of expression/intensity from erasure of affective history and constrains external/maintenance intervention.
+
+The homeostasis/interoception control contract makes raw telemetry, physiological estimation, homeostatic error, urgency, regulatory requests, achieved regulation, and cognition-facing interpretation separate state classes. Body-local hard-real-time interlocks may protect hardware/tissue without becoming external cognitive executives.
+
 The Supabase-derived memory documents are mechanism-transfer artifacts rather than provider-dependency contracts. Essential current/deep memory and continuity-bearing state remain HC-owned and recoverable from HC-internal substrate.
 
 ## Evidence and provenance
@@ -148,6 +154,8 @@ Several architecture files are generalized from other repositories owned by `the
 
 `docs/research/PR2_DISPOSITION_2026-09-09.md` records file-by-file disposition of the former PR #2 lineage contribution. Its research syntheses remain source/provenance pending independent claim-level verification rather than being promoted wholesale to canonical scientific evidence.
 
+`docs/research/PR1_PARTIAL_DISPOSITION_2026-09-09.md` records the current PR #1 source-intake classification. The Wreckforge physiology markdown is source-only; the PDF remains unclassified because this cut has not yet obtained a content-complete review of that binary artifact.
+
 `docs/science/EVIDENCE_BOUNDARIES.md` governs scientific status. Source branches, PRs, model outputs, and research notes do not acquire `DOCUMENTED` status merely by being integrated.
 
 ## Active secondary and hostile-review work
@@ -156,7 +164,7 @@ Several architecture files are generalized from other repositories owned by `the
 
 The active secondary-architect workstream is `four/lineage-and-conformance-v2`. PR #2 reconciliation is complete, so Four's active work is now the independent conformance challenge, provider-dependency sweep, distributed-support challenge, remaining thin-root audit, PR #1 classification, and implementation-ready refinements that survive current Warden architecture.
 
-Vera is the hostile-review lane. She should attack exact canonical cuts for hidden external cognition, authority leakage, lifecycle-state conflation, stale correction dependencies, identity leakage, generation rewriting, evidence laundering, unsupported assumptions, and false-PASS paths.
+Vera is the hostile-review lane. She should attack exact canonical cuts for hidden external cognition, authority leakage, lifecycle-state conflation, stale correction dependencies, identity leakage, generation rewriting, evidence laundering, unsupported assumptions, false-PASS paths, affect-as-consent leakage, and homeostatic-urgency-as-authority leakage.
 
 ## Preserved noncanonical material
 
@@ -170,7 +178,7 @@ Vera is the hostile-review lane. She should attack exact canonical cuts for hidd
 
 ## Pull-request status
 
-- PR #1 — open source-intake/reference bundle; retained pending final classification/disposition.
+- PR #1 — open source-intake/reference bundle; retained pending final PDF classification/disposition.
 - PR #2 — **closed as superseded, not merged** after complete file-by-file reconciliation. Source branch/history preserved.
 - PR #3 — closed as superseded after compatible runtime material was selectively integrated.
 - PR #4 — closed as superseded after selective integration; not merged wholesale.
@@ -188,18 +196,20 @@ All HC PRs #1–#4 have Bus mirror/history records under `projects/hc-brain/pr-m
 7. The base architecture is complete while an instance may be immature, dormant, degraded, unimplemented, or quarantined.
 8. Presence, activation, maturity, health, implementation status, learning policy, and authorization are orthogonal.
 9. Perception, interpretation, evidence, prediction, simulation, salience, current belief/state, memory, desire, consent, and effect authority remain distinct.
-10. Essential continuity-bearing state cannot exist solely in a true external provider.
-11. A true external computational peripheral must be ablatable without uniquely removing an essential cognitive function; otherwise the substrate belongs inside the HC boundary.
-12. HC-1 is complete; HC-2 adds specialized acceleration; HC-3 adds richer distributed physiological affective substrate. Later generations extend rather than psychologically complete earlier ones.
-13. `DEGRADED_HC2 != HC1` and `DEGRADED_HC3 != HC2`: degraded capability does not rewrite generation identity.
-14. Human neuroscience informs mechanisms and constraints but does not dictate human gross anatomy or hemispheric decomposition.
-15. Routing, governance/authority, epistemic support, resource/QoS, plasticity, timing, and logical topology are separate runtime dimensions.
-16. Personification can shape presentation but does not independently own social action authority.
-17. Sexuality may own self-boundary state and willingness hypotheses but direct consent evidence and final external effect authority remain separately governed.
-18. Research/source material, model outputs, and repository integration do not automatically become documented science.
-19. Architecture conformance, implementation conformance, behavioral qualification, and scientific validation are separate claims.
-20. Qualification outcomes are target-, capability-, scope-, evidence-, and snapshot-bound; no PASS may silently become consciousness, personhood, or manufacturability proof.
-21. Repository-tree conformance does not guarantee repository-surface conformance. About/description/homepage/topics metadata can contradict the reusable template and must be checked independently.
+10. Affective state may modulate cognition and behavior but is not semantic truth, consent, identity, or effect authority.
+11. Homeostatic need, pain, threat, and urgency may alter salience/conation but are not commands or unrestricted permission.
+12. Essential continuity-bearing state cannot exist solely in a true external provider.
+13. A true external computational peripheral must be ablatable without uniquely removing an essential cognitive function; otherwise the substrate belongs inside the HC boundary.
+14. HC-1 is complete; HC-2 adds specialized acceleration; HC-3 adds richer distributed physiological affective substrate. Later generations extend rather than psychologically complete earlier ones.
+15. `DEGRADED_HC2 != HC1` and `DEGRADED_HC3 != HC2`: degraded capability does not rewrite generation identity.
+16. Human neuroscience informs mechanisms and constraints but does not dictate human gross anatomy or hemispheric decomposition.
+17. Routing, governance/authority, epistemic support, resource/QoS, plasticity, timing, and logical topology are separate runtime dimensions.
+18. Personification can shape presentation but does not independently own social action authority.
+19. Sexuality may own self-boundary state and willingness hypotheses but direct consent evidence and final external effect authority remain separately governed.
+20. Research/source material, model outputs, and repository integration do not automatically become documented science.
+21. Architecture conformance, implementation conformance, behavioral qualification, and scientific validation are separate claims.
+22. Qualification outcomes are target-, capability-, scope-, evidence-, and snapshot-bound; no PASS may silently become consciousness, personhood, or manufacturability proof.
+23. Repository-tree conformance does not guarantee repository-surface conformance. About/description/homepage/topics metadata can contradict the reusable template and must be checked independently.
 
 ## Current qualification and repository-surface debt
 
@@ -207,4 +217,4 @@ The first Warden architecture cut is `CONDITIONAL PASS` for its stated scope. Th
 
 ## Repository-management status
 
-Main is under active Warden integration. Compatible identity-neutral material may be committed directly after review. Four's secondary lane remains active and multi-threaded; Vera's lane remains hostile review. Remaining high-value work includes independent conformance challenge, repository-surface correction when tooling permits, provider-dependency audit, PR #1 classification, selective evidence verification, and disposition of any still-useful research/HC-1R mechanisms without silently adopting a redesign.
+Main is under active Warden integration. Compatible identity-neutral material may be committed directly after review. Four's secondary lane remains active and multi-threaded; Vera's lane remains hostile review. Remaining high-value work includes independent conformance challenge, repository-surface correction when tooling permits, provider-dependency audit, PR #1 PDF classification, selective evidence verification, and disposition of any still-useful research/HC-1R mechanisms without silently adopting a redesign.

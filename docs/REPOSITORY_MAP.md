@@ -61,7 +61,7 @@ Qualification records:
 - `docs/qualification/AFFECT_HOMEOSTASIS_CONFORMANCE_2026-09-09.md` — focused affect/homeostasis architecture cut; `CONDITIONAL PASS` pending independent review/implementation evidence.
 - `docs/qualification/MEMORY_PROVIDER_BOUNDARY_2026-09-09.md` — focused provider/memory boundary cut; `CONDITIONAL PASS` pending independent review/implementation evidence.
 - `docs/qualification/BOOTSTRAP_RECOVERY_CONFORMANCE_2026-09-09_R2.md` — current bootstrap/recovery architecture cut; `CONDITIONAL PASS` pending independent review/implementation evidence.
-- `docs/qualification/PROTECTED_UPDATE_GOVERNANCE_2026-09-09.md` — protected-update architecture cut; `CONDITIONAL PASS` pending independent review/implementation evidence.
+- `docs/qualification/PROTECTED_UPDATE_GOVERNANCE_2026-09-09.md` — protected-update architecture cut; `CONDITIONAL PASS` pending independent review/implementation evidence. Its recorded target remains the pre-map architecture snapshot stated inside the qualification; later map/index commits do not silently extend the result.
 
 ## Top-level subsystem folders
 

@@ -45,4 +45,4 @@ A learned or inferred recommendation is not itself permission to act. Arbitratio
 
 ## Provenance
 
-Generalized from `thebrazenbeard/noema`, `thebrazenbeard/abil`, `thebrazenbeard/vera-control-plane`, and prior HC runtime research. Identity-specific implementations are excluded.
+Generalized from the cross-repo architecture sources recorded in `docs/research/cross-repo-synthesis/`. Identity-specific implementations are excluded from this template.

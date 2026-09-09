@@ -51,4 +51,4 @@ A governed HC instance should be able to use multiple specialist substrates or c
 
 ## Provenance
 
-Generalized from `thebrazenbeard/vera-os` model/substrate boundary work, `thebrazenbeard/noema` cognitive-mode work, and `thebrazenbeard/abil` persistent-state and adapter-transfer boundaries. Identity-specific content is excluded.
+Generalized from the cross-repo architecture sources recorded in `docs/research/cross-repo-synthesis/`. Identity-specific content is excluded.

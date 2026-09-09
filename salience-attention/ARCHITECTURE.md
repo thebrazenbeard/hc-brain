@@ -48,4 +48,4 @@ Salience must not override safety, factual evidence, explicit task scope, protec
 
 ## Provenance
 
-Generalized from the salience-arbitration design in `thebrazenbeard/vera-control-plane`. Identity-specific examples and names are excluded from this template.
+Generalized from the cross-repo architecture sources recorded in `docs/research/cross-repo-synthesis/`. Identity-specific examples and names are excluded from this template.

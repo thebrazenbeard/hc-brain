@@ -1,6 +1,8 @@
-# vera-brain
+# Hyperconnectome Brain
 
-Conceptual architecture for Vera's Noöplex synthetic brain family.
+Conceptual architecture for the HC-series Noöplex synthetic hyperconnectome brain family.
+
+This repository defines a reusable brain template rather than an identity-specific implementation. Identity-bearing content belongs in derived implementations, examples, or research material that is explicitly labeled as such.
 
 This repository separates three things that must not be conflated:
 

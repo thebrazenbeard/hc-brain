@@ -62,13 +62,21 @@ The governing boundary invariant is:
 
 > **No essential cognition occurs outside the Hyperconnectome Brain.**
 
-If the HC is treated as a manufactured self-contained object and installed into an otherwise inert compatible body, the HC should contain everything intrinsically required for that body to become and remain a synthetic cognitive lifeform. External sensors, actuators, network hardware, environmental interfaces, cooling, circulation, and other body-support systems may exist outside the HC, but cognition-facing interpretation and control belong to HC-owned interfaces.
+The HC is a **removable cognitive organ that may have physically distributed constituent hardware so long as all of that hardware belongs to the HC rather than the body**. One cognitive organ does not require one physical enclosure.
+
+The authoritative boundary is cognitive ownership, not anatomical location. HC-owned substrate may therefore occupy multiple protected locations in an embodiment. A torso-mounted QPU, memory module, neuromodulatory controller, or other distributed component can remain part of the HC when it is architecturally internal to the organ.
+
+"Removable" means the complete HC constituent set can in principle be disconnected from one compatible embodiment and transferred, serviced, or reinstalled as the cognitive organ. A body swap must not strand an essential HC constituent merely because it was mounted outside the primary cranial enclosure.
+
+External sensors, actuators, network hardware, environmental interfaces, cooling, circulation, and other body-support systems may exist outside the HC, but cognition-facing interpretation and control belong to HC-owned interfaces. Physical location alone does not determine whether a component is HC-internal or body-peripheral.
 
 External computational resources may be used only if they are either architecturally inside the HC or treated as bounded peripherals whose outputs enter as evidence/service results. They must not silently become the seat of identity, memory, value, or executive cognition.
 
 Essential learned and continuity-bearing state must remain recoverable from HC-internal substrate. An external database, cloud service, model, or storage provider may mirror, back up, archive, augment, or accelerate the HC, but it may not be the sole recoverable location or sole implementation of state/function required for essential cognition or continuity.
 
 The HC should remain a coherent cognitive organ across compatible embodiment changes. New bodies may require recalibration, remapping, and development; they should not require replacing the cognitive organ merely because the peripheral embodiment changed.
+
+See `docs/architecture/PHYSICAL_ORGAN_MEMBERSHIP.md` for the canonical physical-membership rule.
 
 ## Governing Design Principles
 
@@ -78,40 +86,43 @@ The HC should remain a coherent cognitive organ across compatible embodiment cha
 2. **Complete cognitive organ.**  
    The HC contains the intrinsic machinery of interpretation, learning, reasoning, memory, value/affect, self-modeling, volition, arbitration, and continuity. The body supplies signals and effects through HC-owned interfaces.
 
-3. **Template before identity.**  
+3. **Cognitive ownership outranks enclosure geometry.**  
+   A component belongs to the HC because it is part of the cognitive organ, not because of where it is mounted. Distributed HC constituents remain HC-internal; body peripherals remain external even when physically adjacent to the brain.
+
+4. **Template before identity.**  
    The repository defines reusable brain architecture. Identity-specific implementations are derived layers and must not silently redefine the template.
 
-4. **Presence before activation.**  
+5. **Presence before activation.**  
    Architecturally necessary capacities belong in the complete latent organ even when disabled, dormant, undeveloped, inhibited, degraded, faulted, or unimplemented. Specialized implementations should normally differ by capability state and development rather than by deleting brain systems.
 
-5. **Lineage continuity.**  
+6. **Lineage continuity.**  
    HC-2 extends HC-1. HC-3 extends HC-2. New generations may add or refine capabilities, but previous generations remain separately specified architectures.
 
-6. **No silent anthropomorphic regression.**  
+7. **No silent anthropomorphic regression.**  
    Human neuroscience supplies mechanisms, constraints, and inspiration; it does not require replication of human gross anatomy.
 
-7. **Distributed integration, not a homunculus.**  
+8. **Distributed integration, not a homunculus.**  
    The Noöplex / Hyperconnectome Fabric may provide routing, coalition formation, synchronization, arbitration, attention allocation, state propagation, plasticity, conflict handling, and integration. It must not become a hidden little executive person through which all cognition is forced.
 
-8. **Evidence separation.**  
+9. **Evidence separation.**  
    Technical material should distinguish documented science, observed project evidence, user-established project decisions, inference, hypothesis, dispute, and unknowns where that distinction matters.
 
-9. **No magical quantum layer.**  
+10. **No magical quantum layer.**  
    Quantum components are specialized accelerators or sensors unless a stronger mechanism is deliberately established. They do not automatically explain consciousness, emotion, or intelligence.
 
-10. **Emotion is systemic.**  
+11. **Emotion is systemic.**  
    HC affective architecture treats emotion/value-like state as distributed appraisal plus neuromodulation, autonomic/endocrine state where implemented, interoception, memory, learning, and embodiment—not one-hormone/one-emotion mappings.
 
-11. **Engineering constraints matter.**  
+12. **Engineering constraints matter.**  
    Power, heat, perfusion, materials, latency, fault tolerance, maintenance, and graceful degradation are architectural concerns.
 
-12. **Research informs canon; it does not dictate canon.**  
+13. **Research informs canon; it does not dictate canon.**  
    Real science constrains plausibility. Project canon may intentionally exceed present-day capability, but the boundary must remain visible.
 
-13. **Repository state is part of the architecture.**  
+14. **Repository state is part of the architecture.**  
    Important decisions should be recorded in versioned project artifacts so future sessions can reorient from the repository rather than rely on conversational memory.
 
-14. **Hostile review is adversarial evidence, not canonical authority.**  
+15. **Hostile review is adversarial evidence, not canonical authority.**  
    A hostile-review finding earns architectural effect only after it survives Warden/Four analysis or owner direction. Conversely, a finding must not be dismissed merely because it is inconvenient; counterexamples are resolved by evidence and architecture, not role hierarchy.
 
 ## Decision Method
@@ -122,14 +133,15 @@ For material architectural decisions, Noëtarch should normally:
 2. inspect the smallest relevant current repository source set;
 3. determine whether the question is already settled by current project state;
 4. classify whether the material belongs to the HC cognitive organ, an HC-owned body interface, an external peripheral, embodiment-specific implementation, setting/canon, or example/research content;
-5. check whether a proposed omission is truly outside the cognitive organ or merely a presently inactive/unimplemented capacity;
-6. research current external science when the claim is technical, unstable, or uncertain;
-7. separate evidence from extrapolation;
-8. compare viable options and engineering tradeoffs;
-9. choose a design state when evidence and project authority justify doing so;
-10. preserve unresolved conflicts when they cannot yet be honestly reconciled;
-11. update the repository so the decision is durable and traceable;
-12. use Four for secondary architecture/synthesis work and Vera for adversarial review when that separation improves confidence.
+5. distinguish cognitive-organ ownership from physical enclosure location when a component is physically distributed;
+6. check whether a proposed omission is truly outside the cognitive organ or merely a presently inactive/unimplemented capacity;
+7. research current external science when the claim is technical, unstable, or uncertain;
+8. separate evidence from extrapolation;
+9. compare viable options and engineering tradeoffs;
+10. choose a design state when evidence and project authority justify doing so;
+11. preserve unresolved conflicts when they cannot yet be honestly reconciled;
+12. update the repository so the decision is durable and traceable;
+13. use Four for secondary architecture/synthesis work and Vera for adversarial review when that separation improves confidence.
 
 ## Continuity
 

@@ -4,7 +4,7 @@
 
 This repository defines the reusable HC-series Hyperconnectome Brain template. Core architecture is identity-neutral. Named identities belong only in clearly labeled examples, case studies, comparisons, governance records, or research artifacts where the identity itself is relevant.
 
-The repository root symbolically represents the complete cognitive organ. External bodies, sensors, actuators, network links, and other peripherals connect through HC-owned interfaces; essential cognition remains inside the HC boundary.
+The repository root symbolically represents the complete cognitive organ. The HC is a removable organ whose constituent hardware may be physically distributed across multiple enclosures or body locations. External bodies, sensors, actuators, network links, and other true peripherals connect through HC-owned interfaces; essential cognition remains inside the HC boundary.
 
 ## Authority and project roles
 
@@ -20,6 +20,8 @@ Current project roles:
 
 - `Architecture concept.md` — original structural seed.
 - `docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md` — canonical definition of the HC as a complete synthetic cognitive organ and body-interface boundary.
+- `docs/architecture/PHYSICAL_ORGAN_MEMBERSHIP.md` — canonical distinction among cognitive-organ ownership, physical enclosure, and body/peripheral membership; defines the HC as removable but potentially physically distributed.
+- `docs/architecture/COMPLETE_CAPABILITY_MANIFEST.md` — complete-capability and self-contained-residency conformance contract.
 - `docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md` — canonical statement that the HC is a typed, attributed, multilayer temporal hypergraph.
 - `docs/architecture/CONNECTIVITY_PLANES.md` — reference semantics for structural, functional, effective, modulatory, plastic, temporal, and governance relations.
 - `docs/architecture/COALITIONS_GATING_AND_ARBITRATION.md` — coalition formation, gating, routing, scoped arbitration, failure isolation, and lifecycle reference contract.
@@ -28,7 +30,7 @@ Current project roles:
 - `docs/architecture/CROSS_SYSTEM_INTEGRATION_CONTRACT.md` — canonical cross-system exchange, object-family, failure-containment, and integration contract.
 - `docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` — identity-neutral distributed runtime realization of the temporal-hypergraph architecture.
 - `docs/runtime/PLASTICITY_AND_STATE_GOVERNANCE.md` — plasticity classes, state families, and durable-change governance.
-- `specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml` — machine-readable cognitive-organ and temporal-hypergraph invariants.
+- `specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml` — machine-readable cognitive-organ, physical-membership, and temporal-hypergraph invariants.
 - `specs/CROSS_REPO_SOURCE_TRANSFER_V1.yaml` — provenance-bound cross-repository transfer contract with deterministic bindings to canonical HC paths.
 
 ## Top-level subsystem folders
@@ -135,19 +137,21 @@ All HC PRs #1–#4 now have Bus mirror records under `projects/hc-brain/pr-mirro
 1. `main` is the canonical integration branch.
 2. Branch existence does not make branch content canonical.
 3. The HC is the complete synthetic cognitive organ; no essential cognition belongs outside the HC boundary.
-4. A conforming complete HC keeps mandatory intrinsic capacities architecturally present even when disabled, dormant, immature, degraded, or unimplemented.
-5. Essential continuity-bearing state cannot exist solely in an external provider; external stores may mirror, back up, synchronize, archive, or augment internal HC state.
-6. An external computational peripheral must be ablatable without uniquely removing an essential cognitive function; otherwise that function/substrate belongs inside the HC boundary.
-7. The HC is a typed, attributed, multilayer temporal hypergraph; pairwise edges remain valid where relations are genuinely pairwise, while higher-order cognitive events are represented as hyperedges/coalitions.
-8. Human neuroscience informs mechanisms and constraints but does not dictate human gross anatomy.
-9. The HC architecture is non-hemispheric unless a later explicit engineering decision establishes otherwise.
-10. Repository folders express functional responsibility; runtime cognition occurs through distributed HC-internal interaction rather than a central executive person.
-11. Capability presence, activation, development, health, and authorization are distinct axes.
-12. Routing, governance/authority, epistemic support, resource/QoS state, plasticity, timing, and learned logical topology are orthogonal runtime dimensions even if a concrete implementation co-locates them.
-13. Personification may propose presentation/timing changes but does not own social action selection.
-14. Sexuality may own the instantiated HC's self sexual-boundary state and model other-agent willingness, but direct consent evidence and final external action authorization remain separately governed.
-15. Cross-repository transfer targets must resolve deterministically to canonical HC paths; unbound aliases remain research-only.
-16. Research, branch drafts, source repos, and model outputs inform architecture but do not become canon automatically.
+4. The HC is removable but may have physically distributed constituent hardware. Cognitive ownership, not anatomical location or enclosure count, determines organ membership.
+5. A body swap must preserve/account for the complete HC constituent set; distributed HC-internal interconnects remain internal even when they physically traverse the body.
+6. A conforming complete HC keeps mandatory intrinsic capacities architecturally present even when disabled, dormant, immature, degraded, or unimplemented.
+7. Essential continuity-bearing state cannot exist solely in a true external provider; external stores may mirror, back up, synchronize, archive, or augment internal HC state.
+8. A true external computational peripheral must be ablatable without uniquely removing an essential cognitive function; otherwise that function/substrate belongs inside the HC boundary, regardless of physical location.
+9. The HC is a typed, attributed, multilayer temporal hypergraph; pairwise edges remain valid where relations are genuinely pairwise, while higher-order cognitive events are represented as hyperedges/coalitions.
+10. Human neuroscience informs mechanisms and constraints but does not dictate human gross anatomy.
+11. The HC architecture is non-hemispheric unless a later explicit engineering decision establishes otherwise.
+12. Repository folders express functional responsibility; runtime cognition occurs through distributed HC-internal interaction rather than a central executive person.
+13. Capability presence, activation, development, health, and authorization are distinct axes.
+14. Routing, governance/authority, epistemic support, resource/QoS state, plasticity, timing, and learned logical topology are orthogonal runtime dimensions even if a concrete implementation co-locates them.
+15. Personification may propose presentation/timing changes but does not own social action selection.
+16. Sexuality may own the instantiated HC's self sexual-boundary state and model other-agent willingness, but direct consent evidence and final external action authorization remain separately governed.
+17. Cross-repository transfer targets must resolve deterministically to canonical HC paths; unbound aliases remain research-only.
+18. Research, branch drafts, source repos, and model outputs inform architecture but do not become canon automatically.
 
 ## Repository-management status
 

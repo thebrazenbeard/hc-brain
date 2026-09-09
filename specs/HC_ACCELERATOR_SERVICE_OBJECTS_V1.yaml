@@ -1,0 +1,430 @@
+schema_version: HC_ACCELERATOR_SERVICE_OBJECTS_V1
+status: TEMPLATE_MACHINE_COMPANION
+
+scope:
+  purpose: >-
+    Define generic HC service boundaries for specialized computational
+    accelerators without promoting accelerator execution into cognition,
+    identity, semantic truth, memory authority, or action authority, and
+    without depending on other unmerged feeder schemas.
+  canonical_dependencies:
+    hc2_generation: docs/architecture/HC2_NOOPLEX_Q.md
+    physical_engineering: docs/engineering/POWER_THERMAL_AND_DISTRIBUTED_ORGAN.md
+    authority_and_effect: basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md
+    lifecycle: basic operating instructions/SUBSYSTEM_LIFECYCLE_CONTRACT.md
+    bootstrap_safe_degradation: specs/HC_BOOTSTRAP_RECOVERY_V1.yaml
+    protected_updates: specs/HC_PROTECTED_UPDATE_GOVERNANCE_V1.yaml
+    core_invariants: specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml
+
+invariants:
+  - ACCELERATOR_SERVICE_NE_WHOLE_COGNITION
+  - ACCELERATOR_RESULT_NE_SEMANTIC_TRUTH
+  - ACCELERATOR_RESULT_NE_ACTION_AUTHORITY
+  - ACCELERATOR_RESULT_NE_IDENTITY_STATE
+  - OFFLOAD_REQUEST_NE_OFFLOAD_SUITABLE
+  - ACCELERATOR_AVAILABLE_NE_ACCELERATOR_SUITABLE
+  - HARDWARE_AVAILABLE_NE_ALGORITHM_ADVANTAGE
+  - THEORETICAL_SPEEDUP_NE_END_TO_END_SPEEDUP
+  - ACCELERATOR_UNAVAILABLE_NE_WHOLE_HC_UNAVAILABLE
+  - WORKLOAD_MIGRATION_NE_IDENTITY_MIGRATION
+  - PHYSICAL_LOCATION_NE_HC_MEMBERSHIP
+  - QUANTUM_NE_GENERIC_FASTER_THINKING
+  - COMPUTED_NE_VERIFIED
+  - VERIFICATION_STATUS_NE_VERIFICATION_EVIDENCE
+  - VERIFIED_EXECUTION_NE_SEMANTIC_CORRECTNESS
+  - FALLBACK_SUCCESS_NE_ACCELERATOR_REPAIRED
+  - ACCELERATOR_QUEUE_PRIORITY_NE_COGNITIVE_TRUTH
+  - ACCELERATOR_QUEUE_PRIORITY_NE_ACTION_PERMISSION
+  - AUTHENTICATED_ACCELERATOR_NE_INFALLIBLE_ACCELERATOR
+  - COARSE_HEALTH_LABEL_NE_CAPABILITY_DESCRIPTION
+
+accelerator_classes:
+  examples:
+    - PHOTONIC
+    - NEUROMORPHIC
+    - ANALOG_OR_MEMRISTIVE
+    - GPU_OR_NPU_LIKE
+    - QUANTUM
+    - OPTIMIZATION_ENGINE
+    - SIMULATION_ENGINE
+    - OTHER_SPECIALIZED_SUBSTRATE
+  rule: >-
+    Accelerator class describes implementation/capability and does not itself
+    determine HC membership, authority, epistemic status, or superiority.
+
+membership:
+  HC_INTERNAL_ACCELERATOR:
+    condition: >-
+      Explicit HC constituent or unique implementation of an essential
+      generation/build cognitive capability.
+    consequences:
+      - INCLUDED_IN_HC_CONSTITUENT_SET
+      - HC_INTERNAL_INTERCONNECT
+      - CANONICAL_HC_FAULT_RECOVERY_AND_UPDATE_RULES_APPLY
+  EXTERNAL_COMPUTATIONAL_PERIPHERAL:
+    condition: >-
+      Optional augmentation or acceleration where complete essential cognition
+      remains available after peripheral ablation.
+    consequences:
+      - OUTPUT_ENTER_AS_BOUNDED_TYPED_RESULT
+      - LOSS_MAY_REMOVE_PERFORMANCE_OR_OPTIONAL_CAPABILITY
+      - LOSS_MUST_NOT_REMOVE_ONLY_IMPLEMENTATION_OF_REQUIRED_COGNITION
+  rule:
+    - ESSENTIAL_UNIQUE_IMPLEMENTATION_IMPLIES_HC_INTERNAL_CLASSIFICATION
+
+object_families:
+  AcceleratorCapabilityProfile:
+    class: CAPABILITY_DESCRIPTION
+    required_concepts:
+      - accelerator_ref
+      - accelerator_class
+      - supported_workload_or_algorithm_classes
+      - availability_state
+      - provenance
+    optional_concepts:
+      - hardware_or_service_revision
+      - precision_modes
+      - latency_profile
+      - resource_profile
+      - thermal_profile
+      - error_model
+      - verification_methods
+      - privacy_or_data_boundary
+      - fallback_capabilities
+      - HC_membership_class
+      - currentness_or_expiry
+    rules:
+      - CAPABILITY_PROFILE_DOES_NOT_CREATE_OFFLOAD_REQUIREMENT
+      - CAPABILITY_PROFILE_DOES_NOT_ESTABLISH_THEORETICAL_ADVANTAGE_FOR_ALL_WORKLOADS
+
+  AcceleratorSuitabilityAssessment:
+    class: DECISION_SUPPORT_STATE
+    required_concepts:
+      - workload_ref
+      - candidate_accelerator_ref
+      - suitability_status
+      - evidence_basis
+      - provenance
+    optional_concepts:
+      - availability_ref
+      - expected_speed_or_quality_benefit
+      - preparation_cost
+      - transport_cost
+      - queue_cost
+      - execution_cost
+      - decode_or_measure_cost
+      - verification_cost
+      - integration_cost
+      - resource_or_thermal_cost
+      - privacy_or_integrity_cost
+      - deadline_or_QoS
+      - fallback_ref
+      - uncertainty
+      - currentness_or_expiry
+    suitability_statuses:
+      - SUITABLE
+      - NOT_SUITABLE
+      - POSSIBLY_SUITABLE
+      - INSUFFICIENT_EVIDENCE
+    rules:
+      - END_TO_END_COST_MATTERS
+      - THEORETICAL_SPEEDUP_ALONE_IS_INSUFFICIENT
+      - SUITABILITY_STATUS_DOES_NOT_ENCODE_AVAILABILITY
+      - UNAVAILABLE_ACCELERATOR_MAY_STILL_BE_ALGORITHMICALLY_SUITABLE
+
+  AcceleratorRequest:
+    class: BOUNDED_COMPUTATION_REQUEST
+    required_concepts:
+      - request_id
+      - workload_ref
+      - accelerator_ref
+      - input_or_encoding_ref
+      - provenance
+    optional_concepts:
+      - requested_algorithm_or_mode
+      - precision_requirement
+      - deadline
+      - resource_budget
+      - privacy_constraints
+      - integrity_constraints
+      - authority_or_allocation_ref
+      - expected_verification_method
+      - currentness_or_expiry
+    rules:
+      - REQUEST_DOES_NOT_SELF_AUTHORIZE_EXTERNAL_EFFECTS
+      - REQUEST_DOES_NOT_SELF_PROMOTE_TO_HIGH_PRIORITY
+      - AUTHORITY_OR_ALLOCATION_REF_USES_CANONICAL_SCOPE_AND_CURRENTNESS_RULES_WHEN_REQUIRED
+
+  AcceleratorExecutionReceipt:
+    class: EXECUTION_RECEIPT
+    required_concepts:
+      - request_ref
+      - accelerator_ref
+      - execution_status
+      - execution_time_or_window
+      - provenance
+    optional_concepts:
+      - hardware_or_service_revision
+      - algorithm_compiler_or_configuration_revision
+      - measurement_or_decode_ref
+      - resource_cost
+      - thermal_cost
+      - error_correction_or_integrity_ref
+      - fault_or_degradation_state
+      - replay_or_idempotency_ref
+    rules:
+      - EXECUTION_RECEIPT_DOES_NOT_ESTABLISH_RESULT_CORRECTNESS
+      - EXECUTION_ACKNOWLEDGED_NE_RESULT_VERIFIED
+
+  AcceleratorResult:
+    class: BOUNDED_COMPUTATIONAL_RESULT
+    required_concepts:
+      - request_ref
+      - accelerator_ref
+      - result_payload_or_ref
+      - evidence_class
+      - provenance
+    optional_concepts:
+      - execution_receipt_ref
+      - hardware_or_service_revision
+      - algorithm_compiler_or_configuration_revision
+      - input_or_encoding_ref
+      - precision_or_error_bounds
+      - confidence_or_uncertainty
+      - distribution_or_samples
+      - resource_or_thermal_cost
+      - integrity_state
+      - verification_status
+      - failure_or_degradation_state
+      - currentness_or_expiry
+    rules:
+      - RESULT_ENTERS_HC_AS_TYPED_RESULT
+      - RESULT_DOES_NOT_SELF_PROMOTE_TO_BELIEF
+      - RESULT_DOES_NOT_SELF_PROMOTE_TO_AUTHORITY
+      - MULTIMODAL_OR_STOCHASTIC_RESULT_MAY_REMAIN_DISTRIBUTIONAL
+      - ROUTING_OR_WRAPPING_DOES_NOT_UPGRADE_EVIDENCE_OR_PROVENANCE_CLASS
+      - RESULT_SHAPE_MUST_SUPPORT_LATER_GENERIC_WRAPPING_WITHOUT_INVENTED_PROVENANCE_OR_EVIDENCE_METADATA
+
+  AcceleratorVerification:
+    class: RESULT_VERIFICATION_STATE
+    required_concepts:
+      - result_ref
+      - verification_method
+      - verification_status
+      - evidence_refs
+      - provenance
+    optional_concepts:
+      - residual_or_property_checks
+      - redundant_run_refs
+      - cross_method_refs
+      - calibration_refs
+      - known_control_refs
+      - confidence
+      - failure_state
+      - claim_ceiling
+    verification_methods:
+      - DETERMINISTIC_RECOMPUTATION
+      - PROPERTY_OR_INVARIANT_CHECK
+      - REDUNDANT_RUN
+      - CROSS_METHOD_COMPARISON
+      - STATISTICAL_CALIBRATION
+      - RESIDUAL_CHECK
+      - HARDWARE_OR_ERROR_CORRECTION_RECEIPT
+      - KNOWN_CONTROL_COMPARISON
+      - OTHER_DECLARED_METHOD
+    rules:
+      - VERIFICATION_STATUS_REQUIRES_EVIDENCE_LINEAGE
+      - VERIFIED_EXECUTION_NE_SEMANTIC_CORRECTNESS
+      - VERIFICATION_CLAIM_CEILING_MATCHES_METHOD
+
+  AcceleratorDegradationState:
+    class: CAPABILITY_HEALTH_DESCRIPTION
+    required_concepts:
+      - accelerator_ref
+      - state
+      - retained_capabilities
+      - unavailable_capabilities
+      - currentness
+      - provenance
+    states:
+      - AVAILABLE
+      - DEGRADED
+      - CALIBRATION_REQUIRED
+      - THERMALLY_THROTTLED
+      - RESOURCE_EXHAUSTED
+      - FAULTED
+      - PARTITIONED
+      - UNAVAILABLE
+    optional_concepts:
+      - canonical_lifecycle_health_ref
+      - bootstrap_or_recovery_ref
+      - fallback_refs
+      - confidence_or_precision_penalties
+      - latency_or_resource_penalties
+      - repair_prerequisites
+      - affected_dependents
+      - expected_duration
+    rules:
+      - DEGRADED_NE_ABSENT
+      - COARSE_STATE_LABEL_DOES_NOT_REPLACE_FUNCTION_LEVEL_DESCRIPTION
+      - FALLBACK_SERVICE_NE_SUBJECT_REPAIR
+      - OBJECT_DESCRIBES_ACCELERATOR_CAPABILITY_AND_DOES_NOT_REDEFINE_CANONICAL_LIFECYCLE_HEALTH
+      - SAFE_DEGRADATION_AND_RETURN_TO_SERVICE_HAND_OFF_TO_CANONICAL_BOOTSTRAP_RECOVERY
+
+  AcceleratorFallbackProfile:
+    class: FUNCTIONAL_FALLBACK_DESCRIPTION
+    required_concepts:
+      - source_accelerator_or_path_ref
+      - fallback_path_ref
+      - preserved_functions
+      - lost_or_degraded_functions
+      - provenance
+    optional_concepts:
+      - latency_delta
+      - throughput_delta
+      - precision_delta
+      - energy_delta
+      - uncertainty_delta
+      - qualification_refs
+    rules:
+      - SAME_OUTPUT_SHAPE_DOES_NOT_PROVE_FUNCTIONAL_EQUIVALENCE
+
+  AcceleratorUpgradeRecord:
+    class: ORGAN_OR_SERVICE_CHANGE_RECORD
+    required_concepts:
+      - prior_accelerator_ref
+      - successor_accelerator_ref
+      - compatibility_status
+      - provenance
+    optional_concepts:
+      - capability_differences
+      - recalibration_requirements
+      - relearning_requirements
+      - result_distribution_changes
+      - qualification_refs
+      - rollback_or_forward_repair_ref
+      - HC_constituent_set_change
+      - protected_update_ref
+    rules:
+      - ACCELERATOR_REPLACEMENT_DOES_NOT_IMPLY_IDENTITY_REPLACEMENT
+      - HC_INTERNAL_CONSTITUENT_REPLACEMENT_USES_CANONICAL_REPAIR_UPDATE_AND_REQUALIFICATION_SEMANTICS
+
+interoperability_requirements:
+  bounded_result_minimum:
+    - service_or_substrate_identity
+    - request_identity
+    - result_payload_or_ref
+    - evidence_class
+    - provenance
+    - revision_when_material
+    - uncertainty_when_available
+    - integrity_or_verification_refs_when_material
+    - currentness_or_expiry_when_material
+  degradation_minimum:
+    - subject_identity
+    - retained_functions
+    - unavailable_functions
+    - currentness
+    - provenance
+  rules:
+    - NO_UNMERGED_FEEDER_SCHEMA_IS_REQUIRED_FOR_ACCELERATOR_RESULT_OR_DEGRADATION_REPRESENTATION
+    - LATER_CANONICAL_WRAPPING_MUST_NOT_REQUIRE_INVENTING_MISSING_EVIDENCE_OR_PROVENANCE
+    - DEGRADATION_INTEROP_MUST_PRESERVE_FUNCTION_LEVEL_SCOPE
+
+service_path:
+  conceptual_sequence:
+    - TASK_OR_HYPOTHESIS
+    - SUITABILITY_ASSESSMENT
+    - AVAILABILITY_AND_HEALTH_CHECK
+    - ENCODE_OR_COMPILE
+    - AUTHORIZE_OR_ALLOCATE
+    - EXECUTE
+    - MEASURE_OR_DECODE
+    - VALIDATE
+    - RETURN_TYPED_RESULT
+    - INTEGRATE
+
+end_to_end_cost_model:
+  conceptual_terms:
+    - PREPARE
+    - TRANSPORT
+    - QUEUE
+    - EXECUTE
+    - MEASURE_OR_DECODE
+    - VERIFY
+    - INTEGRATE
+  rules:
+    - OFFLOAD_DECISION_USES_END_TO_END_COST_WHEN_MATERIAL
+
+quantum_specific_rules:
+  - NO_GENERIC_SPEEDUP_ASSUMPTION
+  - NO_DEFAULT_QUANTUM_ADVANTAGE_FOR_ORDINARY_COGNITION
+  - QPU_NE_SEAT_OF_IDENTITY_OR_CONSCIOUSNESS
+  - WARM_COGNITIVE_SUBSTRATE_NE_REQUIRED_TO_REMAIN_QUANTUM_ENTANGLED_WITH_QPU
+  - QUANTUM_RESULT_RETURNS_AS_TYPED_RESULT
+  - ERROR_CORRECTION_PACKAGING_AND_CONTROL_OVERHEAD_MUST_BE_ACCOUNTED_FOR_WHEN_MATERIAL
+
+photonic_and_analog_rules:
+  - PHOTON_USE_NE_QUANTUM_COMPUTATION
+  - INTERFERENCE_OR_ANALOG_PARALLELISM_NE_QUANTUM_ADVANTAGE
+  - NEUROMORPHIC_OR_ANALOG_ACCELERATION_NE_EPISTEMIC_AUTHORITY
+
+resource_integration:
+  relevant_domains:
+    - POWER
+    - THERMAL
+    - BANDWIDTH
+    - SYNCHRONIZATION
+    - QUEUE_CAPACITY
+    - CALIBRATION
+    - ERROR_CORRECTION_OR_CONTROL_OVERHEAD
+  rules:
+    - RESOURCE_PRESSURE_MAY_CHANGE_SCHEDULING_NOT_SEMANTIC_TRUTH
+    - RESOURCE_PRIORITY_DOES_NOT_CREATE_EFFECT_AUTHORITY
+
+privacy_and_integrity:
+  minimize_sensitive_export: true
+  sensitive_state_examples:
+    - AUTOBIOGRAPHICAL_MEMORY
+    - CONTINUITY_IDENTITY_STATE
+    - PRIVATE_PERSON_MODELS
+    - PRIVATE_AFFECTIVE_STATE
+    - CREDENTIALS_OR_CAPABILITY_SECRETS
+    - PROTECTED_CONFIGURATION
+  rules:
+    - AUTHENTICATED_ACCELERATOR_NE_INFALLIBLE_ACCELERATOR
+    - EXTERNAL_ACCELERATOR_RESULT_REMAINS_TYPED_BOUNDED_EVIDENCE
+
+canonical_handoffs:
+  membership_and_generation:
+    contracts:
+      - docs/architecture/HC2_NOOPLEX_Q.md
+      - docs/engineering/POWER_THERMAL_AND_DISTRIBUTED_ORGAN.md
+    rule: ACCELERATOR_OBJECTS_DO_NOT_REDEFINE_HC_MEMBERSHIP_OR_GENERATION_LINEAGE
+  authority_effects:
+    contract: basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md
+    rule: OFFLOAD_ALLOCATION_QUEUE_PRIORITY_OR_HARDWARE_ACCESS_DOES_NOT_CREATE_EFFECT_AUTHORITY
+  lifecycle_recovery:
+    contract: specs/HC_BOOTSTRAP_RECOVERY_V1.yaml
+    rule: ACCELERATOR_DEGRADATION_INFORMS_BUT_DOES_NOT_REDEFINE_SAFE_DEGRADATION_OR_RECOVERY
+  protected_updates:
+    contract: specs/HC_PROTECTED_UPDATE_GOVERNANCE_V1.yaml
+    rule: HC_INTERNAL_ACCELERATOR_REPLACEMENT_OR_PROTECTED_CONFIGURATION_CHANGE_USES_CANONICAL_UPDATE_GOVERNANCE
+
+hostile_test_classes:
+  - NO_ADVANTAGE_WORKLOAD
+  - SUITABLE_BUT_UNAVAILABLE_ACCELERATOR
+  - QUANTUM_MYSTIFICATION
+  - ENCODING_OVERHEAD_DOMINATES
+  - OPTIONAL_ACCELERATOR_ABLATION
+  - REQUIRED_INTERNAL_ACCELERATOR_ABLATION
+  - STOCHASTIC_RESULT_PRESERVATION
+  - VERIFICATION_WITHOUT_EVIDENCE
+  - AUTHENTICATED_WRONG_ACCELERATOR
+  - SELF_CONTAINED_RESULT_REPRESENTATION
+  - COARSE_DEGRADATION_WITHOUT_FUNCTION_SCOPE
+  - FALLBACK_REPAIR_DISTINCTION
+  - SENSITIVE_DATA_EXPORT_MINIMIZATION
+  - ACCELERATOR_UPGRADE_DRIFT
+  - QUEUE_PRIORITY_AUTHORITY_LEAK
+  - SUPPLIED_CAPABILITY_ACCOUNTING

@@ -8,19 +8,7 @@ The resolver handles bounded contradictions, ambiguous references, incompatible 
 
 ## Conflict classes
 
-The resolver should distinguish at least:
-
-- contradictory propositions;
-- ambiguous semantic/pragmatic interpretations;
-- competing current-state heads;
-- stale dependency chains after correction;
-- incompatible embodiment/calibration state;
-- failed or expired routes;
-- duplicate/idempotency conflict;
-- action-policy conflict;
-- evidence/provenance mismatch;
-- unresolved social/person-model disagreement;
-- synchronization/version conflict.
+The resolver should distinguish at least contradictory propositions, ambiguous semantic/pragmatic interpretations, competing current-state heads, stale dependency chains after correction, incompatible embodiment/calibration state, failed or expired routes, duplicate/idempotency conflict, action-policy conflict, evidence/provenance mismatch, unresolved social/person-model disagreement, and synchronization/version conflict.
 
 Different conflict classes may require different repair mechanisms.
 
@@ -28,14 +16,7 @@ Different conflict classes may require different repair mechanisms.
 
 When a source claim is corrected or invalidated, only dependent conclusions should become ineligible by default.
 
-Useful repair metadata includes:
-
-- invalidated source;
-- dependency edges;
-- affected conclusions/actions;
-- surviving independent state;
-- newly unknown fields;
-- repair/recompute requirement.
+Useful repair metadata includes invalidated source, dependency edges, affected conclusions/actions, surviving independent state, newly unknown fields, and repair/recompute requirement.
 
 `CORRECTION != GLOBAL_RESET`
 
@@ -56,17 +37,7 @@ A generic bounded process is:
 
 ## Dead-letter behavior
 
-State or messages that cannot be safely interpreted, routed, incorporated, or acted upon should not disappear silently. A dead-letter/unresolved surface should preserve:
-
-- original envelope/content reference;
-- failure stage;
-- failure code;
-- attempted route or consumer;
-- diagnostic details;
-- applicability/scope;
-- retry count;
-- replay eligibility/state;
-- timestamps and provenance.
+State or messages that cannot be safely interpreted, routed, incorporated, or acted upon should not disappear silently. A dead-letter/unresolved surface should preserve the original envelope/content reference, failure stage/code, attempted route or consumer, diagnostic details, applicability/scope, retry count, replay eligibility/state, timestamps, and provenance.
 
 Dead-letter state is not necessarily permanent failure. It may be replayed after a capability, schema, route, or context change.
 
@@ -82,6 +53,6 @@ Global halt remains available for genuinely global integrity or safety failures.
 
 Resolver output can establish that technical conflict has been repaired. It does not necessarily decide semantic truth, moral correctness, identity, consent, or value questions. Those remain with their appropriate systems and evidence contracts.
 
-## Provenance basis
+## Provenance
 
-Generalized from Radar reconciliation/dead-letter mechanisms, fail-closed state-head selection, Semantic Atlas correction/supersession discipline, and HC dependency-aware arbitration.
+Integrated from `four/cross-repo-synthesis-v1` after Warden review.

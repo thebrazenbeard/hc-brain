@@ -30,37 +30,11 @@ Exception/negative states:
 
 ## Capability manifest
 
-An admitted interface should expose, where applicable:
-
-- channel/interface identity;
-- modality or effect class;
-- read/write direction;
-- units/encoding/transport;
-- sampling/update behavior;
-- latency/jitter;
-- dynamic range and saturation;
-- spatial/body attachment scope;
-- calibration basis/version;
-- confidence/reliability;
-- write/action capabilities;
-- safety/consequence class;
-- failure and disconnect semantics;
-- embodiment binding;
-- provenance and test evidence.
+An admitted interface should expose, where applicable, channel/interface identity, modality/effect class, read/write direction, units/encoding/transport, sampling/update behavior, latency/jitter, dynamic range/saturation, spatial/body attachment scope, calibration basis/version, confidence/reliability, write/action capabilities, safety/consequence class, failure/disconnect semantics, embodiment binding, provenance, and test evidence.
 
 ## Bounded validation
 
-Validation claims must be scoped to the operating conditions actually tested. Useful admission tests include:
-
-- known positive condition;
-- known negative/sham condition;
-- remount/reconnection repeatability;
-- perturbation of likely confounders;
-- barrier/occlusion tests;
-- saturation and range checks;
-- timing/latency verification;
-- independent corroboration where available;
-- cheapest decisive kill test for the claimed capability.
+Validation claims must be scoped to the operating conditions actually tested. Useful admission tests include known positive and negative/sham conditions, remount/reconnection repeatability, confounder perturbation, barrier/occlusion tests, saturation/range checks, timing/latency verification, independent corroboration where available, and the cheapest decisive kill test for the claimed capability.
 
 A passed test establishes only the bounded claim tested.
 
@@ -88,6 +62,6 @@ Calibration and learned mapping are bound to embodiment/interface identity. Tran
 
 An external model/service can be admitted as a computational peripheral with declared input/output contract, provenance, latency, failure mode, and evidence ceiling. Its output enters as evidence/result, not direct internal belief or authority.
 
-## Provenance basis
+## Provenance
 
-Generalized from Skeleton Key sensor admission/kill-test discipline, ABIL adapter boundaries, UNVTRSLR channel neutrality, and the HC body-interface boundary.
+Integrated from `four/cross-repo-synthesis-v1` after Warden review.

@@ -78,3 +78,7 @@ without rewriting history to claim the impulse never existed.
 ## Cross-system interfaces
 
 Strong coupling is expected with cognition, conation, affect, salience/attention, memory, chronology, social modeling, personification, somatics, self identity, resolver, and neuroplasticity.
+
+## Provenance
+
+Integrated from `four/cross-repo-synthesis-v1` after Warden review and retained as identity-neutral subsystem architecture.

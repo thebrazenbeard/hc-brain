@@ -83,20 +83,12 @@ A body swap or material actuator change invalidates incompatible learned mapping
 
 ## Closed-loop execution
 
-Motor execution should compare expected and observed consequences continuously where feedback exists. Material deviation may trigger:
-
-- correction;
-- replanning;
-- degraded-mode control;
-- abort/inhibit;
-- body-schema update;
-- fault isolation;
-- memory/plasticity evidence.
+Motor execution should compare expected and observed consequences continuously where feedback exists. Material deviation may trigger correction, replanning, degraded-mode control, abort/inhibit, body-schema update, fault isolation, or memory/plasticity evidence.
 
 ## External protective reflexes
 
 A body may contain external local protective circuits for hard-real-time damage prevention. Such reflexes are peripheral safety mechanisms, not external cognition. Their activation and state should be observable to the HC when feasible.
 
-## Provenance basis
+## Provenance
 
-Generalized from ABIL's independent safety/action gateway, Skeleton Key consequence-bounded testing, Project Achilles consequence classification, Noema action arbitration, and existing HC kinesis/body-interface design.
+Integrated from `four/cross-repo-synthesis-v1` after Warden review and generalized to the current cognitive-organ boundary.

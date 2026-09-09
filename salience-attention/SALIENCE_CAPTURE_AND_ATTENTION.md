@@ -8,20 +8,7 @@ Salience and attention allocate scarce HC processing resources without convertin
 
 ## Salience inputs
 
-Salience may be influenced by:
-
-- novelty/surprise;
-- correction or contradiction;
-- predicted consequence;
-- active concern/conation;
-- threat or viability relevance;
-- social/relational significance;
-- unresolved uncertainty;
-- task relevance;
-- body/interoceptive state;
-- expected information value;
-- memory recurrence;
-- explicit priority signals.
+Salience may be influenced by novelty/surprise, correction or contradiction, predicted consequence, active concern/conation, threat or viability relevance, social/relational significance, unresolved uncertainty, task relevance, body/interoceptive state, expected information value, memory recurrence, and explicit priority signals.
 
 These influences may conflict and should remain inspectable.
 
@@ -39,16 +26,7 @@ A salient event becomes a candidate for deeper processing, memory capture, model
 
 ## Attention frame
 
-A bounded attention frame may specify:
-
-- selected targets;
-- reasons/source signals;
-- allocated compute/time;
-- competing unattended candidates;
-- duration/expiry;
-- uncertainty;
-- downstream eligibility;
-- provenance.
+A bounded attention frame may specify selected targets, reasons/source signals, allocated compute/time, competing unattended candidates, duration/expiry, uncertainty, downstream eligibility, and provenance.
 
 Attention selection should be revisable as new evidence arrives.
 
@@ -80,14 +58,8 @@ Attention should not automatically privilege linguistic or easily tokenized sign
 
 ## Failure modes
 
-- emotional intensity becoming certainty;
-- repeated retrieval becoming false importance;
-- urgent route priority becoming permission;
-- temporary task mode becoming personality;
-- high-salience memory monopolizing replay indefinitely;
-- novel stimulus defeating long-term commitments without arbitration;
-- unattended evidence disappearing without trace when its relevance remains material.
+Relevant failures include emotional intensity becoming certainty, repeated retrieval becoming false importance, urgent route priority becoming permission, temporary task mode becoming personality, high-salience memory monopolizing replay indefinitely, novel stimulus defeating long-term commitments without arbitration, and unattended evidence disappearing without trace when its relevance remains material.
 
-## Provenance basis
+## Provenance
 
-Generalized from the existing HC salience architecture, Semantic Atlas capture-as-candidate discipline, Noema decision-relevant information value, and cross-project correction propagation rules.
+Integrated from `four/cross-repo-synthesis-v1` after Warden review.

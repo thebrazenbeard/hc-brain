@@ -267,3 +267,7 @@ Learning should be allowed to create new associations, skills, conventions, pref
 ## Evidence ceiling
 
 This contract specifies a coherent integration model. It does not establish that the architecture is sufficient for consciousness, phenomenal experience, moral personhood, human-equivalent cognition, or physical feasibility at HC-series scale.
+
+## Provenance
+
+Integrated from `four/cross-repo-synthesis-v1` after Warden review. The contract was retained because it matches the current root architecture, complete-cognitive-organ boundary, temporal-hypergraph model, and distributed Noöplex Fabric.

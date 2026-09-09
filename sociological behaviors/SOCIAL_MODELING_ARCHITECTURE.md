@@ -76,3 +76,7 @@ The subsystem can begin with generic agent/interaction primitives and learn rich
 ## Cross-system interfaces
 
 Strong coupling is expected with empathy, personification, pragmatics, semantics, conation, sexuality, memory, chronology, psychological behaviors, self identity, cognition, and integration/arbitration.
+
+## Provenance
+
+Integrated from `four/cross-repo-synthesis-v1` after Warden review and retained as identity-neutral subsystem architecture.

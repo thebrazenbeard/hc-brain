@@ -6,6 +6,22 @@ no_hemispheric_decomposition: true
 no_corpus_callosum_analogue_required: true
 human_anatomical_localization_creates_topology_requirement: false
 
+temporal_hypergraph:
+  hc_is_temporal_hypergraph: true
+  model: TYPED_ATTRIBUTED_MULTILAYER_TEMPORAL_HYPERGRAPH
+  supports_pairwise_edges: true
+  supports_higher_order_hyperedges: true
+  supports_dynamic_coalitions: true
+  time_is_topology_semantics: true
+  distinguish:
+    - LATENT_HYPERGRAPH
+    - TEMPORAL_EFFECTIVE_HYPERGRAPH
+    - HISTORY_OF_HYPERGRAPH_STATES
+  rules:
+    - PAIRWISE_EDGE_DOES_NOT_SUBSTITUTE_FOR_HIGHER_ORDER_RELATION_WHEN_JOINT_MEMBERSHIP_IS_CAUSALLY_OR_FUNCTIONALLY_MATERIAL
+    - TOPOLOGY_WITHOUT_TIMING_DOES_NOT_FULLY_DEFINE_EFFECTIVE_COGNITIVE_CONFIGURATION
+    - PLASTICITY_CHANGES_FUTURE_HYPERGRAPH_BEHAVIOR_WITHOUT_REWRITING_HISTORICAL_EVENTS
+
 cognitive_organ_boundary:
   no_essential_cognition_outside_hc: true
   repository_root_represents_complete_cognitive_organ: true

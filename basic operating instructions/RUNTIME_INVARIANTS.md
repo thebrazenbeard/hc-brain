@@ -14,11 +14,13 @@ External sensors, actuators, databases, model services, and computational periph
 
 ## Topology
 
+`TEMPORAL_HYPERGRAPH_ARCHITECTURE`
+
 `NO_HEMISPHERIC_DECOMPOSITION`
 
 `NO_HOMUNCULAR_EXECUTIVE`
 
-Subsystem folders are ownership/packaging boundaries; runtime cognition is distributed through the Noöplex Fabric.
+Subsystem folders are ownership/packaging boundaries; runtime cognition is distributed through the Noöplex Fabric across typed pairwise and higher-order temporal relations.
 
 ## State separation
 
@@ -109,3 +111,7 @@ Every subsystem should be able to distinguish source evidence, derived state, cu
 ## Evidence ceiling
 
 A subsystem may only claim what its evidence and validation support. Engineering convenience, file placement, component naming, or successful task completion do not by themselves prove cognition, semantics, causation, consciousness, personhood, or universal competence.
+
+## Provenance
+
+Integrated from `four/cross-repo-synthesis-v1` after Warden review, with the temporal-hypergraph invariant made explicit to match canonical architecture.

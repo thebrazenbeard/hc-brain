@@ -8,25 +8,7 @@ Routing connects HC subsystems through typed, provenance-bearing, failure-visibl
 
 ## Message/event envelope
 
-A routed internal event should be capable of carrying:
-
-- stable message/event identity;
-- schema version;
-- source subsystem or coalition;
-- intended audience/target capability;
-- domain;
-- intent/function;
-- priority;
-- root task/episode identity when applicable;
-- correlation identity;
-- causal-parent identity;
-- acknowledgement requirement;
-- expiration/TTL;
-- source references/provenance;
-- content hash and idempotency key where repeat delivery matters;
-- payload;
-- projection/incorporation state;
-- authority reference when material.
+A routed internal event should be capable of carrying stable message/event identity, schema version, source subsystem or coalition, intended audience/target capability, domain, intent/function, priority, root task/episode identity when applicable, correlation identity, causal-parent identity, acknowledgement requirement, expiration/TTL, source references/provenance, content hash and idempotency key where repeat delivery matters, payload, projection/incorporation state, and authority reference when material.
 
 Routing metadata must not be mistaken for semantic truth or action permission.
 
@@ -76,16 +58,7 @@ A successful route may create plasticity evidence but never changes durable rout
 
 ## Plasticity classes
 
-Routing-related durable updates may include:
-
-- connection weight change;
-- new/remapped capability association;
-- inhibition/gating change;
-- fault-compensation route;
-- learned context/regime route;
-- latency/reliability adaptation;
-- structural hyperedge creation/removal;
-- modality calibration change.
+Routing-related durable updates may include connection weight change, new/remapped capability association, inhibition/gating change, fault-compensation route, learned context/regime route, latency/reliability adaptation, structural hyperedge creation/removal, and modality calibration change.
 
 Every material durable update should carry scope, provenance, evidence, version/supersession, reversibility/rollback information where applicable, and a learning class.
 
@@ -97,6 +70,6 @@ Repeatedly selected pathways must not silently become identity, value, or perman
 
 Routing is non-hemispheric and function/capability based. Dynamic specialization may emerge without imposing human lobe or left/right cerebral structure.
 
-## Provenance basis
+## Provenance
 
-Generalized from Radar message/subscription schemas, Chat Communication Bus routing principles, existing HC routing architecture, and HC plasticity research.
+Integrated from `four/cross-repo-synthesis-v1` after Warden review.

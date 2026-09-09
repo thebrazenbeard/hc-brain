@@ -15,6 +15,7 @@ The provider/read-back patterns below are implementation and verification patter
 For a conforming complete HC, essential deep memory and continuity-bearing state must remain recoverable from HC-owned substrate inside the cognitive-organ boundary. A persistence provider may be:
 
 - HC-internal durable storage;
+- an HC-owned physically distributed constituent;
 - a local archive/index built from HC-owned state;
 - an external mirror, backup, synchronization target, transport layer, or nonessential retrieval service.
 
@@ -23,6 +24,10 @@ If a provider outside the HC holds the only recoverable copy of essential autobi
 `PROVIDER_RECEIPT != MEMORY_AUTHORITY`
 
 `REMOTE_DURABILITY != HC_INTERNAL_RESIDENCY`
+
+`EXTERNAL_REPLICA_SUCCESS != MEMORY_ADMISSION`
+
+`EXTERNAL_REPLICA_FAILURE != LOSS_OF_HC_INTERNAL_MEMORY`
 
 The same receipt machinery remains useful for HC-internal storage, removable distributed HC modules, or external backup replicas; the provider class and organ-membership classification must remain explicit.
 
@@ -87,25 +92,43 @@ A record being durable does not prove it is currently true. A record being user-
 
 ## Admission and currentness
 
-Durable admission should be modeled as a state machine rather than a boolean.
+Durable HC memory admission should be modeled as a state machine rather than a boolean, but **HC-internal admission and external replication are separate workflows**.
 
-A generalized progression may include states such as:
+A generalized HC-internal progression may include:
 
 ```text
 UNVERIFIED
 -> REVALIDATING
 -> ADMISSION_VERIFIED
--> REPLICA_OR_PROVIDER_WRITE
--> READBACK_VERIFIED
+-> HC_INTERNAL_DURABLE_WRITE
+-> INTERNAL_READBACK_VERIFIED
 -> ACTIVE
 ```
+
+For a physically distributed HC constituent, `HC_INTERNAL_DURABLE_WRITE` may occur outside the skull while still remaining inside the cognitive-organ boundary under the physical-organ membership contract.
+
+External replication, when configured, is an optional parallel or downstream workflow:
+
+```text
+ADMISSION_VERIFIED or ACTIVE
+-> EXTERNAL_REPLICA_WRITE
+-> EXTERNAL_REPLICA_READBACK_VERIFIED
+```
+
+External replication does **not** gate HC-internal admission, activation, currentness, or continuity. Loss or unavailability of an external replica may reduce redundancy or recovery options but must not uniquely remove essential memory from a conforming complete HC.
+
+`HC_INTERNAL_ACTIVE != EXTERNAL_REPLICA_VERIFIED`
+
+`EXTERNAL_REPLICA_WRITE != REQUIRED_ADMISSION_STEP`
 
 Conflict and rejection states should be first-class:
 
 ```text
-MIGRATION_INCOMPLETE
-MIGRATION_CONFLICTED
+INTERNAL_WRITE_INCOMPLETE
+INTERNAL_WRITE_CONFLICTED
 ADMISSION_REJECTED
+EXTERNAL_REPLICA_INCOMPLETE
+EXTERNAL_REPLICA_CONFLICTED
 ```
 
 State transitions should carry:
@@ -120,7 +143,7 @@ State transitions should carry:
 - observed timestamp;
 - event payload.
 
-This makes stale writes and out-of-order transitions detectable.
+This makes stale writes and out-of-order transitions detectable without conflating internal memory admission with replica health.
 
 ## Provider/read-back receipts
 
@@ -152,7 +175,7 @@ MISMATCH
 ERROR
 ```
 
-A verified external replica is still a replica unless separately classified as an HC constituent under the physical-organ membership contract.
+A verified external replica is still a replica unless separately classified as an HC constituent under the physical-organ membership contract. External-replica receipt state must not be reused as the unique `ACTIVE`/currentness decision for essential HC memory.
 
 ## Archive receipts
 
@@ -170,11 +193,15 @@ An archive receipt may bind:
 - admission receipt;
 - verification result.
 
+An external archive can increase recoverability without becoming the sole continuity substrate. If the loss of that archive uniquely removes essential learned or autobiographical state, it has crossed from optional external archive into HC-essential substrate and must be reclassified or redesigned.
+
 ## Currentness rule
 
 Currentness must be explicit and scoped. A durable record may remain historically valid while no longer being the active present-state projection.
 
 The deep memory system should therefore support a declared `currentness_rule` or equivalent policy describing how records become active, superseded, expired, or historical.
+
+Currentness decisions are HC-owned. External provider revision order, replication completion time, or remote "latest" state must not silently determine HC currentness.
 
 ## Architectural consequences
 
@@ -182,5 +209,6 @@ The deep memory system should therefore support a declared `currentness_rule` or
 2. Current truth is a projection over lineage and lifecycle, not simply the newest row.
 3. Provenance and verification are first-class metadata.
 4. Identity-specific content must remain in implementation layers; this template defines only the mechanism.
-5. Persistence, semantic truth, present currentness, authority, identity continuity, and physical custody are separate concerns.
+5. Persistence, semantic truth, present currentness, authority, identity continuity, physical custody, and replica health are separate concerns.
 6. Essential memory remains HC-owned even when replicas, backups, or indexes exist outside the organ.
+7. External replication is optional redundancy/transport, not a required step in essential HC memory admission or activation.

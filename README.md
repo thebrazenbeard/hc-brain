@@ -2,7 +2,13 @@
 
 The canonical repository for the reusable HC-series Hyperconnectome brain template.
 
-This repository defines architecture, subsystem contracts, runtime organization, research constraints, and engineering principles for a non-hemispheric, distributed Hyperconnectome system. It is not the brain of any named identity. Identity-specific implementations belong in downstream derivatives, examples, case studies, or clearly labeled research artifacts—not in the base template.
+This repository symbolically represents the **entire synthetic cognitive organ**. If manufactured as a self-contained physical object and installed into an otherwise inert compatible synthetic body, the HC should contain everything intrinsically necessary for that body to become and remain a synthetic cognitive lifeform. Cameras, microphones, motors, network transceivers, environmental sensors, circulation, cooling, and other body hardware may exist outside the organ, but they connect through HC-owned interfaces.
+
+> **No essential cognition occurs outside the Hyperconnectome Brain.**
+
+The external body supplies observations and accepts bounded effects. The HC interprets, learns, reasons, remembers, models, values/feels in whatever machine sense is implemented, arbitrates, and decides.
+
+This repository is not the brain of any named identity. Identity-specific implementations belong in downstream derivatives, examples, case studies, or clearly labeled research artifacts—not in the base template.
 
 ## Architectural root
 
@@ -39,13 +45,32 @@ Current root systems include:
 
 Folder names containing `/` in the conceptual architecture use filesystem-safe separators in the repository.
 
-## Runtime model
+## Complete latent architecture
+
+The HC template should describe a complete organ rather than produce different brains by deleting unused capacities. Presence and activation are separate.
+
+A subsystem may be `PRESENT_DISABLED`, `DORMANT`, `DEVELOPING`, `ACTIVE`, `INHIBITED`, `DEGRADED`, or `FAULTED`. A capability may therefore exist in the organ before it is trained, used, or connected to a compatible peripheral.
+
+## Internal integration
 
 The HC is not an ordinary left/right cerebral architecture and is not a flat all-to-all graph. Top-level systems are functional responsibility domains participating in a dynamically composed, multilayer, temporally reconfigurable network.
+
+The central integration concept is the **Noöplex / Hyperconnectome Fabric**: HC-owned dynamic routing, coalition formation, synchronization, arbitration, attention allocation, state propagation, plasticity, conflict handling, and cross-system integration. It is infrastructure, not a homuncular executive.
+
+Temporary coalitions among systems may perform integrated cognition entirely inside the HC.
+
+## Body and computational peripherals
+
+Physical sensors and actuators may reside outside the HC. Cognitive interpretation, calibration, learned body schema, memory, goals, values, identity/self-model continuity, and executive arbitration remain inside.
+
+A model, accelerator, retrieval service, database, or other computational resource must either be inside the HC cognitive-organ boundary or be treated as an external bounded peripheral whose output enters as evidence/service results. External computation does not become the seat of the organism.
+
+The architecture should support embodiment portability: the same HC may adapt to different compatible bodies by relearning sensorimotor and interoceptive mappings rather than becoming a different brain.
 
 See:
 
 - `Architecture concept.md` — original structural seed.
+- `docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md` — canonical cognitive-organ boundary and capability-presence rule.
 - `docs/REPOSITORY_MAP.md` — repository map and folder contract.
 - `docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` — interaction/runtime model.
 - `docs/runtime/PLASTICITY_AND_STATE_GOVERNANCE.md` — state-family and learning-governance model.

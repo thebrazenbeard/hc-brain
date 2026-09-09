@@ -14,7 +14,7 @@
 
 - Base architecture is identity-neutral.
 - Named-person identity payloads are excluded from architecture/spec/runtime files.
-- Named identities may appear only in provenance/research source discussion where materially necessary.
+- Named identities and exact source-repository bindings may appear only in provenance/research source discussion where materially necessary.
 - `NO_HEMISPHERIC_DECOMPOSITION` remains a hard architecture invariant.
 - Human anatomical localization does not create Hyperconnectome topology requirements.
 - Source presence does not imply current truth, runtime activation, authority, or implementation.
@@ -32,7 +32,7 @@
 - Create: `cognition/EPISTEMIC_COGNITIVE_CONTROL.md`
 
 **Interfaces:**
-- Consumes: existing subsystem `README.md` / `ARCHITECTURE.md`, Semantic Atlas, UNVTRSLR, SPM, Noema, ABIL.
+- Consumes: existing subsystem `README.md` / `ARCHITECTURE.md` plus semantic-ledger, universal-mediation, pragmatic-modeling, developmental-cognition, and adaptive-learning source families recorded in the research provenance package.
 - Produces: representation/provenance contracts used by memory, arbitration, routing, and action layers.
 
 - [ ] Write the three architecture files with explicit object/state distinctions, uncertainty, grounding, correction, and claim ceilings.
@@ -48,7 +48,7 @@
 - Create: `self identity/CONTINUITY_SUBSTRATE.md`
 
 **Interfaces:**
-- Consumes: Temporal, Deep Memory Storage, Semantic Atlas, Supabase save-state/memory-epoch/readback patterns, Redworm lineage patterns.
+- Consumes: temporal, archival-memory, semantic-ledger, persistence/readback, and lineage source families plus relevant runtime-schema observations recorded in the research provenance package.
 - Produces: event/state/currentness/supersession/readback contracts consumed by identity, learning, and arbitration.
 
 - [ ] Write append-oriented event/current-state/deep-memory/continuity contracts.
@@ -68,7 +68,7 @@
 - Create: `somatics/BODY_STATE_AND_BODY_SCHEMA.md`
 
 **Interfaces:**
-- Consumes: Conations, Empathy, Sexuality, Personification, Selfimage, Conditioning, Noema, existing HC affect/interoception work.
+- Consumes: conation, empathy, sexuality, social-presentation, body-reference, conditioning, developmental-cognition, and HC-native affect/interoception source families recorded in the research provenance package.
 - Produces: typed social/motivational/body-state inputs to cognition, arbitration, learning, and action.
 
 - [ ] Generalize mechanisms while excluding personal memories, relationships, morphology, preferences, and identity state.
@@ -88,7 +88,7 @@
 - Create: `basic operating instructions/RUNTIME_INVARIANTS.md`
 
 **Interfaces:**
-- Consumes: Chat Communication Bus/Radar, Build Team 2, Project Achilles, ABIL, Skeleton Key, Noema, Lantern, Supabase routing/dead-letter/reconciliation/subscription schemas.
+- Consumes: routing/control-plane, multi-perspective arbitration, safety-boundary, adaptive-machine, sensor-admission, developmental-cognition, stable-material/currentness-governance, and runtime routing/reconciliation schema evidence recorded in the research provenance package.
 - Produces: distributed execution and learning control substrate for all nodes.
 
 - [ ] Write typed message/routing, arbitration, dead-letter, reconciliation, sensor admission, salience, action-gateway, and plasticity rules.
@@ -107,11 +107,11 @@
 - Create: `docs/architecture/CROSS_SYSTEM_INTEGRATION_CONTRACT.md`
 
 **Interfaces:**
-- Consumes: all preceding task outputs plus exact GitHub/Supabase source observations.
+- Consumes: all preceding task outputs plus exact GitHub/Supabase source observations retained only in the research provenance package.
 - Produces: auditable source-to-template map and cross-system whole-brain contract.
 
 - [ ] Record source repository/project families, evidence class, transfer target, transformation, exclusions, and claim ceiling.
 - [ ] Record Supabase observations as schema/runtime evidence rather than Git canonical source.
 - [ ] Define whole-brain invariants and inter-subsystem information flow without introducing a homunculus.
-- [ ] Verify every architecture file remains identity-neutral and every source-specific identity mention is confined to provenance/research discussion.
+- [ ] Verify every architecture file remains identity-neutral and every source-specific identity/repository mention is confined to provenance/research discussion.
 - [ ] Open a draft PR against current `main`, mirror it to the Chat Bus, and report exact head/base state.

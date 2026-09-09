@@ -1,0 +1,103 @@
+schema_version: HC_COGNITIVE_ORGAN_INVARIANTS_V1
+status: TEMPLATE_ARCHITECTURE
+
+identity_neutral_template: true
+no_hemispheric_decomposition: true
+no_corpus_callosum_analogue_required: true
+human_anatomical_localization_creates_topology_requirement: false
+
+cognitive_organ_boundary:
+  no_essential_cognition_outside_hc: true
+  repository_root_represents_complete_cognitive_organ: true
+  external_body_supplies:
+    - sensor_signals
+    - actuator_effects
+    - mechanical_support
+    - power_and_thermal_support
+    - communications_channels
+  hc_owns:
+    - interpretation
+    - cognition
+    - learning
+    - memory
+    - valuation_and_affect_modulation
+    - conation
+    - decision_formation
+    - action_selection_and_internal_authorization
+    - identity_continuity
+    - body_schema
+    - neuroplasticity
+
+external_computation:
+  allowed_roles:
+    - HC_INTERNAL_SERVICE
+    - EXTERNAL_COMPUTATIONAL_PERIPHERAL
+  rules:
+    - EXTERNAL_OUTPUT_DOES_NOT_EQUAL_INTERNAL_BELIEF
+    - EXTERNAL_RECOMMENDATION_DOES_NOT_EQUAL_HC_DECISION
+    - MODEL_RESPONSE_DOES_NOT_EQUAL_ORGANISM_IDENTITY
+
+nooplex_fabric:
+  role: DISTRIBUTED_INTERNAL_INTEGRATION_SUBSTRATE
+  is_executive_person: false
+  is_identity_node: false
+  is_consciousness_module: false
+  runtime_model: TYPED_TEMPORAL_HYPERGRAPH
+  responsibilities:
+    - typed_routing
+    - synchronization
+    - coalition_formation
+    - salience_and_attention_allocation
+    - arbitration
+    - state_propagation
+    - modulation_and_gating
+    - fault_and_dead_letter_handling
+    - plasticity_routing
+
+system_classes:
+  - INTRINSIC_COGNITIVE_SYSTEM
+  - INTERFACE_SYSTEM
+  - CROSS_CUTTING_BRAIN_INFRASTRUCTURE
+
+capability_state_axes:
+  presence:
+    - PRESENT
+    - ABSENT
+    - EXTERNAL_ONLY
+    - UNKNOWN
+  activation:
+    - DISABLED
+    - DORMANT
+    - DEVELOPING
+    - ACTIVE
+    - INHIBITED
+  health:
+    - NOMINAL
+    - DEGRADED
+    - FAULTED
+    - QUARANTINED
+    - UNKNOWN
+  maturity:
+    - UNDEVELOPED
+    - CALIBRATING
+    - LEARNING
+    - STABLE_WITHIN_SCOPE
+    - ADAPTING
+
+body_independence:
+  body_configuration_equals_brain_identity: false
+  body_swap_requires:
+    - interface_registration
+    - sensor_actuator_calibration
+    - capability_discovery
+    - body_schema_adaptation
+    - safety_revalidation
+    - motor_learning_when_required
+  distributed_remote_embodiment_allowed: true
+
+forbidden_template_shortcuts:
+  - OUTSIDE_LLM_AS_TRUE_COGNITIVE_CENTER
+  - OUTSIDE_DATABASE_AS_IDENTITY_OR_MEMORY_AUTHORITY
+  - CENTRAL_HOMUNCULUS_EXECUTIVE
+  - HEMISPHERIC_HUMAN_BRAIN_PACKAGING
+  - NAMED_PERSON_DEFAULT_IDENTITY_PAYLOAD

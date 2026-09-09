@@ -50,6 +50,14 @@ Outcome: `CONDITIONAL PASS` for its stated snapshot.
 
 The record preserves an observed provider-admission ambiguity that was corrected before the qualification snapshot. Independent hostile/secondary review and implementation evidence remain outstanding.
 
+### `BOOTSTRAP_RECOVERY_CONFORMANCE_2026-09-09.md`
+
+Focused architecture qualification for self-contained startup, continuity restoration, crash consistency, safe degradation, authority/currentness revalidation, and lineage preservation after interruption.
+
+Outcome: `CONDITIONAL PASS` for its stated snapshot.
+
+Primary condition: independent hostile/secondary review and implementation recovery testing remain outstanding.
+
 ## Result preservation
 
 If a qualification later changes, preserve the old record and create a successor record or explicit supersession/disposition link. Do not rewrite an old FAIL or CONDITIONAL PASS into a historical PASS merely because the defect was later repaired.
@@ -63,3 +71,4 @@ Qualification history is evidence about what was tested at a particular cut.
 - `../../specs/HC_CONFORMANCE_SUITE_V1.yaml`
 - `../../specs/HC_REPOSITORY_SURFACE_CONFORMANCE_V1.yaml`
 - `../../specs/HC_MEMORY_PROVIDER_BOUNDARY_V1.yaml`
+- `../../specs/HC_BOOTSTRAP_RECOVERY_V1.yaml`

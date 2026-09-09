@@ -1,0 +1,292 @@
+schema_version: HC_POWER_THERMAL_RESOURCE_OBJECTS_V1
+status: TEMPLATE_MACHINE_COMPANION
+
+scope:
+  purpose: >-
+    Define typed power, thermal, transport, compute, storage, bandwidth, and
+    resource-state objects without redefining canonical physical-organ,
+    bootstrap/recovery, authority, protected-update, or lifecycle architecture.
+  canonical_dependencies:
+    engineering: docs/engineering/POWER_THERMAL_AND_DISTRIBUTED_ORGAN.md
+    authority_and_effect: basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md
+    bootstrap_safe_degradation: specs/HC_BOOTSTRAP_RECOVERY_V1.yaml
+    protected_updates: specs/HC_PROTECTED_UPDATE_GOVERNANCE_V1.yaml
+    lifecycle: basic operating instructions/SUBSYSTEM_LIFECYCLE_CONTRACT.md
+
+invariants:
+  - POWER_MEASUREMENT_NE_POWER_ESTIMATE_NE_POWER_TARGET
+  - THERMAL_MEASUREMENT_NE_THERMAL_ESTIMATE_NE_THERMAL_FAULT
+  - RESOURCE_PRESSURE_NE_COGNITIVE_TRUTH
+  - RESOURCE_PRIORITY_NE_ACTION_AUTHORITY
+  - PASSIVE_PHYSICAL_RESPONSE_NE_AUTHORIZED_CONTROL_ACTION
+  - WORKLOAD_MIGRATION_NE_IDENTITY_MIGRATION
+  - ACCELERATOR_UNAVAILABLE_NE_WHOLE_HC_UNAVAILABLE
+  - THROTTLED_NE_DELETED
+  - BODY_SUPPORT_SERVICE_NE_HC_COGNITIVE_AUTHORITY
+  - POWER_INTERRUPTED_NE_STATE_COMMITTED
+  - RESOURCE_CONSTRAINT_NE_ROOT_CAUSE_PROVEN
+
+resource_domains:
+  candidate_domains:
+    - POWER_OR_ENERGY
+    - THERMAL_LOAD
+    - COOLANT_PERFUSION_OR_HEAT_TRANSPORT
+    - INTERNAL_INTERCONNECT_BANDWIDTH
+    - INTERNAL_INTERCONNECT_LATENCY
+    - COMPUTE_CAPACITY
+    - ACCELERATOR_CAPACITY
+    - VOLATILE_WORKING_STATE
+    - DURABLE_MEMORY_CAPACITY
+    - DURABLE_MEMORY_WRITE_BANDWIDTH
+    - SENSOR_EFFECTOR_BANDWIDTH
+    - SYNCHRONIZATION_MARGIN
+    - PLASTICITY_UPDATE_BUDGET
+    - DIAGNOSTIC_SERVICE_CAPACITY
+    - FAULT_OR_REDUNDANCY_RESERVE
+  rule: NO_SINGLE_GLOBAL_RESOURCE_HEALTH_SCALAR_REQUIRED
+
+object_families:
+  ResourceObservation:
+    class: EVIDENCE_OBJECT
+    required_concepts:
+      - resource_domain
+      - constituent_scope
+      - observation_time_or_interval
+      - evidence_class
+      - provenance
+    optional_concepts:
+      - value_or_range
+      - units
+      - calibration_basis
+      - source_identity
+      - uncertainty
+      - saturation_or_fault_state
+      - currentness_or_expiry
+    rules:
+      - INTERNAL_SENSOR_ORIGIN_DOES_NOT_MAKE_MEASUREMENT_INFALLIBLE
+      - STALE_RESOURCE_OBSERVATION_DOES_NOT_SELF_PROMOTE_TO_CURRENT_STATE
+
+  ResourceEstimate:
+    class: DERIVED_OR_INFERRED_STATE
+    required_concepts:
+      - resource_domain
+      - estimate_or_distribution
+      - supporting_observation_refs
+      - confidence
+      - provenance
+    optional_concepts:
+      - trend
+      - forecast_horizon
+      - competing_estimates
+      - currentness_or_expiry
+      - calibration_state
+    rules:
+      - ESTIMATE_RETAINS_SUPPORTING_EVIDENCE_LINEAGE
+
+  ResourceTarget:
+    class: GOVERNED_CONTROL_STATE
+    required_concepts:
+      - resource_domain
+      - target_range_or_envelope
+      - target_source
+      - provenance
+    optional_concepts:
+      - valid_context
+      - protected_limit
+      - modification_authority_ref
+      - validity_window
+      - protected_update_ref
+    rules:
+      - TARGET_CHANGE_DOES_NOT_REWRITE_OBSERVATION
+      - PROTECTED_TARGET_CHANGE_HANDS_OFF_TO_CANONICAL_UPDATE_GOVERNANCE
+
+  ResourceForecast:
+    class: PREDICTION
+    required_concepts:
+      - forecast_subject
+      - forecast_horizon
+      - predicted_resource_effect
+      - confidence
+      - provenance
+    optional_concepts:
+      - candidate_workload_refs
+      - model_or_assumption_refs
+      - alternative_forecasts
+      - uncertainty
+      - currentness_or_expiry
+    rules:
+      - FORECAST_NE_MEASUREMENT
+      - FORECAST_ERROR_SHOULD_UPDATE_CALIBRATION_WHEN_ELIGIBLE
+      - FORECAST_DOES_NOT_REWRITE_PRIOR_OBSERVATIONS
+
+  PassiveResourceMechanism:
+    class: PHYSICAL_OR_SUBSTRATE_RESPONSE
+    required_concepts:
+      - mechanism_class
+      - resource_domain
+      - constituent_or_path_scope
+      - provenance
+    mechanism_classes:
+      - PASSIVE_DISSIPATION
+      - PASSIVE_HEAT_SPREADING
+      - PASSIVE_CONDUCTION_OR_RADIATION
+      - PASSIVE_ENERGY_RESERVE_RESPONSE
+      - OTHER_DECLARED_PASSIVE_MECHANISM
+    optional_concepts:
+      - capacity_or_envelope
+      - dependency_refs
+      - observed_effect_refs
+      - degradation_or_saturation_state
+      - qualification_refs
+    rules:
+      - PASSIVE_MECHANISM_DOES_NOT_REQUIRE_ACTION_AUTHORITY_TO_PHYSICALLY_OCCUR
+      - PASSIVE_MECHANISM_MAY_STILL_REQUIRE_ENGINEERING_VALIDATION_AND_MONITORING
+
+  ResourceControlAction:
+    class: CONTROL_ACTION
+    required_concepts:
+      - triggering_resource_state
+      - control_class
+      - target_scope
+      - authority_or_policy_ref
+      - provenance
+    control_classes:
+      - FLOW_OR_TRANSPORT_ADJUSTMENT
+      - WORKLOAD_MIGRATION
+      - RATE_OR_DUTY_THROTTLING
+      - CAPABILITY_DEGRADATION_REQUEST
+      - NONESSENTIAL_SUBSYSTEM_INHIBITION
+      - STATE_PRESERVATION_AND_PROTECTIVE_MODE_REQUEST
+    optional_concepts:
+      - effect_authorization_ref
+      - expected_effect
+      - protected_capabilities
+      - sacrificed_capabilities
+      - expiry_or_release_condition
+      - effect_receipt_ref
+      - fault_or_degradation_ref
+    rules:
+      - ACTIVE_CONTROL_ACTION_REQUIRES_DECLARED_CANONICAL_AUTHORITY_OR_POLICY
+      - RESOURCE_PRIORITY_DOES_NOT_CREATE_EFFECT_AUTHORITY
+      - DEGRADATION_OR_PROTECTIVE_MODE_REQUEST_HANDS_OFF_TO_CANONICAL_LIFECYCLE_AND_RECOVERY_RULES
+
+  PowerDomain:
+    class: PHYSICAL_OR_LOGICAL_RESOURCE_PARTITION
+    required_concepts:
+      - domain_identity
+      - constituent_membership
+      - dependency_refs
+      - provenance
+    optional_concepts:
+      - independent_source_or_converter
+      - ride_through_capacity
+      - safe_shutdown_behavior
+      - isolation_behavior
+      - recovery_behavior
+      - qualification_refs
+    rules:
+      - CLAIMED_INDEPENDENCE_REQUIRES_COMMON_MODE_ANALYSIS_WHEN_MATERIAL
+      - POWER_DOMAIN_OBJECT_DOES_NOT_REDEFINE_CANONICAL_ORGAN_MEMBERSHIP
+
+  DistributedConstituentResourceProfile:
+    class: HC_CONSTITUENT_ENGINEERING_STATE
+    required_concepts:
+      - constituent_ref
+      - power_dependencies
+      - thermal_transport_path
+      - safe_operating_envelope
+      - degradation_behavior
+      - provenance
+    optional_concepts:
+      - local_energy_reserve
+      - local_sensor_refs
+      - throttling_behavior
+      - interconnect_dependencies
+      - partial_power_behavior
+      - recovery_or_rejoin_requirements
+      - currentness
+    rules:
+      - NONCRANIAL_LOCATION_DOES_NOT_IMPLY_EXTERNAL_PERIPHERAL
+      - HC_CONSTITUENT_POWER_LOSS_IS_HC_DEGRADATION_OR_FAULT
+      - PHYSICAL_MEMBERSHIP_REMAINS_CANONICAL_ENGINEERING_CONCERN
+
+thermal_control:
+  conceptual_levels:
+    - PASSIVE_DISSIPATION
+    - FLOW_OR_TRANSPORT_ADJUSTMENT
+    - WORKLOAD_MIGRATION
+    - RATE_OR_DUTY_THROTTLING
+    - CAPABILITY_DEGRADATION_REQUEST
+    - NONESSENTIAL_SUBSYSTEM_INHIBITION
+    - STATE_PRESERVATION_AND_PROTECTIVE_MODE_REQUEST
+  rule: >-
+    Levels are not a mandatory monotonic sequence. Passive dissipation is a
+    physical response. Active changes are governed actions and any lifecycle,
+    protected-update, or safe-degradation transition is owned by canonical contracts.
+
+continuity_protection:
+  required_goals_when_supported:
+    - PROTECT_CONTINUITY_BEARING_STATE
+    - PROTECT_MINIMUM_REQUIRED_MEMORY_ACCESS
+    - PROTECT_CORE_FABRIC_INTEGRITY
+    - PROTECT_HOMEOSTATIC_VISIBILITY
+    - PRESERVE_FAULT_DIAGNOSTIC_VISIBILITY
+  prohibited_assumption:
+    - ABRUPT_UNRECORDED_POWER_LOSS_IS_ACCEPTABLE_ROUTINE_THERMAL_CONTROL
+  canonical_handoff: specs/HC_BOOTSTRAP_RECOVERY_V1.yaml
+
+body_support_boundary:
+  body_may_supply:
+    - POWER_CONVERSION
+    - HEAT_REJECTION
+    - COOLANT_OR_CIRCULATION_TRANSPORT
+    - STRUCTURAL_THERMAL_PATH
+    - BOUNDED_PHYSICAL_CONTROLLERS
+  hc_must_retain_when_cognitive:
+    - RESOURCE_INTERPRETATION
+    - RESOURCE_POLICY
+    - COGNITIVE_WORKLOAD_ALLOCATION
+    - RESOURCE_PREDICTION
+    - FAULT_REASONING
+  rule: >-
+    A body controller that uniquely owns essential cognitive resource-allocation
+    decisions must be reclassified as an HC constituent or the organ boundary is defective.
+
+canonical_handoffs:
+  physical_engineering:
+    contract: docs/engineering/POWER_THERMAL_AND_DISTRIBUTED_ORGAN.md
+    rule: OWNERSHIP_TOPOLOGY_POWER_DOMAIN_AND_TRANSPLANT_ENGINEERING_REMAIN_CANONICAL
+  authority_effects:
+    contract: basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md
+    rule: RESOURCE_PRESSURE_OR_PRIORITY_DOES_NOT_CREATE_AUTHORITY
+  safe_degradation_recovery:
+    contract: specs/HC_BOOTSTRAP_RECOVERY_V1.yaml
+    rule: RESOURCE_OBJECTS_INFORM_BUT_DO_NOT_REDEFINE_SAFE_DEGRADATION_OR_RECOVERY
+  protected_updates:
+    contract: specs/HC_PROTECTED_UPDATE_GOVERNANCE_V1.yaml
+    rule: PROTECTED_RESOURCE_TARGET_OR_CONFIGURATION_CHANGE_USES_CANONICAL_UPDATE_GOVERNANCE
+  lifecycle:
+    contract: basic operating instructions/SUBSYSTEM_LIFECYCLE_CONTRACT.md
+    rule: RESOURCE_STATE_DOES_NOT_REDEFINE_SUBSYSTEM_HEALTH_OR_ACTIVATION_AXES
+
+engineering_evidence_classes:
+  - MEASURED_COMPONENT_BEHAVIOR
+  - DERIVED_ESTIMATE
+  - MODELED_SUBSYSTEM_DEMAND
+  - EXTRAPOLATED_DESIGN_TARGET
+  - SPECULATIVE_FUTURE_SUBSTRATE_EXPECTATION
+
+failure_cases:
+  - LOCAL_HOTSPOT_HIDDEN_BY_GLOBAL_AVERAGE
+  - HEAT_TRANSPORT_LOSS
+  - SENSOR_BIAS_OR_STALENESS
+  - RUNAWAY_COMPUTE_OR_PLASTICITY_LOAD
+  - POWER_DOMAIN_COLLAPSE
+  - INTERCONNECT_BROWNOUT_OR_TIMING_DEGRADATION
+  - MEMORY_WRITE_DURING_UNSTABLE_POWER
+  - BAD_WORKLOAD_MIGRATION
+  - THROTTLE_OSCILLATION
+  - COMMON_MODE_DOMAIN_FAILURE
+  - FALSE_SUCCESS_FROM_BODY_SUPPORT
+  - SILENT_CAPABILITY_DEGRADATION
+  - STALE_RESOURCE_STATE_USED_AS_CURRENT

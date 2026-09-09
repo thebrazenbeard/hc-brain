@@ -53,3 +53,7 @@ Conative state does not itself grant permission to act on another system, person
 ## Failure controls
 
 The architecture should distinguish wishful-thinking contamination, viability dominance, concern proliferation, cyclic preferences, proxy manipulation, commitment rigidity, and indecision so learning can correct the responsible mechanism rather than globally rewriting motivation.
+
+## Provenance
+
+Integrated through repository architecture review; exact source bindings are recorded in `docs/research/cross-repo-synthesis/`.

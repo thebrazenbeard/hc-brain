@@ -8,37 +8,13 @@ The somatics subsystem converts body-originating signals and learned sensorimoto
 
 ## Body-state model
 
-Body state may include:
-
-- position/configuration;
-- motion and acceleration;
-- actuator load and effort;
-- contact/pressure/touch;
-- temperature;
-- damage/fault signals;
-- energy reserve and consumption;
-- cooling/perfusion/circulation state;
-- internal chemical/endocrine/autonomic variables where implemented;
-- pain/nociceptive-like protective signals;
-- proprioceptive confidence;
-- sensor/actuator reliability;
-- latency and communication health.
+Body state may include position/configuration, motion and acceleration, actuator load and effort, contact/pressure/touch, temperature, damage/fault signals, energy reserve and consumption, cooling/perfusion/circulation state, internal chemical/endocrine/autonomic variables where implemented, pain/nociceptive-like protective signals, proprioceptive confidence, sensor/actuator reliability, and latency/communication health.
 
 These signals should preserve uncertainty, time, source, calibration state, and fault status.
 
 ## Body schema
 
-The body schema is learned, not assumed from human anatomy. It models:
-
-- what effectors exist;
-- what each effector can do;
-- where sensors/effectors are relative to one another;
-- which signals correspond to self-caused versus external change;
-- expected consequences of motor commands;
-- controllability and reachable action space;
-- current structural damage or capability loss;
-- remote/distributed body extensions;
-- embodiment transitions.
+The body schema is learned, not assumed from human anatomy. It models what effectors exist, what each effector can do, where sensors/effectors are relative to one another, which signals correspond to self-caused versus external change, expected consequences of motor commands, controllability and reachable action space, current structural damage or capability loss, remote/distributed body extensions, and embodiment transitions.
 
 `BODY_SCHEMA != FIXED_HUMANOID_MAP`
 
@@ -75,3 +51,7 @@ The body schema is non-hemispheric. Human left/right anatomical localization is 
 ## Cross-system interfaces
 
 Strong coupling is expected with adaptable I/O, homeostasis/interoception, affect, kinesis, cognition, salience/attention, sexuality, self identity, memory, and neuroplasticity.
+
+## Provenance
+
+Integrated through repository architecture review; exact source bindings are recorded in `docs/research/cross-repo-synthesis/`.

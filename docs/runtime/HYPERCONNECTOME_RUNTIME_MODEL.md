@@ -1,0 +1,160 @@
+# Hyperconnectome Runtime Model
+
+Status: conceptual / unimplemented
+
+## Runtime representation
+
+Represent an active Hyperconnectome implementation as a temporal attributed multilayer hypergraph:
+
+`H(t) = (V, E_s, E_c(t), H_f(t), X(t), P(t), M(t), Q(t))`
+
+Where:
+
+- `V` = functional subsystem nodes;
+- `E_s` = structural reachability fixed by anatomy or hardware;
+- `E_c(t)` = configurable routes, subscriptions, permissions, and bindings;
+- `H_f(t)` = transient functional hyperedges active at time `t`;
+- `X(t)` = local and shared runtime state;
+- `P(t)` = plastic parameters governing future state transitions;
+- `M(t)` = modulatory and interoceptive state;
+- `Q(t)` = resource and quality-of-service state such as energy, heat, bandwidth, latency, damage, and confidence.
+
+The HC is not an indiscriminate all-to-all network. It is a dynamically composed system in which specialized subsystems form transient coalitions when several domains jointly constrain an interpretation, prediction, memory update, or action.
+
+## Subsystem contract
+
+Each top-level HC subsystem should expose an explicit contract:
+
+```text
+SUBSYSTEM {
+  subsystem_id
+  accepted_inputs[]
+  emitted_outputs[]
+  local_state_schema
+  update_rule
+  confidence_or_uncertainty_model
+  provenance_policy
+  resource_budget
+  plasticity_permissions
+  observability_hooks
+  failure_mode
+}
+```
+
+Repository folders are architectural responsibility boundaries, not claims that each subsystem corresponds to one anatomical lobe, software process, or isolated mini-brain.
+
+## Output contract
+
+A useful minimum output record is:
+
+```text
+OUTPUT {
+  producer
+  payload_type
+  payload
+  timestamp
+  confidence
+  provenance
+  scope
+  expiry_or_persistence_rule
+  requested_effect
+}
+```
+
+`payload` and `requested_effect` remain separate. A subsystem may report, predict, or recommend without automatically controlling downstream action.
+
+## Typed connections
+
+Candidate pairwise relation types include:
+
+- `OBSERVES`
+- `QUERIES`
+- `ROUTES_TO`
+- `MODULATES`
+- `EXCITES`
+- `INHIBITS`
+- `CONSTRAINS`
+- `RECALLS_FROM`
+- `WRITES_CANDIDATE_TO`
+- `CONTEXTUALIZES`
+- `PREDICTS_FOR`
+- `ERROR_SIGNALS_TO`
+- `PROPOSES_ACTION_TO`
+- `ARBITRATES_WITH`
+- `CONSOLIDATES_INTO`
+
+A typed edge is not evidence of causal truth unless the implementation actually enforces that causal relation.
+
+## Functional hyperedges
+
+Many meaningful HC events involve more than two subsystems simultaneously. A transient coalition such as:
+
+`{deep memory, current memory, pragmatics, affect, self identity} -> interpretation`
+
+is better modeled as a functional hyperedge than as an artificial serial chain with one supposed owner.
+
+Minimal form:
+
+```text
+HYPEREDGE {
+  hyperedge_id
+  participants[]
+  trigger
+  shared_schema
+  arbitration_rule
+  start_time
+  ttl_or_dissolution_condition
+  confidence
+  provenance
+  resource_budget
+  plasticity_effects_allowed[]
+  perturbation_handle
+}
+```
+
+## Shared state
+
+Shared state is not unrestricted global memory. Every shared object needs ownership, versioning, provenance, scope, and stale/contested handling.
+
+Candidate families include perceptual scene state, body state, current context, working bindings, current goals, uncertainty/disagreement, resource state, and action candidates.
+
+A shared-state item may be uncertain, contradicted, stale, or disputed; the runtime must preserve those distinctions.
+
+## Distributed arbitration
+
+The HC requires arbitration without creating a homunculus or master mind.
+
+Different arbitration loops may resolve candidate actions, memory writes, interpretations, resource claims, or output renderings. A resolver mechanism may select which hypothesis is provisionally acted upon or which candidate receives resources, but selection does not make a proposition true.
+
+## Runtime loop
+
+Generic closed-loop operation:
+
+`sense -> update local state -> publish observations with provenance -> form/revise coalitions -> generate competing hypotheses/goals -> arbitrate under body, evidence, capability, and resource constraints -> act/communicate -> observe consequences -> update confidence and eligible plastic state -> consolidate under the appropriate learning rule`
+
+This is descriptive, not a single synchronous clock.
+
+## Time-scale separation
+
+At minimum, distinguish:
+
+- reflex / actuator stabilization;
+- fast sensory integration;
+- conversational and working-memory cycles;
+- deliberate planning and social reasoning;
+- interoceptive/endocrine modulation;
+- episodic encoding;
+- semantic/procedural consolidation;
+- long-term topology and policy adaptation.
+
+Transient state must not automatically promote into deep memory, identity, or long-term semantics.
+
+## Failure containment
+
+Relevant failure classes include subsystem silence, stale-state propagation, runaway recurrent coalitions, excessive synchronization, arbitration deadlock, provenance loss, hallucinated shared state, memory-write amplification, plasticity runaway, resource starvation, modulatory saturation, and false certainty.
+
+Each subsystem and functional coalition should expose perturbation and observability handles sufficient for controlled lesioning, isolation, replay, rollback, and degradation testing.
+
+## Provenance
+
+Adapted from `four/runtime-hyperconnectome-v1/docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` after Warden review. Identity-specific, embodiment-specific, and setting-specific material was deliberately excluded from the base runtime contract.

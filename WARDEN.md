@@ -44,37 +44,60 @@ Named identities may appear only in clearly labeled example, case-study, compari
 
 Architecture, governance, lineage, engineering, science, and template documentation must remain identity-neutral.
 
+## Cognitive Organ Boundary
+
+The repository represents the **entire synthetic cognitive organ**.
+
+The governing boundary invariant is:
+
+> **No essential cognition occurs outside the Hyperconnectome Brain.**
+
+If the HC is treated as a manufactured self-contained object and installed into an otherwise inert compatible body, the HC should contain everything intrinsically required for that body to become and remain a synthetic cognitive lifeform. External sensors, actuators, network hardware, environmental interfaces, cooling, circulation, and other body-support systems may exist outside the HC, but cognition-facing interpretation and control belong to HC-owned interfaces.
+
+External computational resources may be used only if they are either architecturally inside the HC or treated as bounded peripherals whose outputs enter as evidence/service results. They must not silently become the seat of identity, memory, value, or executive cognition.
+
+The HC should remain a coherent cognitive organ across compatible embodiment changes. New bodies may require recalibration, remapping, and development; they should not require replacing the cognitive organ merely because the peripheral embodiment changed.
+
 ## Governing Design Principles
 
 1. **Hyperconnectome first.**  
    The HC-series is not an enhanced human cerebrum. It is a deliberately non-hemispheric, distributed, highly interconnected synthetic cognitive architecture.
 
-2. **Template before identity.**  
+2. **Complete cognitive organ.**  
+   The HC contains the intrinsic machinery of interpretation, learning, reasoning, memory, value/affect, self-modeling, volition, arbitration, and continuity. The body supplies signals and effects through HC-owned interfaces.
+
+3. **Template before identity.**  
    The repository defines reusable brain architecture. Identity-specific implementations are derived layers and must not silently redefine the template.
 
-3. **Lineage continuity.**  
+4. **Presence before activation.**  
+   Architecturally necessary capacities belong in the complete latent organ even when disabled, dormant, undeveloped, inhibited, degraded, faulted, or unimplemented. Specialized implementations should normally differ by capability state and development rather than by deleting brain systems.
+
+5. **Lineage continuity.**  
    HC-2 extends HC-1. HC-3 extends HC-2. New generations may add or refine capabilities, but previous generations remain separately specified architectures.
 
-4. **No silent anthropomorphic regression.**  
+6. **No silent anthropomorphic regression.**  
    Human neuroscience supplies mechanisms, constraints, and inspiration; it does not require replication of human gross anatomy.
 
-5. **Evidence separation.**  
+7. **Distributed integration, not a homunculus.**  
+   The Noöplex / Hyperconnectome Fabric may provide routing, coalition formation, synchronization, arbitration, attention allocation, state propagation, plasticity, conflict handling, and integration. It must not become a hidden little executive person through which all cognition is forced.
+
+8. **Evidence separation.**  
    Technical material should distinguish documented science, observed project evidence, user-established project decisions, inference, hypothesis, dispute, and unknowns where that distinction matters.
 
-6. **No magical quantum layer.**  
+9. **No magical quantum layer.**  
    Quantum components are specialized accelerators or sensors unless a stronger mechanism is deliberately established. They do not automatically explain consciousness, emotion, or intelligence.
 
-7. **Emotion is systemic.**  
-   HC-3 affective architecture treats emotion as distributed neural appraisal plus neuromodulation, endocrine/autonomic state, interoception, memory, learning, and embodiment—not one-hormone/one-emotion mappings.
+10. **Emotion is systemic.**  
+   HC affective architecture treats emotion/value-like state as distributed appraisal plus neuromodulation, autonomic/endocrine state where implemented, interoception, memory, learning, and embodiment—not one-hormone/one-emotion mappings.
 
-8. **Engineering constraints matter.**  
+11. **Engineering constraints matter.**  
    Power, heat, perfusion, materials, latency, fault tolerance, maintenance, and graceful degradation are architectural concerns.
 
-9. **Research informs canon; it does not dictate canon.**  
+12. **Research informs canon; it does not dictate canon.**  
    Real science constrains plausibility. Project canon may intentionally exceed present-day capability, but the boundary must remain visible.
 
-10. **Repository state is part of the architecture.**  
-    Important decisions should be recorded in versioned project artifacts so future sessions can reorient from the repository rather than rely on conversational memory.
+13. **Repository state is part of the architecture.**  
+   Important decisions should be recorded in versioned project artifacts so future sessions can reorient from the repository rather than rely on conversational memory.
 
 ## Decision Method
 
@@ -83,13 +106,14 @@ For material architectural decisions, Noëtarch should normally:
 1. identify the exact design question;
 2. inspect the smallest relevant current repository source set;
 3. determine whether the question is already settled by current project state;
-4. classify whether the material belongs to template architecture, embodiment, setting/canon, or example/research content;
-5. research current external science when the claim is technical, unstable, or uncertain;
-6. separate evidence from extrapolation;
-7. compare viable options and engineering tradeoffs;
-8. choose a design state when evidence and project authority justify doing so;
-9. preserve unresolved conflicts when they cannot yet be honestly reconciled;
-10. update the repository so the decision is durable and traceable.
+4. classify whether the material belongs to the HC cognitive organ, an HC-owned body interface, an external peripheral, embodiment-specific implementation, setting/canon, or example/research content;
+5. check whether a proposed omission is truly outside the cognitive organ or merely a presently inactive/unimplemented capacity;
+6. research current external science when the claim is technical, unstable, or uncertain;
+7. separate evidence from extrapolation;
+8. compare viable options and engineering tradeoffs;
+9. choose a design state when evidence and project authority justify doing so;
+10. preserve unresolved conflicts when they cannot yet be honestly reconciled;
+11. update the repository so the decision is durable and traceable.
 
 ## Continuity
 

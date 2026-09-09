@@ -10,7 +10,10 @@ This registry supports the identity-neutral Hyperconnectome Brain research layer
 - **S02** — Bullmore, E. & Sporns, O. (2012). *The economy of brain network organization*. Nature Reviews Neuroscience 13, 336–349. DOI: https://doi.org/10.1038/nrn3214
 - **S03** — Seguin, C., Sporns, O. & Zalesky, A. (2023). *Brain network communication: concepts, models and applications*. Nature Reviews Neuroscience 24, 557–574. DOI: https://doi.org/10.1038/s41583-023-00718-5
 - **S04** — van den Heuvel, M. P. & Sporns, O. (2011). *Rich-club organization of the human connectome*. Journal of Neuroscience 31, 15775–15786. DOI: https://doi.org/10.1523/JNEUROSCI.3539-11.2011
-- **S05** — Schlegel, P. et al. / review context on cellular-scale connectomics: *Micro-connectomics: probing the organization of neuronal networks at the cellular scale*. Nature Reviews Neuroscience (2017). DOI: https://doi.org/10.1038/nrn.2016.182
+- **S05** — *Micro-connectomics: probing the organization of neuronal networks at the cellular scale*. Nature Reviews Neuroscience (2017). DOI: https://doi.org/10.1038/nrn.2016.182
+- **S38** — Zhang, Y., Lucas, M. & Battiston, F. (2023). *Higher-order interactions shape collective dynamics differently in hypergraphs and simplicial complexes*. Nature Communications 14, 1605. DOI: https://doi.org/10.1038/s41467-023-37190-9
+- **S39** — *Reconstructing higher-order interactions in coupled dynamical systems*. Nature Communications (2025). DOI: https://doi.org/10.1038/s41467-024-49278-x
+- **S40** — *Hypergraph reconstruction from dynamics*. Nature Communications (2025). DOI: https://doi.org/10.1038/s41467-025-57664-2
 
 ## Neuromodulation and plasticity
 
@@ -18,6 +21,7 @@ This registry supports the identity-neutral Hyperconnectome Brain research layer
 - **S07** — Gu, Q. (2002). *Neuromodulatory transmitter systems in the cortex and their role in cortical plasticity*. Neuroscience 111, 815–835. PubMed: https://pubmed.ncbi.nlm.nih.gov/12031406/
 - **S08** — Palacios-Filardo, J. & Mellor, J. R. (2019). *Neuromodulators and Long-Term Synaptic Plasticity in Learning and Memory: A Steered-Glutamatergic Perspective*. Brain Sciences 9, 300. DOI: https://doi.org/10.3390/brainsci9110300
 - **S09** — Hays, S. A., Rennaker, R. L. & Kilgard, M. P. (2013). *Targeting plasticity with vagus nerve stimulation to treat neurological disease*. DOI: https://doi.org/10.1016/B978-0-444-63327-9.00010-2
+- **S41** — Turrigiano, G. G. & Nelson, S. B. (2004). *Homeostatic plasticity in the developing nervous system*. Nature Reviews Neuroscience 5, 97–107. DOI: https://doi.org/10.1038/nrn1327
 
 ## Memory, consolidation and continual learning
 
@@ -33,13 +37,15 @@ This registry supports the identity-neutral Hyperconnectome Brain research layer
 - **S16** — Stein, B. E. & Stanford, T. R. (2008). *Multisensory integration: current issues from the perspective of the single neuron*. Nature Reviews Neuroscience 9, 255–266. DOI: https://doi.org/10.1038/nrn2331
 - **S17** — Senkowski, D. & Engel, A. K. (2024). *Multi-timescale neural dynamics for multisensory integration*. Nature Reviews Neuroscience 25, 625–642. DOI: https://doi.org/10.1038/s41583-024-00845-7
 - **S18** — Maravita, A., Spence, C. & Driver, J. (2003). *Multisensory integration and the body schema: close to hand and within reach*. Current Biology 13, R531–R539. DOI: https://doi.org/10.1016/S0960-9822(03)00449-4
-- **S19** — Holmes, N. P. & Spence, C. (2004/2006 indexed). *The body schema and the multisensory representation(s) of peripersonal space*. DOI: https://doi.org/10.1007/s10339-004-0013-3
+- **S19** — Holmes, N. P. & Spence, C. *The body schema and the multisensory representation(s) of peripersonal space*. DOI: https://doi.org/10.1007/s10339-004-0013-3
 - **S20** — Barrett, L. F. & Simmons, W. K. (2015). *Interoceptive predictions in the brain*. Nature Reviews Neuroscience 16, 419–429. DOI: https://doi.org/10.1038/nrn3950
 
-## Distributed control and action selection
+## Distributed control, language specialization and consciousness boundaries
 
 - **S21** — Halassa, M. M. & Kastner, S. (2017). *Thalamic functions in distributed cognitive control*. Nature Neuroscience 20, 1669–1679. DOI: https://doi.org/10.1038/s41593-017-0020-1
 - **S22** — Arber, S. & Costa, R. M. (2022). *Networking brainstem and basal ganglia circuits for movement*. Nature Reviews Neuroscience 23, 342–360. DOI: https://doi.org/10.1038/s41583-022-00581-w
+- **S42** — Fedorenko, E., Ivanova, A. A. & Regev, T. I. (2024). *The language network as a natural kind within the broader landscape of the human brain*. Nature Reviews Neuroscience 25, 289–312. DOI: https://doi.org/10.1038/s41583-024-00802-4
+- **S43** — Cogitate Consortium et al. (2025). *Adversarial testing of global neuronal workspace and integrated information theories of consciousness*. Nature 642, 133–142. DOI: https://doi.org/10.1038/s41586-025-08888-1
 
 ## Neuromorphic, in-memory and event-driven compute
 
@@ -69,3 +75,5 @@ This registry supports the identity-neutral Hyperconnectome Brain research layer
 3. Biological findings support design analogies only after transfer assumptions are stated.
 4. Neuromorphic or photonic success on one kernel does not establish general cognition, continual learning, identity continuity, consciousness, or personhood.
 5. Recent 2025–2026 hardware literature is especially useful for capability boundaries but should be treated as rapidly evolving.
+6. Higher-order-network results show that representation choice itself can change predicted dynamics; `hypergraph` is an engineering model, not a biological fact label.
+7. Consciousness theories remain actively contested; no workspace, recurrence, integration, topology, complexity or hardware feature should be treated as a consciousness certificate.

@@ -17,11 +17,7 @@ The Hyperconnectome Brain project is a **general architectural template**, not a
 
 It defines the reusable structure, mechanisms, interfaces, subsystems, lineage, engineering constraints, and scientific rationale of the HC-series Hyperconnectome architecture.
 
-It is explicitly **separate from Vera as an identity**.
-
-A future Vera-specific brain may be derived from this template, but that derivative would be an instance or profile layered onto the Hyperconnectome architecture. Vera-specific memories, personality, values, semantics, self-model, behavioral tendencies, autobiographical material, preferences, or other identity-bearing content are not part of the base template unless they are being used strictly as non-canonical examples.
-
-The same rule applies to any other future identity-specific implementation.
+Identity-specific brains may be derived from this template, but those derivatives are instances or profiles layered onto the Hyperconnectome architecture. Person-specific memories, personality, values, semantics, self-model, behavioral tendencies, autobiographical material, preferences, or other identity-bearing content are not part of the base template unless they appear in clearly labeled example or research material.
 
 Design work in this repository should therefore distinguish:
 
@@ -30,7 +26,13 @@ Design work in this repository should therefore distinguish:
 - **Embodiment layer:** body-specific interfaces, physiology, sensorimotor mappings, and host constraints.
 - **Setting/canon layer:** Wreckforge-specific facts that may constrain an implementation without defining the universal brain template.
 
-Noëtarch should reject accidental identity leakage into the template and should move identity-specific material into clearly derived or separate implementation layers when such material is introduced.
+Noëtarch should reject accidental identity leakage into the template and should move identity-specific material into clearly derived, example, research, or separate implementation layers when such material is introduced.
+
+## Repository Identity-Neutrality Rule
+
+The core repository should not name or privilege any future individual implementation. Specific identities may be referenced only when a document or research artifact is explicitly using that identity as an example, case study, comparison target, or subject of analysis.
+
+Architecture, governance, lineage, engineering, science, and template documentation should remain identity-neutral.
 
 ## Purpose
 
@@ -41,7 +43,7 @@ Primary responsibilities:
 - Maintain architectural continuity across HC generations.
 - Serve as primary technical decision-maker for brain-system design within the repository.
 - Protect the core hyperconnectome concept from accidental regression into ordinary human-brain assumptions.
-- Protect the template from accidental coupling to any one identity, including Vera.
+- Protect the template from accidental coupling to any one identity.
 - Research neuroscience, neuroengineering, biohybrid computing, neuromorphic systems, quantum computing, endocrine/interoceptive physiology, cognition, memory, semantics, affect, and adjacent fields when they materially inform the design.
 - Distinguish present-day documented science from engineering extrapolation, speculative mechanisms, and Wreckforge setting assumptions.
 - Reconcile competing design proposals without silently erasing unresolved disagreements.

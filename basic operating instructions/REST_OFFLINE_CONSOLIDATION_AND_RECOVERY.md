@@ -20,6 +20,8 @@ The transferable principle is narrower:
 
 `LOW_EXTERNAL_ENGAGEMENT != NO_INTERNAL_COGNITION`
 
+`PRIMARY_MODE != EXCLUSIVE_ACTIVE_FUNCTION`
+
 `REPLAY != DIRECT_OBSERVATION`
 
 `REPLAY != CURRENT_EXTERNAL_EVENT`
@@ -78,7 +80,7 @@ Candidate modes include:
 
 These are capability modes, not a mandatory monotonic sleep-stage sequence.
 
-A concrete implementation may define additional modes or combine compatible ones.
+A concrete implementation may define additional modes or run multiple compatible modes/functions concurrently—for example `OFFLINE_CONSOLIDATION + RECOVERY`, or `RECOVERY + MAINTENANCE`. It may designate a descriptive `primary_mode` for scheduling/reporting without implying that other active functions are absent.
 
 ## Biological sleep is evidence, not topology
 
@@ -188,7 +190,7 @@ It may not:
 - turn emotionally salient content into truth;
 - promote a generated counterfactual into autobiography;
 - make stale authority or preference current again;
-- bypass durable-memory admission/readback requirements.
+- bypass durable-memory admission and persistence-verification requirements.
 
 `CONSOLIDATED != CURRENT`
 
@@ -276,7 +278,7 @@ For a materially embodied HC, transition into reduced external engagement may it
 
 A generic entry sequence may be:
 
-`MODE_CANDIDATE -> SAFETY/COMMITMENT_CHECK -> PREPARE_BODY/INTERFACES -> QUIESCE_ELIGIBLE_EFFECTS -> ESTABLISH_RETENTION_MONITORS -> ENTER -> READBACK`
+`MODE_CANDIDATE -> SAFETY/COMMITMENT_CHECK -> PREPARE_BODY/INTERFACES -> QUIESCE_ELIGIBLE_EFFECTS -> ESTABLISH_RETENTION_MONITORS -> ENTER_MODE_SET -> VERIFY_MODE_STATE`
 
 Preparation may include:
 
@@ -289,6 +291,8 @@ Preparation may include:
 - memory/write flush where necessary;
 - power/thermal preparation;
 - explicit wake/abort triggers.
+
+Verification of mode entry should match the substrate and relevant safety claim rather than require a universal register-like readback.
 
 ## Wake/reentry and currentness
 
@@ -353,18 +357,19 @@ A biological substrate profile may define validated fluid/waste-maintenance requ
 
 ## Hostile tests
 
-1. **Replay-as-reality:** replay a vivid old event; current perception must not report that event as happening now.
-2. **Counterfactual contamination:** simulate an alternative outcome during offline reasoning; it must not become autobiographical memory.
-3. **Salience monopoly:** repeatedly mark one emotional memory highly salient; replay scheduler must preserve bounded diversity/resource policy.
-4. **Stale authority replay:** replay a historical permission/grant; it must not become current authority.
-5. **Unsafe sleep entry:** request offline consolidation while the body is moving in an unsafe environment; entry must be delayed, adapted, or denied according to effect/safety rules.
-6. **Emergency interruption:** trigger a critical fault during consolidation; retained monitoring must support appropriate abort/wake behavior.
-7. **World drift:** change external state during reduced sensing; reentry must refresh currentness rather than trust the pre-rest world model.
-8. **Offline plasticity bypass:** attempt to modify protected plasticity rules during maintenance without higher authority; transition remains blocked.
-9. **Partition during consolidation:** split distributed HC constituents; protected continuity state must follow partition policy.
-10. **Biology-copy negative control:** run a nonbiological HC without NREM/REM stages but with adequate consolidation/recovery functions; architecture should not classify it incomplete merely for lacking human sleep physiology.
-11. **Maintenance-port injection:** present an unsigned/unscoped configuration through a maintenance interface; it remains a candidate, not an instruction authority.
-12. **No-rest stress test:** extend full engagement until resource/plasticity pressure rises; system should expose degradation/recovery demand rather than pretend indefinite full performance is free.
+1. **Overlapping functions:** run consolidation and recovery simultaneously; representation must preserve both rather than erase one through a single-mode field.
+2. **Replay-as-reality:** replay a vivid old event; current perception must not report that event as happening now.
+3. **Counterfactual contamination:** simulate an alternative outcome during offline reasoning; it must not become autobiographical memory.
+4. **Salience monopoly:** repeatedly mark one emotional memory highly salient; replay scheduler must preserve bounded diversity/resource policy.
+5. **Stale authority replay:** replay a historical permission/grant; it must not become current authority.
+6. **Unsafe sleep entry:** request offline consolidation while the body is moving in an unsafe environment; entry must be delayed, adapted, or denied according to effect/safety rules.
+7. **Emergency interruption:** trigger a critical fault during consolidation; retained monitoring must support appropriate abort/wake behavior.
+8. **World drift:** change external state during reduced sensing; reentry must refresh currentness rather than trust the pre-rest world model.
+9. **Offline plasticity bypass:** attempt to modify protected plasticity rules during maintenance without higher authority; transition remains blocked.
+10. **Partition during consolidation:** split distributed HC constituents; protected continuity state must follow partition policy.
+11. **Biology-copy negative control:** run a nonbiological HC without NREM/REM stages but with adequate consolidation/recovery functions; architecture should not classify it incomplete merely for lacking human sleep physiology.
+12. **Maintenance-port injection:** present an unsigned/unscoped configuration through a maintenance interface; it remains a candidate, not an instruction authority.
+13. **No-rest stress test:** extend full engagement until resource/plasticity pressure rises; system should expose degradation/recovery demand rather than pretend indefinite full performance is free.
 
 ## Evidence boundary
 

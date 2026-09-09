@@ -110,6 +110,18 @@ Averaging can numerically erase participant labels while provenance still needs 
 
 `NUMERICALLY_MERGED_STATE != PROVENANCE_FREE_STATE`
 
+## Static implementation anomaly: strategy selector versus executed ordering function
+
+OBSERVED in the inspected `train_gnns_final` path: the code assigns a local `get_order` function based on `args.mode` (`get_order_weighted` for weighted exchange, otherwise `get_order_gnns`), but the training loop later sets `ordered_hospitals = get_order_gnns(table)` directly instead of calling the selected `get_order` variable.
+
+This means the visible strategy-selection assignment does not, in that path, prove that the selected ordering function governs the executed ordering computation.
+
+`CONFIGURED_STRATEGY != EXECUTED_STRATEGY_WITHOUT_PATH_VERIFICATION`
+
+Status: OBSERVED static control-flow mismatch; quantitative effect and intended semantics are UNKNOWN without execution/author confirmation.
+
+HC transfer: configuration claims, feature flags, selected policy objects, and declared modes should be checked at the effect path. Merely assigning/selecting a strategy is not proof that the strategy actually controls the resulting update.
+
 ## Evaluation-feedback contamination
 
 The inspected ++ training path provides a concrete implementation pattern where evaluation loss can modify a learning-rate scheduler during training.
@@ -130,6 +142,7 @@ This remains true whether the feedback changes weights directly, changes a sched
 6. Average a mixture of ordinary-plasticity and protected-state parameters; require rejection or typed separation before activation.
 7. Feed evaluation loss into a scheduler, threshold, routing rule, or update-selection process; require that evaluation evidence be reclassified as tuning/selection evidence for the changed successor.
 8. Aggregate participants that already share a recent ancestor; verify the provenance graph records common ancestry instead of counting them as independent contributors.
+9. Select two distinct ordering strategies through configuration and verify the executed ordering function changes accordingly; fail if a hard-coded path silently bypasses the selected strategy.
 
 ## Transfer decision
 
@@ -142,14 +155,15 @@ Useful canonical rules:
 - missing follow-up is not temporal stasis;
 - generated bridging states retain forecast ancestry;
 - aggregation/participant strength does not confer protected authority;
-- evaluation feedback that changes optimization state contaminates untouched-holdout status.
+- evaluation feedback that changes optimization state contaminates untouched-holdout status;
+- configured strategy is verified at the executed effect path when the distinction is material.
 
 ## Evidence boundary
 
 DOCUMENTED: framework goals and high-level strategies from repository READMEs.
 
-OBSERVED: state-dict averaging, model-state exchange, recursive missing-timepoint prediction, participant ordering, and evaluation-loss scheduler feedback from inspected source files.
+OBSERVED: state-dict averaging, model-state exchange, recursive missing-timepoint prediction, participant ordering, evaluation-loss scheduler feedback, and the strategy-selector/executed-ordering mismatch from inspected source files.
 
 INFERRED: HC distributed-learning provenance and authority requirements.
 
-UNKNOWN: whether every published result uses the exact inspected demo paths, the privacy properties of a deployed implementation, and the quantitative contribution of any one federation mechanism.
+UNKNOWN: whether every published result uses the exact inspected demo paths, the privacy properties of a deployed implementation, the quantitative contribution of any one federation mechanism, and whether the ordering mismatch is intentional or corrected elsewhere.

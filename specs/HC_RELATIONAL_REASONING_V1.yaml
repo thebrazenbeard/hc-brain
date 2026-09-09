@@ -1,0 +1,129 @@
+schema_version: HC_RELATIONAL_REASONING_V1
+status: CANONICAL_COGNITION_CONTRACT
+scope: HC_REUSABLE_TEMPLATE
+
+principle: >-
+  A reasoning topology is a computational hypothesis or comparison plan unless
+  separately supported as a claim about the world or HC itself.
+
+required_separations:
+  - REASONING_GRAPH_PRIOR != WORLD_RELATION_TRUTH
+  - REASONING_GRAPH != HC_PHYSICAL_TOPOLOGY
+  - REASONING_GRAPH != HC_CURRENT_EFFECTIVE_TOPOLOGY
+  - FIXED_MESSAGE_PATH != DISCOVERED_CAUSAL_STRUCTURE
+  - ATTENTION_WEIGHT != EPISTEMIC_AUTHORITY
+  - RELATION_MESSAGE != TRUE_RELATION
+  - CANDIDATE_SCORE != FACT
+  - HIGHER_MODEL_SCORE != EFFECT_AUTHORITY
+  - ATTENDED_RELATION != TRUE_RELATION
+  - LOW_ATTENTION != FALSE_RELATION
+  - CROSS_SCALE_FUSION != SCALE_EQUIVALENCE
+  - SHARED_REASONER != SHARED_SEMANTICS
+  - CANDIDATE_CONDITIONAL_RESULT != UNCONDITIONAL_BELIEF
+  - LEARNED_CLUSTER != FUNCTIONAL_ONTOLOGY_TRUTH
+  - HIERARCHICAL_POOL != COGNITIVE_MODULE_PROOF
+  - CLUSTER_ASSIGNMENT != AUTHORITY_DOMAIN
+  - NUM_OUTPUTS != NUM_INDEPENDENT_SOURCES
+  - REPLICA != INDEPENDENT_SOURCE
+  - PERTURBED_COPY != INDEPENDENT_CORROBORATION
+
+reasoning_workspace_material_fields:
+  - workspace_id
+  - participant_ids
+  - participant_roles
+  - task_or_question_scope
+  - topology_construction_mode
+  - topology_construction_rationale
+  - source_or_provenance_refs
+  - candidate_pairwise_relations
+  - candidate_higher_order_relations
+  - uncertainty
+  - chronology_or_currentness
+  - candidate_condition_if_any
+  - competing_interpretations
+  - output_candidates
+  - lifetime_or_expiry
+
+allowed_topology_construction_modes:
+  - FULLY_CONNECTED_COMPARISON
+  - SPARSE_HEURISTIC_COMPARISON
+  - SPATIAL_GRID_OR_SEQUENCE_ADJACENCY
+  - SEMANTIC_NEIGHBORHOOD
+  - TASK_TEMPLATE
+  - LEARNED_RELATION_PROPOSAL
+  - CAUSAL_MODEL_CANDIDATE
+  - SHARED_SOURCE_OR_PROVENANCE
+  - TEMPORAL_ADJACENCY
+  - HIERARCHICAL_OR_CLUSTER_LOCAL
+  - EXPLICIT_HIGHER_ORDER_PARTICIPANT_SET
+  - OTHER_TYPED_AND_PROVENANCED
+
+reasoning_topology_rules:
+  topology_mode_is_part_of_provenance: true
+  fixed_task_topology_generalizes_beyond_task_without_evidence: false
+  reasoning_relation_creates_world_fact_directly: false
+  reasoning_relation_creates_hc_substrate_relation_directly: false
+  learned_relation_proposal_creates_causal_fact_directly: false
+
+attention_and_gating_rules:
+  attention_may_allocate_computation: true
+  attention_weight_creates_truth: false
+  attention_weight_creates_authority: false
+  attention_weight_creates_consent: false
+  attention_weight_creates_identity: false
+  attention_weight_creates_memory_admission: false
+  attention_weight_creates_action_permission: false
+  low_weight_alternative_may_remain_decision_relevant: true
+
+multi_scale_view_rules:
+  preserve_scale_or_view_identity_when_material: true
+  preserve_scale_or_view_disagreement_when_material: true
+  preferred_pattern:
+    - SOURCE_LOCAL_EVIDENCE
+    - SCALE_OR_VIEW_LOCAL_RELATIONAL_HYPOTHESES
+    - PROVENANCE_PRESERVING_FUSION
+    - INTEGRATED_CANDIDATE_EVALUATION
+
+candidate_scoped_rules:
+  candidate_condition_is_explicit: true
+  candidate_conditional_evidence_becomes_unconditional_fact_directly: false
+  losing_candidate_state_is_erased_by_default: false
+  candidate_score_bypasses_distributed_arbitration: false
+  candidate_score_bypasses_action_authorization: false
+
+hierarchy_rules:
+  learned_cluster_is_revisable_unless_separately_protected: true
+  hierarchy_training_objective_is_provenance: true
+  learned_cluster_creates_physical_module_boundary: false
+  learned_cluster_creates_authority_scope: false
+
+dependency_lineage_rules:
+  preserve_shared_upstream_evidence_when_independence_matters: true
+  preserve_shared_initialization_when_independence_matters: true
+  preserve_shared_preprocessing_when_independence_matters: true
+  preserve_shared_model_or_template_lineage_when_independence_matters: true
+  dependent_agreement_may_support_stability: true
+  dependent_agreement_counts_as_independent_real_world_corroboration: false
+
+negative_tests:
+  - FULLY_CONNECTED_REASONING_WORKSPACE_DOES_NOT_CREATE_ALL_TO_ALL_WORLD_RELATION_CLAIMS
+  - ROW_COLUMN_OR_TASK_TEMPLATE_ADJACENCY_DOES_NOT_ENTER_WORLD_MODEL_AS_CAUSAL_STRUCTURE_WITHOUT_SEPARATE_EVIDENCE
+  - HIGH_ATTENTION_RELATION_DOES_NOT_GAIN_TRUTH_OR_AUTHORITY
+  - CANDIDATE_CONDITIONAL_RESULT_DOES_NOT_ENTER_CURRENT_MEMORY_AS_UNCONDITIONAL_FACT
+  - LEARNED_CLUSTER_DOES_NOT_BECOME_PERMANENT_COGNITIVE_ONTOLOGY_WITHOUT_SEPARATE_ADMISSION
+  - MULTI_SCALE_FUSION_DOES_NOT_ERASE_SCALE_SPECIFIC_DISAGREEMENT
+  - REASONING_GRAPH_DOES_NOT_OVERWRITE_HC_PHYSICAL_LOGICAL_CONFIGURED_OR_EFFECTIVE_TOPOLOGY
+  - MULTIPLE_REPLICAS_OF_ONE_SOURCE_DO_NOT_COUNT_AS_MULTIPLE_INDEPENDENT_SOURCES
+  - HIGH_SCORING_ACTION_CANDIDATE_DOES_NOT_BYPASS_EFFECT_AUTHORIZATION
+
+references:
+  - cognition/RELATIONAL_REASONING_AND_GRAPH_PRIORS.md
+  - cognition/EPISTEMIC_COGNITIVE_CONTROL.md
+  - cognition/PERCEPTION_AND_MULTIMODAL_INFERENCE.md
+  - docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md
+  - docs/architecture/MULTIGRAPH_MULTILAYER_AND_HYPEREDGE_SEMANTICS.md
+  - docs/architecture/REPRESENTATION_ALIGNMENT_AND_RESOLUTION.md
+  - integration-arbitration/DISTRIBUTED_ARBITRATION.md
+  - salience-attention/SALIENCE_CAPTURE_AND_ATTENTION.md
+  - kinesis/ACTION_GATEWAY.md
+  - docs/research/BASIRA_FEDERATED_REPLICA_AND_RELATIONAL_REASONING_2026-09-09.md

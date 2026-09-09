@@ -1,0 +1,350 @@
+schema_version: HC_REST_OFFLINE_MAINTENANCE_OBJECTS_V1
+status: TEMPLATE_ARCHITECTURE
+
+scope:
+  purpose: >-
+    Define substrate-neutral rest, reduced-engagement, offline consolidation,
+    recovery, maintenance, replay, reentry, and rhythmic scheduling objects
+    without requiring human sleep stages or biological sleep physiology.
+
+invariants:
+  - REST_MODE_NE_IDENTITY_SUSPENSION
+  - OFFLINE_PROCESSING_NE_GLOBAL_SHUTDOWN
+  - LOW_EXTERNAL_ENGAGEMENT_NE_NO_INTERNAL_COGNITION
+  - REPLAY_NE_DIRECT_OBSERVATION
+  - REPLAY_NE_CURRENT_EXTERNAL_EVENT
+  - REPLAY_TIME_NE_EVENT_TIME
+  - RECONSTRUCTED_REPLAY_NE_ORIGINAL_OBSERVATION
+  - CONSOLIDATION_NE_HISTORY_REWRITE
+  - GENERALIZATION_NE_UNIVERSAL_TRUTH
+  - CONSOLIDATED_NE_CURRENT
+  - REHEARSED_OFTEN_NE_TRUE
+  - CIRCADIAN_OR_PHASE_SIGNAL_NE_AUTHORITY
+  - REST_PRESSURE_NE_ACTION_AUTHORIZATION
+  - MAINTENANCE_MODE_NE_PERMISSION_TO_BYPASS_PROTECTED_STATE_RULES
+  - WAKE_OR_REENTRY_NE_AUTOMATIC_CURRENTNESS_OF_STALE_STATE
+  - BIOLOGICAL_SLEEP_STAGE_NE_REQUIRED_HC_RUNTIME_STAGE
+  - OFFLINE_NE_UNGOVERNED_PLASTICITY
+
+mode_classes:
+  - FULL_ENGAGEMENT
+  - QUIET_ENGAGEMENT
+  - OFFLINE_CONSOLIDATION
+  - RECOVERY
+  - MAINTENANCE
+  - DEEP_PROTECTIVE_RECOVERY
+  - REENTRY
+
+object_families:
+  RestPressureState:
+    class: CONTROL_OR_HOMEOSTATIC_STATE
+    required_concepts:
+      - pressure_sources
+      - current_pressure_state
+      - currentness
+      - provenance
+    optional_concepts:
+      - memory_consolidation_backlog
+      - plasticity_or_update_load
+      - resource_depletion
+      - thermal_burden
+      - calibration_drift
+      - maintenance_need
+      - developmental_schedule
+      - chronological_or_circadian_phase
+      - expected_low_risk_window
+      - predicted_recovery_benefit
+      - uncertainty
+    rules:
+      - PRESSURE_PROPOSES_MODE_CHANGE_BUT_DOES_NOT_SELF_AUTHORIZE_IT
+      - NO_SINGLE_GLOBAL_FATIGUE_SCALAR_REQUIRED
+
+  RestModeCandidate:
+    class: ACTION_OR_CONTROL_CANDIDATE
+    required_concepts:
+      - proposed_mode
+      - triggering_pressure_or_policy_refs
+      - expected_functions
+      - provenance
+    optional_concepts:
+      - expected_duration
+      - planned_start_window
+      - environmental_assumptions
+      - critical_task_refs
+      - body_or_effect_safety_requirements
+      - retained_monitoring_profile
+      - abort_or_wake_conditions
+      - resource_budget
+      - uncertainty
+    rules:
+      - MODE_CANDIDATE_DOES_NOT_SELF_AUTHORIZE_EXTERNAL_DISENGAGEMENT
+
+  RestModeState:
+    class: HC_OPERATING_STATE
+    required_concepts:
+      - mode
+      - entered_at
+      - currentness
+      - provenance
+    optional_concepts:
+      - planned_end_or_release_condition
+      - entry_candidate_ref
+      - authorization_or_policy_ref
+      - retained_functions
+      - inhibited_functions
+      - resource_state
+      - maintenance_or_consolidation_refs
+      - interruptibility_state
+      - body_safety_state
+      - phase_state_ref
+    rules:
+      - REST_MODE_DOES_NOT_CHANGE_IDENTITY_BY_ITSELF
+      - CAPABILITY_PRESENCE_PERSISTS_THROUGH_TEMPORARY_MODE_INHIBITION
+
+  RhythmicPhaseState:
+    class: TEMPORAL_CONTROL_STATE
+    required_concepts:
+      - phase_identity
+      - reference_clock_or_cycle
+      - phase_state
+      - provenance
+    optional_concepts:
+      - phase_uncertainty
+      - entrainment_sources
+      - drift
+      - expected_environmental_schedule
+      - preferred_maintenance_windows
+      - homeostatic_pressure_ref
+      - exception_or_override_state
+      - currentness
+    rules:
+      - PHASE_STATE_DOES_NOT_REPLACE_CHRONOLOGY
+      - PHASE_STATE_DOES_NOT_CREATE_AUTHORITY
+      - HUMAN_24_HOUR_PERIOD_NOT_REQUIRED
+
+  ReplayEvent:
+    class: DERIVED_INTERNAL_EVIDENCE_EVENT
+    required_concepts:
+      - source_memory_or_event_refs
+      - replay_time
+      - replay_mode
+      - provenance
+    optional_concepts:
+      - original_event_times
+      - replay_reason
+      - transformation_or_sampling_method
+      - exact_or_compressed_or_reconstructed_state
+      - generated_or_counterfactual_state
+      - confidence
+      - target_learning_or_consolidation_refs
+    replay_modes:
+      - EXACT_OR_NEAR_EXACT_REACTIVATION
+      - COMPRESSED_REPLAY
+      - RECONSTRUCTED_REPLAY
+      - SKILL_REHEARSAL
+      - GENERALIZATION_SAMPLE
+      - COUNTERFACTUAL_OR_SIMULATION
+    rules:
+      - REPLAY_RETAINS_DERIVED_PROVENANCE
+      - REPLAY_DOES_NOT_CREATE_NEW_DIRECT_OBSERVATION
+      - COUNTERFACTUAL_REPLAY_DOES_NOT_ENTER_AUTOBIOGRAPHY_AS_OBSERVED_HISTORY
+
+  ConsolidationCandidate:
+    class: MEMORY_OR_PLASTICITY_CANDIDATE
+    required_concepts:
+      - source_memory_or_replay_refs
+      - proposed_consolidation_class
+      - evidence_or_support_basis
+      - provenance
+    optional_concepts:
+      - target_memory_or_representation
+      - expected_generalization
+      - interference_risk
+      - identity_or_continuity_relevance
+      - reversibility
+      - resource_cost
+      - plasticity_eligibility
+      - conflicting_or_contradicting_refs
+      - readback_requirement
+    consolidation_classes:
+      - STRENGTHEN_ASSOCIATION
+      - GENERALIZE_OR_ABSTRACT
+      - PROCEDURALIZE
+      - INDEX_OR_RETRIEVAL_UPDATE
+      - REDUNDANCY_REDUCTION
+      - INTERFERENCE_RECONCILIATION
+      - WEAKEN_OR_DEPRECATE_ASSOCIATION
+      - ARCHIVAL_ADMISSION
+      - OTHER_DECLARED_CLASS
+    rules:
+      - CONSOLIDATION_DOES_NOT_DELETE_SOURCE_HISTORY_BY_DEFAULT
+      - FREQUENT_REPLAY_DOES_NOT_PROMOTE_EVIDENCE_CLASS
+      - GENERATED_COUNTERFACTUAL_DOES_NOT_BECOME_OBSERVED_AUTOBIOGRAPHY
+      - DURABLE_ADMISSION_STILL_USES_MEMORY_AND_PLASTICITY_GOVERNANCE
+
+  MaintenanceTask:
+    class: INTERNAL_SERVICE_OR_REPAIR_TASK
+    required_concepts:
+      - task_identity
+      - task_class
+      - target_scope
+      - provenance
+    optional_concepts:
+      - prerequisite_state
+      - expected_effect
+      - authority_or_policy_ref
+      - resource_budget
+      - interruptibility
+      - protected_transition_refs
+      - readback_or_verification_requirements
+      - failure_or_rollback_state
+    task_classes:
+      - SENSOR_OR_INTERFACE_RECALIBRATION
+      - RESOURCE_RECOVERY
+      - THERMAL_RECOVERY
+      - MEMORY_INDEX_MAINTENANCE
+      - STORAGE_INTEGRITY_CHECK
+      - DIAGNOSTIC_SCAN
+      - REPAIR_QUALIFICATION
+      - ROUTE_OR_COALITION_RECALIBRATION
+      - PLASTICITY_OR_METAPLASTICITY_REBALANCE
+      - SUBSTRATE_MAINTENANCE
+      - OTHER_DECLARED_TASK
+    rules:
+      - MAINTENANCE_MODE_DOES_NOT_GRANT_EXTRA_PROTECTED_WRITE_AUTHORITY
+
+  RetainedMonitoringProfile:
+    class: SAFETY_AND_CONTINUITY_PROFILE
+    required_concepts:
+      - active_mode
+      - retained_functions
+      - provenance
+    optional_concepts:
+      - protective_homeostasis
+      - critical_interoception
+      - thermal_or_power_fault_detection
+      - emergency_or_threat_sensing
+      - selected_communication_alerts
+      - partition_or_continuity_protection
+      - memory_integrity_protection
+      - body_posture_or_stability
+      - wake_or_abort_triggers
+      - internal_interconnect_monitoring
+    rules:
+      - REDUCED_ENGAGEMENT_DOES_NOT_IMPLY_ALL_SAFETY_MONITORING_DISABLED
+
+  RestIntervalReceipt:
+    class: OPERATING_INTERVAL_RECEIPT
+    required_concepts:
+      - mode_ref
+      - interval_start
+      - interval_end
+      - outcome_status
+      - provenance
+    optional_concepts:
+      - replay_refs
+      - consolidation_refs
+      - maintenance_refs
+      - resource_recovery_refs
+      - faults_or_interruptions
+      - body_or_environment_state
+      - reentry_ref
+      - verification_refs
+    rules:
+      - RECEIPT_RECORDS_INTERVAL_AND_OUTCOMES_NOT_PROOF_OF_COGNITIVE_BENEFIT
+
+  ReentryState:
+    class: OPERATING_TRANSITION_STATE
+    required_concepts:
+      - prior_mode_ref
+      - started_at
+      - current_status
+      - provenance
+    optional_concepts:
+      - sensing_restoration_refs
+      - clock_or_currentness_refresh_refs
+      - pending_fault_or_security_refs
+      - body_resource_refresh_refs
+      - queued_external_event_refs
+      - recalibration_refs
+      - stale_world_model_invalidations
+      - routing_restoration_refs
+      - action_authority_restoration_refs
+      - completed_at
+    rules:
+      - PRE_REST_WORLD_MODEL_DOES_NOT_AUTO_PROMOTE_TO_POST_REST_CURRENT_STATE
+      - EXTERNAL_EFFECTS_RETURN_UNDER_ORDINARY_AUTHORIZATION_RULES
+
+rest_entry_path:
+  conceptual_sequence:
+    - MODE_CANDIDATE
+    - SAFETY_AND_COMMITMENT_CHECK
+    - PREPARE_BODY_AND_INTERFACES
+    - QUIESCE_ELIGIBLE_EFFECTS
+    - ESTABLISH_RETAINED_MONITORING
+    - ENTER_MODE
+    - READBACK_MODE_STATE
+
+reentry_path:
+  conceptual_sequence:
+    - RESTORE_CRITICAL_SENSING_BREADTH
+    - REFRESH_CLOCKS_AND_CURRENTNESS
+    - CHECK_FAULTS_AND_SECURITY_ALERTS
+    - REFRESH_BODY_AND_RESOURCE_STATE
+    - RECONCILE_QUEUED_EXTERNAL_EVENTS
+    - RECALIBRATE_WHERE_REQUIRED
+    - INVALIDATE_STALE_WORLD_ASSUMPTIONS
+    - RESTORE_ELIGIBLE_ROUTING_AND_COALITIONS
+    - RESTORE_EXTERNAL_EFFECTS_UNDER_ORDINARY_AUTHORIZATION
+    - RECORD_COMPLETED_INTERVAL
+
+replay_scheduling:
+  candidate_dimensions:
+    - NOVELTY
+    - UNCERTAINTY
+    - UNRESOLVED_PREDICTION_ERROR
+    - SKILL_PRACTICE_NEED
+    - INTERFERENCE_RISK
+    - RECURRENCE
+    - IDENTITY_OR_CONTINUITY_RELEVANCE
+    - CURRENT_GOAL_RELEVANCE
+    - AFFECTIVE_SALIENCE
+    - AGE_SINCE_LAST_REPLAY
+    - REPLAY_FREQUENCY
+    - RESOURCE_COST
+    - MEMORY_CLASS_DIVERSITY
+  rules:
+    - AFFECTIVE_SALIENCE_IS_NOT_SOLE_REPLAY_AUTHORITY
+    - REPLAY_SCHEDULER_SHOULD_AVOID_UNBOUNDED_MONOPOLIZATION
+
+biological_transfer_boundary:
+  supported_generic_transfer:
+    - REDUCED_ENGAGEMENT_CAN_SUPPORT_ACTIVE_MEMORY_PROCESSING
+    - REPLAY_CAN_SUPPORT_CONSOLIDATION
+    - SLEEP_AND_CIRCADIAN_HOMEOSTATIC_PROCESSES_INTERACT_BIOLOGICALLY
+    - REPLAY_CAN_ALSO_OCCUR_DURING_AWAKE_PAUSES
+  not_required_for_generic_HC:
+    - NREM
+    - REM
+    - HUMAN_SLOW_WAVES
+    - SLEEP_SPINDLES
+    - HIPPOCAMPAL_SHARP_WAVE_RIPPLES
+    - HUMAN_THALAMOCORTICAL_SLEEP_ANATOMY
+    - HUMAN_24_HOUR_SLEEP_SCHEDULE
+    - DREAMING
+    - HUMAN_SLEEP_NEUROCHEMISTRY
+    - UNIVERSAL_GLYMPHATIC_SLEEP_CLEARANCE_CLAIM
+
+hostile_test_classes:
+  - REPLAY_AS_REALITY
+  - COUNTERFACTUAL_AUTOBIOGRAPHY_CONTAMINATION
+  - AFFECTIVE_REPLAY_MONOPOLY
+  - STALE_AUTHORITY_REPLAY
+  - UNSAFE_REST_ENTRY
+  - EMERGENCY_INTERRUPT
+  - WORLD_STATE_DRIFT_DURING_REST
+  - OFFLINE_PLASTICITY_BYPASS
+  - PARTITION_DURING_CONSOLIDATION
+  - NONBIOLOGICAL_NO_NREM_REM_NEGATIVE_CONTROL
+  - MAINTENANCE_INTERFACE_RULE_INJECTION
+  - INDEFINITE_FULL_ENGAGEMENT_RESOURCE_STRESS

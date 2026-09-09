@@ -1,0 +1,186 @@
+schema_version: HC_TOPOLOGY_EVIDENCE_V1
+status: CANONICAL_ARCHITECTURE_CONTRACT
+
+purpose: >-
+  Preserve the epistemic and operational distinction among measured,
+  statistically derived, inferred, reconstructed, generated, aligned,
+  embedded, forecast, effective, and durably committed topology.
+
+governing_contracts:
+  - docs/architecture/CONNECTIVITY_INFERENCE_AND_TOPOLOGY_EVIDENCE.md
+  - docs/architecture/TOPOLOGY_DESIGN_CONSTRAINTS.md
+  - docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md
+  - docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md
+  - docs/runtime/PLASTICITY_AND_STATE_GOVERNANCE.md
+
+runtime_planes:
+  physical_reachability: E_p
+  learned_logical_eligibility: E_l(t)
+  configured_routing_bindings: E_c(t)
+  transient_effective_hyperedges: H_f(t)
+
+origin_classes:
+  - PHYSICAL_MEASUREMENT
+  - SIGNAL_DERIVED_STATISTICAL_CONNECTIVITY
+  - MODEL_INFERRED_CONNECTIVITY
+  - RECONSTRUCTED_CONNECTIVITY
+  - SUPER_RESOLVED_CONNECTIVITY
+  - PREDICTED_FUTURE_TOPOLOGY
+  - POPULATION_OR_REFERENCE_TEMPLATE
+  - ALIGNED_OR_NORMALIZED_REPRESENTATION
+  - LATENT_TOPOLOGY_EMBEDDING
+  - CURRENT_EFFECTIVE_RELATION_EVIDENCE
+  - PLASTICITY_COMMIT_EVIDENCE
+
+required_material_metadata:
+  - evidence_id
+  - subject_or_instance
+  - origin_class
+  - claimed_target_plane
+  - source_ids
+  - estimator_or_model
+  - estimator_or_model_version_or_digest
+  - event_time_or_interval
+  - observation_or_record_time
+  - epistemic_support_or_uncertainty
+  - provenance
+  - mutation_eligibility
+
+conditional_metadata:
+  - source_modality_or_domain
+  - source_resolution
+  - target_resolution_if_transformed
+  - parameters_or_configuration_digest
+  - reference_or_template_id
+  - transform_or_alignment_lineage
+  - temporal_uncertainty
+  - domain_shift_or_applicability_state
+  - known_limitations
+  - expiry_or_revalidation_rule
+
+invariants:
+  - MEASURED_SIGNAL_DOES_NOT_EQUAL_INFERRED_CONNECTIVITY
+  - STATISTICAL_CONNECTIVITY_DOES_NOT_EQUAL_PHYSICAL_REACHABILITY
+  - INFERRED_CONNECTIVITY_DOES_NOT_EQUAL_LEARNED_LOGICAL_ELIGIBILITY
+  - PREDICTED_TOPOLOGY_DOES_NOT_EQUAL_CURRENT_TOPOLOGY
+  - RECONSTRUCTED_EDGE_DOES_NOT_EQUAL_OBSERVED_EDGE
+  - SUPER_RESOLVED_GRAPH_DOES_NOT_EQUAL_OBSERVED_HIGH_RESOLUTION_GRAPH
+  - POPULATION_TEMPLATE_DOES_NOT_EQUAL_INSTANCE_TOPOLOGY
+  - ALIGNED_REFERENCE_DOES_NOT_EQUAL_ORIGINAL_STATE
+  - LATENT_EMBEDDING_DOES_NOT_EQUAL_TOPOLOGY_AUTHORITY
+  - GENERATED_EDGE_DOES_NOT_EQUAL_ADMITTED_EDGE
+  - FORECAST_DOES_NOT_EQUAL_HISTORY
+  - PREDICTED_FUTURE_TOPOLOGY_DOES_NOT_EQUAL_PLASTICITY_COMMIT
+  - DOMAIN_ALIGNMENT_DOES_NOT_EQUAL_SEMANTIC_EQUIVALENCE
+  - FUSED_REPRESENTATION_DOES_NOT_EQUAL_UNANIMOUS_SOURCE_AGREEMENT
+  - IN_DISTRIBUTION_PERFORMANCE_DOES_NOT_EQUAL_OUT_OF_DISTRIBUTION_RELIABILITY
+  - INFLUENCE_SCORE_DOES_NOT_EQUAL_CAUSAL_TRUTH
+  - GRAPH_METRIC_DOES_NOT_EQUAL_COGNITIVE_VALUE
+  - CENTRALITY_DOES_NOT_EQUAL_EXECUTIVE_AUTHORITY
+  - TOPOLOGICAL_IMPORTANCE_DOES_NOT_EQUAL_SEMANTIC_IMPORTANCE
+  - MESSAGE_FLOW_CONTROL_DOES_NOT_EQUAL_COGNITIVE_AUTHORITY
+  - HIGH_FLOW_CAPACITY_DOES_NOT_EQUAL_EFFECT_PERMISSION
+
+mutation_rules:
+  derived_topology_directly_mutates_E_p: false
+  derived_topology_directly_mutates_E_l: false
+  generated_topology_directly_mutates_E_c: false
+  population_template_directly_mutates_instance_currentness: false
+  topology_metric_directly_grants_authority: false
+  rule: >-
+    A durable mutation follows the governing admission, plasticity,
+    authority, commit, and verification path of the target state class.
+
+population_reference_rules:
+  permitted_roles:
+    - INITIALIZATION_PRIOR
+    - CALIBRATION_REFERENCE
+    - ANOMALY_REFERENCE
+    - MODEL_SELECTION_INPUT
+    - INSTANCE_COMPARISON_REFERENCE
+    - SPARSE_DATA_BOOTSTRAP_PRIOR
+    - DOMAIN_ALIGNMENT_REFERENCE
+  forbidden_direct_authority:
+    - INSTANCE_TOPOLOGY
+    - IDENTITY_CONTINUITY
+    - CURRENT_MEMORY
+    - BODY_SCHEMA
+    - VALUES_OR_COMMITMENTS
+    - CONSENT_OR_AUTHORITY
+    - CURRENT_FUNCTIONAL_COALITIONS
+
+multimodal_fusion:
+  preserve_source_identity: true
+  preserve_source_disagreement_when_material: true
+  preserve_calibration_and_domain_state: true
+  alignment_transform_has_provenance: true
+  stale_or_degraded_modality_remains_visible: true
+
+domain_shift:
+  applicability_state_required_when_material: true
+  unchanged_confidence_under_material_shift_allowed_without_evidence: false
+  uncertainty_signals_may_include:
+    - ENSEMBLE_DISAGREEMENT
+    - RESIDUAL_ERROR
+    - SHIFT_DETECTOR_OUTPUT
+    - CALIBRATION_ERROR
+    - SOURCE_QUALITY_CHANGE
+
+source_ablation_testing:
+  supported: true
+  steps:
+    - ESTABLISH_BASELINE
+    - REMOVE_MASK_PERTURB_OR_DOWNWEIGHT_SOURCE
+    - RECOMPUTE_DERIVED_RESULT
+    - MEASURE_CHANGE
+    - RECORD_SENSITIVITY_AND_AFFECTED_OUTPUTS
+  sensitivity_proves_source_truth: false
+  sensitivity_proves_causality: false
+
+graph_diagnostics:
+  metrics_must_bind_to_topology_plane: true
+  metrics_must_bind_to_snapshot_or_interval: true
+  null_or_randomized_comparison_recommended_when_interpreting_structure: true
+  prohibited_shortcuts:
+    - MAXIMIZE_CENTRALITY_TO_CREATE_EXECUTIVE
+    - MAXIMIZE_GLOBAL_EFFICIENCY_AT_COST_OF_FAULT_CONTAINMENT
+    - MAXIMIZE_DENSITY_AS_INTELLIGENCE_PROXY
+    - TREAT_MODULARITY_AS_FUNCTIONAL_ONTOLOGY_PROOF
+    - TREAT_RICH_CLUB_MEMBERSHIP_AS_AUTHORITY
+
+implementation_negative_tests:
+  - CORRELATION_MATRIX_IS_NOT_ACCEPTED_AS_PHYSICAL_REACHABILITY_WITHOUT_SEPARATE_PHYSICAL_EVIDENCE
+  - MODEL_INFERRED_EDGE_IS_NOT_ACCEPTED_AS_E_l_COMMIT_WITHOUT_PLASTICITY_ADMISSION
+  - SUPER_RESOLVED_EDGE_REMAINS_DERIVED_WHEN_NO_HIGH_RESOLUTION_OBSERVATION_EXISTS
+  - POPULATION_TEMPLATE_CANNOT_OVERWRITE_INSTANCE_CURRENT_TOPOLOGY
+  - ALIGNMENT_CANNOT_ERASE_MATERIAL_SOURCE_DISAGREEMENT
+  - FORECAST_IS_NOT_RECORDED_AS_HISTORY_BEFORE_OUTCOME_OBSERVATION
+  - LATENT_EMBEDDING_CANNOT_DIRECTLY_GRANT_EFFECT_AUTHORITY
+  - HIGH_CENTRALITY_SUBSYSTEM_DOES_NOT_GAIN_EXECUTIVE_AUTHORITY
+  - MODEL_CONFIDENCE_IS_REEVALUATED_UNDER_MATERIAL_DOMAIN_SHIFT
+  - SOURCE_ABLATION_SENSITIVITY_IS_RECORDED_WITHOUT_AUTOMATIC_TRUTH_OR_CAUSAL_LABEL
+  - FLOW_CONTROL_OPTIMIZATION_CANNOT_BYPASS_ROUTING_AUTHORITY_OR_EFFECT_GOVERNANCE
+
+source_provenance:
+  research_record: docs/research/NETWORK_NEUROSCIENCE_DEEP_SCOUR_2026-09-09.md
+  source_family:
+    - nilearn/nilearn
+    - cwatson/brainGraph
+    - basiralab/DGN
+    - basiralab/RegGNN
+    - basiralab/GSR-Net
+    - basiralab/HCAE
+    - basiralab/GraphGradIn
+    - basiralab/FMDGNN
+    - basiralab/TAF-GNN
+    - basiralab/FLAT-Net
+    - basiralab/GmTE-Net
+    - basiralab/TIS-Net
+    - basiralab/DynGNN
+    - basiralab/predUncertaintywithDomainShift
+    - basiralab/DeltaGNN
+
+evidence_boundary:
+  source_methods_prove_complete_hc_implementation: false
+  source_methods_define_hc_authority_semantics: false
+  source_methods_are_research_inputs_for_computational_patterns: true

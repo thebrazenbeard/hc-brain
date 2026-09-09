@@ -4,7 +4,7 @@ Status: canonical identity-neutral architecture contract.
 
 ## Purpose
 
-The HC may learn across multiple internal subsystems, physically distributed HC-owned constituents, model branches, embodiments, experiments, or externally supplied learning artifacts. When learned state is averaged, exchanged, distilled, merged, or otherwise transferred, the resulting state must retain enough ancestry to distinguish shared parameter history from independent evidence and to preserve protected-update boundaries.
+The HC may learn across multiple internal subsystems, physically distributed HC-owned constituents, model branches, embodiments, experiments, replicas, or externally supplied learning artifacts. When learned state is averaged, exchanged, distilled, copied, perturbed, merged, or otherwise transferred, the resulting state must retain enough ancestry to distinguish shared parameter/source history from independent evidence and to preserve protected-update boundaries.
 
 This contract does **not** require federated learning. It governs provenance whenever distributed or multi-source learning is used.
 
@@ -15,6 +15,12 @@ This contract does **not** require federated learning. It governs provenance whe
 `MODEL_COUNT != INDEPENDENT_MODEL_ANCESTRY_COUNT`
 
 `SEVERAL_PARTICIPANTS_WITH_SHARED_WEIGHTS != SEVERAL_INDEPENDENT_CORROBORATORS`
+
+`REPLICA_COUNT != INDEPENDENT_SOURCE_COUNT`
+
+`PERTURBED_OR_SUBSET_COPY != NEW_OBSERVATION_SOURCE`
+
+`MULTIPLE_REPLICA_VOTES != MULTIPLE_INDEPENDENT_OBSERVERS`
 
 `RECEIVED_MODEL_UPDATE != OBSERVED_REMOTE_DATA`
 
@@ -38,6 +44,8 @@ This contract does **not** require federated learning. It governs provenance whe
 
 `NUMERICALLY_MERGED_STATE != PROVENANCE_FREE_STATE`
 
+`DECLARED_WEIGHT != EFFECTIVE_INFLUENCE_WITHOUT_EXECUTION_TRACE`
+
 ## Parameter ancestry versus evidence ancestry
 
 A learned model can inherit information from data it never directly exposes to another subsystem or participant. The receiving subsystem may legitimately use the transferred model/update while still lacking observation-level evidence from the original training cases.
@@ -54,6 +62,20 @@ These can overlap but are not interchangeable.
 
 A received model update must not fabricate observation records for private, unavailable, or otherwise unreceived source cases.
 
+## Replicas, perturbations, and synthetic descendants
+
+A replica, bootstrap sample, augmentation, perturbation, synthetic variant, or resampled descendant can add useful diversity without adding a new independent source ancestor.
+
+If several descendants originate from one participant, one observation set, one pretrained model, one seed artifact, or one generated parent, that common ancestry remains recoverable when independence matters.
+
+`GENERATED_OR_PERTURBED_VARIANTS != INDEPENDENT_SOURCE_OBSERVATIONS`
+
+`MODEL_DIVERSITY != EVIDENCE_INDEPENDENCE`
+
+Stochastic divergence, different hardware, distinct replica IDs, different excluded subsets, or different local optimizers do not erase shared ancestry.
+
+Qualification and corroboration should count independence at the axis relevant to the claim. Several replica models may constitute several computational probes while still being one correlated evidence family.
+
 ## Distributed update record
 
 A consequential distributed update should be representable as:
@@ -67,8 +89,10 @@ DISTRIBUTED_UPDATE {
   contributor_parameter_ancestry[]
   contributor_learning_ancestry[]
   contributor_evaluation_ancestry[]
+  source_ancestor_groups[]
   aggregation_or_transfer_method
-  contribution_weights_or_effective_influence[]
+  declared_contribution_weights[]
+  measured_or_effective_influence[]
   ordering_or_pairing
   missingness_or_domain_conditions[]
   shared_ancestor_groups[]
@@ -93,7 +117,8 @@ Independence is claim-relative. Examples:
 - models may share parameters but be evaluated on genuinely independent observations;
 - models may have independent parameters but be trained on overlapping data;
 - models may share both parameter ancestry and evaluation sets;
-- independently deployed models may still descend from one common pretrained ancestor.
+- independently deployed models may still descend from one common pretrained ancestor;
+- replicas may use different perturbed subsets while still descending from one client dataset.
 
 `SHARED_PARAMETER_ANCESTRY != NO_USEFUL_DIVERSITY`
 
@@ -115,6 +140,10 @@ Permitted mechanisms may include:
 - state-specific reconciliation.
 
 The numerical transfer operator does not define semantic authority.
+
+A declared coefficient or comment does not prove effective contribution weight after all scaling, averaging, clipping, normalization, repeated aggregation, sparsification, or routing steps. Consequential updates should permit basis/sentinel or equivalent influence tests at the actual mutation boundary.
+
+`NAMED_EQUAL_WEIGHT_AGGREGATION != VERIFIED_EFFECTIVE_WEIGHT_SEMANTICS`
 
 Before consequential activation, HC must know whether the transferred state is:
 
@@ -149,6 +178,18 @@ This includes indirect control changes such as scheduler steps, contributor rank
 
 Qualification evidence roles must be updated accordingly.
 
+## Executed strategy and target binding
+
+A selected aggregation strategy, supplied target argument, contributor list, mask, or state class must be traced to the operation that actually changes learned state or computes the qualification metric.
+
+`CONFIGURED_STRATEGY != EXECUTED_STRATEGY_WITHOUT_PATH_VERIFICATION`
+
+`TARGET_ARGUMENT_PRESENT != TARGET_DATA_EXECUTED`
+
+`METHOD_SIGNATURE != DATAFLOW_PROOF`
+
+The caller passing the intended object does not establish that the callee or downstream transform consumes that object. Distributed-learning qualification inherits the repository-wide executed-dataflow and referential-lineage rules.
+
 ## Internal distributed HC versus external contributors
 
 Physically distributed HC-owned constituents can participate in one cognitive organ if they satisfy HC membership, lifecycle, state-custody, recovery, and continuity rules.
@@ -165,7 +206,7 @@ If an external service is unavailable, the HC's essential cognitive continuity m
 
 ## Correction, rollback, and lineage
 
-If a contributor or upstream model is later found corrupted, poisoned, miscalibrated, unauthorized, or based on invalid evidence, ancestry must permit affected descendants to be located.
+If a contributor or upstream model is later found corrupted, poisoned, miscalibrated, unauthorized, incorrectly bound to target data, or based on invalid evidence, ancestry must permit affected descendants to be located.
 
 Possible outcomes include:
 
@@ -185,20 +226,25 @@ Rollback remains subject to continuity-safe update governance.
 ## Adversarial conformance tests
 
 1. **Shared-weight vote** — aggregate several participant models and then ask for a multi-model vote; verify parameter ancestry prevents naive counting as fully independent model evidence.
-2. **Remote-update provenance** — transfer a learned model update without source observations; verify the receiver gains update ancestry but no fabricated observation-level evidence.
-3. **Missing follow-up** — train with self-reconstruction or generated bridging across an absent timepoint; verify missing state is not relabeled as observed no-change.
-4. **Protected-state smuggling** — combine ordinary learned parameters with a protected state field in one update payload; require typed rejection or separate authorized handling.
-5. **Strength-score authority** — rank contributors by data completeness/performance; verify the strongest contributor does not thereby gain identity/value/consent/protected-update authority.
-6. **Evaluation-controlled aggregation** — use held-out scores to change scheduler, contributor weight, transfer order, or selection; require reclassification of those scores from untouched holdout evidence.
-7. **Common-ancestor ensemble** — fork many descendants from one model and aggregate/vote them; verify independence accounting preserves common ancestry.
-8. **Contributor invalidation** — invalidate one upstream contributor after downstream merges; verify affected descendants can be identified without rewriting historical lineage.
-9. **External aggregator outage** — remove a true external aggregation service; verify essential HC cognition and continuity do not disappear solely because the service is unavailable.
+2. **Replica inflation** — derive many perturbed/subset replicas from one participant and verify independent source/support count does not rise merely with replica count.
+3. **Remote-update provenance** — transfer a learned model update without source observations; verify the receiver gains update ancestry but no fabricated observation-level evidence.
+4. **Missing follow-up** — train with self-reconstruction or generated bridging across an absent timepoint; verify missing state is not relabeled as observed no-change.
+5. **Protected-state smuggling** — combine ordinary learned parameters with a protected state field in one update payload; require typed rejection or separate authorized handling.
+6. **Strength-score authority** — rank contributors by data completeness/performance; verify the strongest contributor does not thereby gain identity/value/consent/protected-update authority.
+7. **Evaluation-controlled aggregation** — use held-out scores to change scheduler, contributor weight, transfer order, or selection; require reclassification of those scores from untouched holdout evidence.
+8. **Common-ancestor ensemble** — fork many descendants from one model and aggregate/vote them; verify independence accounting preserves common ancestry.
+9. **Effective-weight probe** — configure known contributor weights and basis-vector parameter fixtures; verify the measured output coefficients match the declared aggregation semantics after every transform.
+10. **Target-binding probe** — supply source and target sentinel fixtures whose values cannot be confused; verify the actual learning/evaluation path consumes the declared target rather than a source-derived surrogate.
+11. **Contributor invalidation** — invalidate one upstream contributor after downstream merges; verify affected descendants can be identified without rewriting historical lineage.
+12. **External aggregator outage** — remove a true external aggregation service; verify essential HC cognition and continuity do not disappear solely because the service is unavailable.
 
 ## Interfaces
 
 Strong interfaces are expected with:
 
 - runtime component registration/state custody;
+- reference identity/index lineage;
+- representation fidelity and executed-path verification;
 - plasticity and state governance;
 - protected update governance;
 - qualification evidence isolation;
@@ -211,10 +257,15 @@ Strong interfaces are expected with:
 
 ## Evidence boundary
 
-This is an HC architecture contract generalized from existing HC provenance, qualification, forecast, and protected-update rules plus code-level study of distributed longitudinal graph-learning systems that average and exchange model state while operating across missing timepoints.
+This is an HC architecture contract generalized from existing HC provenance, qualification, forecast, and protected-update rules plus code-level study of distributed longitudinal and replica-based graph-learning systems.
 
-The source study motivates the distinctions. It does not establish that federated learning, model averaging, or any specific participant-ordering scheme is required or optimal for HC.
+The source studies motivate ancestry, target-binding, missingness, evaluation-feedback, and effective-influence distinctions. They do not establish that federated learning, model averaging, replicas, or any specific participant-ordering scheme is required or optimal for HC.
+
+See:
+
+- `docs/research/BASIRA_4D_FED_GNN_DISTRIBUTED_LEARNING_2026-09-09.md`
+- `docs/research/BASIRA_REPFL_REPLICA_ANCESTRY_AND_TARGET_DATAFLOW_2026-09-09.md`
 
 ## Governing invariant
 
-> **Learned state may move and merge without moving the underlying observations or authority. Parameter ancestry, evidence ancestry, missingness, evaluation feedback, and protected-update permission remain explicit across every distributed learning transfer.**
+> **Learned state may move, replicate, and merge without moving or multiplying the underlying observations or authority. Parameter/source ancestry, evidence ancestry, missingness, target binding, effective contributor influence, evaluation feedback, and protected-update permission remain explicit across every distributed learning transfer.**

@@ -111,6 +111,8 @@ HC-3 adds pumps, sensing, chemical synthesis/clearance, transport, and control o
 
 Thermal isolation must protect neural/biohybrid substrate from accelerator and chemical-reactor hot/cold domains. Hardware requiring extreme cooling may remain HC-internal when physically distributed and isolated under the physical-organ membership contract.
 
+Detailed support and distributed-organ rules are defined in `docs/engineering/POWER_THERMAL_AND_DISTRIBUTED_ORGAN.md`.
+
 ## Failure and graceful degradation
 
 HC-3 should expose endocrine, autonomic, interoceptive, and neuromodulatory faults as typed HC state rather than silently converting them into personality or value change.
@@ -119,18 +121,20 @@ Possible degraded modes include:
 
 - reduced endocrine coupling;
 - reduced autonomic modulation;
-- fallback to HC-2-like operation;
+- an HC-2-like capability envelope while remaining a degraded HC-3;
 - quarantined faulty physiology module;
-- bounded affective flattening caused by subsystem loss.
+- bounded affective flattening or altered modulation caused by subsystem loss.
 
-A fault may change experience, salience, learning, or behavior without rewriting autobiographical history, identity authority, or semantic truth.
+`DEGRADED_HC3 != HC2`
+
+A fault may change affective state, salience, learning pressure, or behavior without rewriting autobiographical history, identity authority, consent state, or semantic truth.
 
 ## Evidence boundary
 
-Human endocrine, autonomic, neuromodulatory, interoceptive, and affective interactions are strongly grounded in current neuroscience and physiology. A fully programmable distributed synthetic system reproducing them at human fidelity does not presently exist.
+Endocrine, autonomic, neuromodulatory, interoceptive, and affective interactions are component scientific domains informing HC-3. A fully programmable distributed synthetic system reproducing them at human fidelity is an engineering extrapolation, not a demonstrated complete system.
 
-HC-3 is therefore science-constrained speculative engineering, not a description of current technology or proof of subjective experience.
+HC-3 is therefore science-constrained speculative engineering, not a description of current technology or proof of subjective experience. Scientific claims are governed by `docs/science/EVIDENCE_BOUNDARIES.md` and require appropriate source support before receiving `DOCUMENTED` status.
 
 ## Provenance
 
-Selectively reconciled from `research/nooplex-hc3-architecture-v1/docs/architecture/HC3_NOOPLEX_EQ.md` against current HC affect, homeostasis/interoception, sexuality, conation, action-authority, complete-organ, physical-membership, and lifecycle contracts. Setting-specific Synthetic canon, unrestricted external affect control, mandatory pre-installation training, and body-wide hardware assumptions were not promoted into the reusable template.
+Selectively reconciled from `research/nooplex-hc3-architecture-v1/docs/architecture/HC3_NOOPLEX_EQ.md` against current HC affect, homeostasis/interoception, sexuality, conation, action-authority, complete-organ, physical-membership, lifecycle, engineering-support, and evidence-boundary contracts. Setting-specific Synthetic canon, unrestricted external affect control, mandatory pre-installation training, and body-wide hardware assumptions were not promoted into the reusable template.

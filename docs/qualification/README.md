@@ -74,6 +74,14 @@ Outcome: `CONDITIONAL PASS` for its stated architecture snapshot. A later reposi
 
 Primary condition: independent hostile review, secondary implementation-readiness challenge, and actual protected-update negative/recovery testing remain outstanding.
 
+### `EVIDENCE_LINEAGE_CUSTODY_CONFORMANCE_2026-09-09.md`
+
+Focused architecture qualification for qualification-evidence isolation, stable reference/index lineage, runtime-component registration/state custody, and composite element-level provenance.
+
+Outcome: `CONDITIONAL PASS` for target `47f2882b6f5ea0d2683ee079a471061cf2e9a8ac` and the stated architecture scope.
+
+Primary conditions: independent Four verification, Vera hostile review, and implementation-level negative tests remain outstanding. Source-specific runtime hypotheses from BGSR/GSR-Net remain explicitly bounded and are not promoted into claims about published experiment validity.
+
 ## Result preservation
 
 If a qualification later changes, preserve the old record and create a successor record or explicit supersession/disposition link. Do not rewrite an old FAIL or CONDITIONAL PASS into a historical PASS merely because the defect was later repaired.
@@ -83,10 +91,19 @@ Qualification history is evidence about what was tested at a particular cut.
 ## Governing sources
 
 - `../architecture/CONFORMANCE_AND_QUALIFICATION.md`
+- `../architecture/QUALIFICATION_EVIDENCE_ISOLATION.md`
+- `../architecture/REFERENCE_IDENTITY_AND_INDEX_LINEAGE.md`
+- `../architecture/RUNTIME_COMPONENT_REGISTRATION_AND_STATE_CUSTODY.md`
+- `../architecture/COMPOSITE_REPRESENTATION_AND_ELEMENT_PROVENANCE.md`
 - `../science/EVIDENCE_BOUNDARIES.md`
 - `../../specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml`
 - `../../specs/HC_CONFORMANCE_SUITE_V1.yaml`
+- `../../specs/HC_CONFORMANCE_EXTENSION_EVIDENCE_LINEAGE_CUSTODY_V1.yaml`
 - `../../specs/HC_REPOSITORY_SURFACE_CONFORMANCE_V1.yaml`
 - `../../specs/HC_MEMORY_PROVIDER_BOUNDARY_V1.yaml`
 - `../../specs/HC_BOOTSTRAP_RECOVERY_V1.yaml`
 - `../../specs/HC_PROTECTED_UPDATE_GOVERNANCE_V1.yaml`
+- `../../specs/HC_QUALIFICATION_EVIDENCE_ISOLATION_V1.yaml`
+- `../../specs/HC_REFERENCE_IDENTITY_INDEX_LINEAGE_V1.yaml`
+- `../../specs/HC_RUNTIME_COMPONENT_CUSTODY_V1.yaml`
+- `../../specs/HC_COMPOSITE_ELEMENT_PROVENANCE_V1.yaml`

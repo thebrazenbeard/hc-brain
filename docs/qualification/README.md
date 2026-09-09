@@ -52,7 +52,15 @@ The record preserves an observed provider-admission ambiguity that was corrected
 
 ### `BOOTSTRAP_RECOVERY_CONFORMANCE_2026-09-09.md`
 
-Focused architecture qualification for self-contained startup, continuity restoration, crash consistency, safe degradation, authority/currentness revalidation, and lineage preservation after interruption.
+Historical first focused bootstrap/recovery architecture qualification.
+
+Outcome: `CONDITIONAL PASS` for its stated snapshot.
+
+For current bootstrap/recovery architecture assessment this record is superseded by the R2 record below; it remains preserved as evidence of what was tested before bootstrap semantics were promoted into the core cognitive-organ invariant schema.
+
+### `BOOTSTRAP_RECOVERY_CONFORMANCE_2026-09-09_R2.md`
+
+Current focused architecture qualification for self-contained startup, continuity restoration, crash consistency, safe degradation, authority/currentness revalidation, lineage/fork preservation, and consistency across prose, focused spec, core invariants, and cross-suite checks.
 
 Outcome: `CONDITIONAL PASS` for its stated snapshot.
 
@@ -68,6 +76,7 @@ Qualification history is evidence about what was tested at a particular cut.
 
 - `../architecture/CONFORMANCE_AND_QUALIFICATION.md`
 - `../science/EVIDENCE_BOUNDARIES.md`
+- `../../specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml`
 - `../../specs/HC_CONFORMANCE_SUITE_V1.yaml`
 - `../../specs/HC_REPOSITORY_SURFACE_CONFORMANCE_V1.yaml`
 - `../../specs/HC_MEMORY_PROVIDER_BOUNDARY_V1.yaml`

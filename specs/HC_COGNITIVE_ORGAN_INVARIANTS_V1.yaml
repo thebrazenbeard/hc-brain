@@ -99,6 +99,40 @@ complete_capability_manifest:
     - PRESENT_DOES_NOT_EQUAL_ACTIVE
     - DISABLED_DOES_NOT_EQUAL_DELETED
 
+developmental_initialization:
+  complete_architecture_may_begin_immature: true
+  template_contains_named_identity_payload: false
+  protected_invariants_are_ordinary_plastic_state: false
+  bootstrap_priors_must_be_explicitly_scoped: true
+  learned_effective_topology_may_develop_over_time: true
+  historical_learning_provenance_is_forward_preserved: true
+  initialization_layers:
+    - PROTECTED_ARCHITECTURAL_INVARIANTS
+    - BOOTSTRAP_PRIORS_AND_DEVELOPMENTAL_AFFORDANCES
+    - DEVELOPMENTALLY_LEARNED_STRUCTURE
+    - INSTANCE_SPECIFIC_CONTINUITY_CONTENT
+  learning_modes_may_include:
+    - SUPERVISED_INSTRUCTIONAL
+    - SELF_SUPERVISED_PREDICTIVE
+    - REINFORCEMENT_CREDIT_ASSIGNMENT
+    - EPISODIC_CAPTURE
+    - SEMANTIC_GENERALIZATION
+    - IMITATION_SOCIAL
+    - PROCEDURAL_PRACTICE
+    - ACTIVE_EXPERIMENTATION
+    - COUNTERFACTUAL_SIMULATION
+    - CALIBRATION_BODY_LEARNING
+    - OBSERVE_ONLY_SHADOW_LEARNING
+  rules:
+    - CAPABILITY_PRESENCE_DOES_NOT_EQUAL_DEVELOPMENTAL_MATURITY
+    - LEARNING_SIGNAL_DOES_NOT_EQUAL_TRUTH
+    - REWARD_DOES_NOT_EQUAL_AUTHORITY
+    - REPEATED_EXPOSURE_DOES_NOT_EQUAL_CONSENT
+    - PREDICTIVE_ACCURACY_DOES_NOT_EQUAL_EFFECT_AUTHORIZATION
+    - ORDINARY_PLASTICITY_MUST_NOT_SILENTLY_REWRITE_PROTECTED_INVARIANTS
+    - BODY_RECALIBRATION_DOES_NOT_EQUAL_IDENTITY_RESET
+    - TEMPORARY_COALITION_DOES_NOT_BECOME_PERMANENT_CONTROL_PATH_WITHOUT_ADMISSION
+
 self_contained_residency:
   essential_cognitive_state_recoverable_without_external_provider: true
   external_storage_may_be:
@@ -214,3 +248,4 @@ forbidden_template_shortcuts:
   - CENTRAL_HOMUNCULUS_EXECUTIVE
   - HEMISPHERIC_HUMAN_BRAIN_PACKAGING
   - NAMED_PERSON_DEFAULT_IDENTITY_PAYLOAD
+  - MATURE_IDENTITY_OR_PERSONAL_HISTORY_PREAUTHORED_BY_BASE_TEMPLATE

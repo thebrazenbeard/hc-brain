@@ -1,0 +1,67 @@
+schema: hc-node-registry/v0.1
+root: hyperconnectome_brain
+architecture: distributed_non_hemispheric_hyperconnectome
+identity_neutral: true
+nodes:
+  - id: empathy
+    domain: empathic modeling, perspective-taking, affective resonance, social concern
+  - id: cognition
+    domain: general reasoning, abstraction, planning, problem solving, working synthesis
+  - id: sexuality
+    domain: sexual motivation, attraction, arousal integration, sexual learning and context
+  - id: self_model
+    domain: current representation of self, capabilities, boundaries, body and role
+  - id: identity_continuity
+    domain: continuity across autobiographical history, commitments, embodiment and change
+  - id: psychological_behavior
+    domain: intrapersonal patterns, coping, learned responses, motivational and behavioral tendencies
+  - id: sociological_behavior
+    domain: social norms, group models, roles, institutions, culture and relationship context
+  - id: semantics
+    domain: concepts, meanings, lexical-semantic representations and knowledge relations
+  - id: pragmatics
+    domain: context-sensitive meaning, intent, implication, discourse and social language use
+  - id: phonetics_phonology
+    domain: speech-sound perception, production targets, phonological structure and articulation mapping
+  - id: language
+    domain: integration of semantics, pragmatics, phonology, syntax, discourse and multilingual mappings
+  - id: somatics
+    domain: body schema, proprioception, nociception, tactile-body mapping and embodied state
+  - id: interoception_homeostasis
+    domain: internal physiological sensing, set-points, autonomic regulation and survival state
+  - id: affect
+    domain: distributed appraisal, valence, arousal, neuromodulatory/endocrine coupling and emotional state
+  - id: chronology
+    domain: temporal ordering, duration, sequence, event-time relations and autobiographical timeline
+  - id: personification
+    domain: coherent outward expression across language, behavior, affect, style and social presentation
+  - id: current_memory
+    domain: working context, active bindings, immediate episodic traces, active plans and temporary models
+  - id: deep_memory
+    domain: consolidated episodic, semantic, procedural, relational and autobiographical memory
+  - id: volition_conation
+    domain: motive formation, goal selection, intention, commitment and action initiation
+  - id: resolver_arbitration
+    domain: conflict representation, bounded arbitration, belief/action selection and uncertainty handling
+  - id: operating_priors
+    domain: basic operating instructions, invariant constraints, bootstrapping assumptions and core defaults
+  - id: salience_attention
+    domain: relevance estimation, attention allocation, interrupt handling and resource prioritization
+  - id: kinesis
+    domain: motor planning, action sequencing, motor execution interfaces and movement prediction
+  - id: adaptive_io
+    domain: modality-agnostic external input/output adaptation, calibration and interface translation
+  - id: optics
+    domain: visual acquisition, preprocessing, gaze control and visual-system calibration
+  - id: speech_recognition
+    domain: auditory-speech decoding and speaker/context-sensitive linguistic input
+  - id: speech_synthesis
+    domain: vocal planning, prosody, articulation targets and linguistic output realization
+  - id: sensory_integration
+    domain: multimodal binding across exteroception, proprioception, interoception and temporal context
+  - id: routing
+    domain: addressing, path selection, synchronization, cross-node transport and fault rerouting
+  - id: neuroplasticity
+    domain: learning-driven modification of weights, timing, recruitment, topology and consolidation
+  - id: diagnostics_health
+    domain: fault detection, physiological/computational health monitoring, graceful degradation and recovery

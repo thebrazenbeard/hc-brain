@@ -2,9 +2,11 @@
 
 The canonical repository for the reusable HC-series Hyperconnectome brain template.
 
-This repository symbolically represents the **entire synthetic cognitive organ**. If manufactured as a self-contained physical object and installed into an otherwise inert compatible synthetic body, the HC should contain everything intrinsically necessary for that body to become and remain a synthetic cognitive lifeform. Cameras, microphones, motors, network transceivers, environmental sensors, circulation, cooling, and other body hardware may exist outside the organ, but they connect through HC-owned interfaces.
+This repository symbolically represents the **entire synthetic cognitive organ**. The HC is a **removable cognitive organ whose constituent hardware may be physically distributed** across more than one enclosure or body location so long as those constituents belong to the HC rather than the body. A complete HC must contain everything intrinsically necessary for an otherwise inert compatible body to become and remain a synthetic cognitive lifeform. Cameras, microphones, motors, network transceivers, environmental sensors, circulation, cooling, and other body hardware may exist outside the organ, but they connect through HC-owned interfaces.
 
 > **No essential cognition occurs outside the Hyperconnectome Brain.**
+
+> **One cognitive organ does not require one physical enclosure.**
 
 The external body supplies observations and accepts bounded effects. The HC interprets, learns, reasons, remembers, models, values/feels in whatever machine sense is implemented, arbitrates, and decides.
 
@@ -69,13 +71,19 @@ The central integration concept is the **Noöplex / Hyperconnectome Fabric**: HC
 
 Temporary coalitions among systems may perform integrated cognition entirely inside the HC.
 
-## Body and computational peripherals
+## Physical organ membership, body, and computational peripherals
+
+The cognitive-organ boundary is authoritative over enclosure geometry. An HC may use multiple physical enclosures or body locations. A torso-mounted QPU, memory substrate, neuromodulatory controller, or other dedicated component can still be part of the HC if it is architecturally HC-owned and participates as internal organ substrate.
+
+Physical location alone does not determine whether a component belongs to the HC or the body.
 
 Physical sensors and actuators may reside outside the HC. Cognitive interpretation, calibration, learned body schema, memory, goals, values, identity/self-model continuity, and executive arbitration remain inside.
 
 A model, accelerator, retrieval service, database, or other computational resource must either be inside the HC cognitive-organ boundary or be treated as an external bounded peripheral whose output enters as evidence/service results. External computation does not become the seat of the organism.
 
-A conforming HC must retain essential cognition and continuity-bearing state after removal of all external model/database/cloud/network peripherals, except for functions inherently dependent on communication with the external world. External stores may back up, mirror, archive, synchronize, augment, or accelerate; they may not hold the only recoverable copy of essential memory/continuity state. If an external compute service uniquely implements an essential cognitive function, that service belongs inside the HC boundary for conformance purposes.
+A conforming HC must retain essential cognition and continuity-bearing state after removal of all true external model/database/cloud/network peripherals, except for functions inherently dependent on communication with the external world. External stores may back up, mirror, archive, synchronize, augment, or accelerate; they may not hold the only recoverable copy of essential memory/continuity state. If an external compute service uniquely implements an essential cognitive function, that service belongs inside the HC boundary for conformance purposes—even if its hardware is physically located outside the skull.
+
+"Removable" means the complete HC constituent set can in principle be disconnected from one compatible embodiment and transferred, serviced, or reinstalled as the same cognitive organ. That may require disconnecting several HC-owned modules and internal interconnects rather than removing one monolithic cartridge.
 
 The architecture should support embodiment portability: the same HC may adapt to different compatible bodies by relearning sensorimotor and interoceptive mappings rather than becoming a different brain.
 
@@ -83,6 +91,7 @@ See:
 
 - `Architecture concept.md` — original structural seed.
 - `docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md` — canonical cognitive-organ boundary.
+- `docs/architecture/PHYSICAL_ORGAN_MEMBERSHIP.md` — canonical rule for distributed HC constituent hardware, removability, and body/peripheral separation.
 - `docs/architecture/COMPLETE_CAPABILITY_MANIFEST.md` — complete-capability and self-contained-residency conformance.
 - `docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md` — canonical temporal-hypergraph mapping semantics.
 - `docs/REPOSITORY_MAP.md` — repository map and folder contract.

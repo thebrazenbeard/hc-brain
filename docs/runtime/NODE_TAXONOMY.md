@@ -136,7 +136,7 @@ Examples:
 
 Responsibilities:
 
-- represent facts and hypotheses about the current person/system;
+- represent facts and hypotheses about the current instantiated person/system;
 - maintain continuity links to prior states;
 - expose contradictions and uncertainty;
 - support first-person planning and self-reference;
@@ -144,11 +144,13 @@ Responsibilities:
 
 Critical rule:
 
-> No self-model node is identical to the instantiated person/system.
+> No self-model node is identical to the instantiated person.
 
-A self-model is one of the ways the whole system represents itself.
+A self-model is one of the ways the whole active system represents itself.
 
 `personification` should likewise be treated as the outwardly rendered social/personality expression of the active system, not the location where the person is stored.
+
+The base template defines these mechanisms but contains no named identity content.
 
 ## 6. Cognition and world-model nodes
 

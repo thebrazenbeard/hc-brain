@@ -3,8 +3,17 @@ status: CONCEPTUAL_NOT_IMPLEMENTED
 source_base:
   repository: thebrazenbeard/hyperconnectome-brain
   branch: thebrazenbeard-patch-1
-  commit: 701a8cfb3616c81aea84aac38cd506fc89fb4035
-  relation: stacked_runtime_contribution_over_user_PR1
+  commit: 66e20f648bac71c9de980e8895a5894377fca385
+  relation: stacked_runtime_contribution_over_PR1
+
+template_scope:
+  identity_neutral: true
+  named_identity_content_allowed_in_base_template: false
+  instance_specific_content_location: downstream_derived_implementation
+  warden:
+    formal_name: Noetarch
+    everyday_name: Noah
+    role: repository_and_architecture_warden_not_runtime_identity
 
 runtime_model:
   type: temporal_attributed_multilayer_hypergraph
@@ -12,6 +21,8 @@ runtime_model:
   invariants:
     - root_is_composition_boundary_not_master_controller
     - no_single_homunculus
+    - no_hemispheric_decomposition
+    - template_is_not_instance
     - self_model_is_not_self
     - personification_is_not_identity_storage
     - observation_does_not_imply_global_authority
@@ -117,6 +128,7 @@ memory_classes:
   - CONNECTOME_STATE
 
 identity_model:
+  template_rule: generic_mechanisms_only_no_named_identity_defaults
   explicit_non_equivalences:
     - SELF_MODEL_NE_SELF
     - AUTOBIOGRAPHICAL_MEMORY_NE_SELF

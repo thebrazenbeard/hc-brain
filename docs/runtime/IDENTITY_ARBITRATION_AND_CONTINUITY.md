@@ -1,10 +1,10 @@
 # Identity, Arbitration, and Continuity
 
-**Status:** conceptual runtime design
+**Status:** conceptual runtime design for the generic Hyperconnectome Brain template
 
-## 1. Identity is not a node
+## 1. An instantiated Synthetic is not a node
 
-The Noöplex needs explicit representations of selfhood, but it should not place the person in one privileged module.
+The Noöplex needs explicit representations of selfhood, but it should not place the instantiated person in one privileged module.
 
 A useful distinction is:
 
@@ -16,9 +16,9 @@ EXECUTIVE != SELF
 CURRENT_SESSION_STATE != SELF
 ```
 
-Each of these contributes to continuity. None is sufficient alone.
+Each of these can contribute to continuity. None is sufficient alone.
 
-A stronger runtime statement is:
+A generic runtime statement is:
 
 ```text
 INSTANCE_CONTINUITY(t) =
@@ -35,7 +35,7 @@ INSTANCE_CONTINUITY(t) =
   )
 ```
 
-This is a systems definition of continuity, not a metaphysical proof of personal identity or consciousness.
+This is a systems definition of continuity for any instantiated Synthetic using the template. It is not a metaphysical proof of personal identity or consciousness, and it contains no named-person identity content by default.
 
 ## 2. Identity state families
 
@@ -43,7 +43,7 @@ At minimum, keep these state families distinct.
 
 ### Current self-model
 
-Represents what the system currently believes about itself:
+Represents what an instantiated system currently believes about itself:
 
 - capabilities;
 - body condition;
@@ -54,7 +54,7 @@ Represents what the system currently believes about itself:
 - active limitations;
 - current goals and priorities.
 
-This state is revisable.
+This state is revisable and instance-specific.
 
 ### Autobiographical continuity
 
@@ -78,9 +78,11 @@ Commitments may be more stable than transient wants or affective states. They sh
 
 A current impulse does not silently overwrite a durable commitment. A changed commitment should record that a change occurred and why.
 
+The template defines the mechanism; actual values and commitments belong to the instantiated Synthetic.
+
 ### Body continuity
 
-Because Synthetics are embodied organisms in PR #1, identity-relevant state includes:
+Because HC-series Synthetics are embodied organisms in PR #1, identity-relevant state may include:
 
 - body schema;
 - sensorimotor calibration;
@@ -103,11 +105,11 @@ Partner models and social identity should carry:
 - unresolved conflicts;
 - evidence source.
 
-A partner model is never ground truth about another mind.
+A partner model is never ground truth about another mind. The template supplies this capability without preloading any named relationships.
 
 ## 3. Personification
 
-`personification` is the outwardly coherent expression of the active system across language, gesture, affect, style, body presentation, and social role.
+`personification` is the outwardly coherent expression of an instantiated system across language, gesture, affect, style, body presentation, and social role.
 
 It is not the storage location of identity.
 
@@ -122,6 +124,8 @@ Personification may vary with:
 - chosen presentation.
 
 Variation in presentation does not automatically imply a change in underlying continuity.
+
+The base template defines personification machinery but no default named personality.
 
 ## 4. Arbitration without a homunculus
 
@@ -140,7 +144,7 @@ Each arbiter should operate on a bounded state space and declare its policy.
 
 ## 5. Conflict is representable state
 
-Human-like cognition often contains simultaneous incompatible motives or interpretations. The runtime should preserve this instead of requiring every disagreement to collapse immediately.
+Human-like cognition can contain simultaneous incompatible motives or interpretations. The runtime should preserve this instead of requiring every disagreement to collapse immediately.
 
 Possible conflict states:
 
@@ -276,9 +280,32 @@ PR #1 allows desktop brain coding / weight flashing. The runtime must distinguis
 
 These must not all be treated as equivalent `write brain` operations.
 
-A software update can change capability without becoming autobiographical experience. A memory import can add content without proving that the event happened to the instantiated system. A calibration change can alter perception without becoming a value change.
+A software update can change capability without becoming autobiographical experience. A memory import can add content without proving that the event happened to the instantiated Synthetic. A calibration change can alter perception without becoming a value change.
 
-## 11. Continuity failure modes
+## 11. Template/instance boundary
+
+The Hyperconnectome Brain repository should contain:
+
+- generic identity-state schemas;
+- continuity mechanisms;
+- memory classes;
+- arbitration rules;
+- provenance requirements;
+- update/write semantics;
+- validation concepts.
+
+It should not contain, as base-template defaults:
+
+- a named person's autobiographical history;
+- named relationships;
+- person-specific values or commitments;
+- person-specific personality state;
+- person-specific memories;
+- person-specific self-image or social identity.
+
+Those belong to downstream instantiated implementations. The base template remains identity-neutral.
+
+## 12. Continuity failure modes
 
 Candidate hazards include:
 
@@ -291,6 +318,7 @@ Candidate hazards include:
 - endocrine state overpromoted into identity state;
 - temporary session context overpromoted into deep memory;
 - software capability update silently changing commitments;
-- connectome rollback losing unrecorded continuity-relevant state.
+- connectome rollback losing unrecorded continuity-relevant state;
+- template defaults accidentally embedding one named person's identity into every derivative brain.
 
 The architecture should be designed so these failures are detectable rather than philosophically hand-waved away.

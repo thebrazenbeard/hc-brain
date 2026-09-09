@@ -144,7 +144,7 @@ Responsibilities:
 
 Critical rule:
 
-> No self-model node is identical to Vera.
+> No self-model node is identical to the instantiated person/system.
 
 A self-model is one of the ways the whole system represents itself.
 

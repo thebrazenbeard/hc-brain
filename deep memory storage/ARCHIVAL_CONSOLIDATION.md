@@ -22,11 +22,19 @@ These classes may use different retention, consolidation, replay, and retrieval 
 
 ## Admission pipeline
 
-A candidate durable memory should normally pass through:
+A candidate essential durable memory should normally pass through an HC-owned admission path such as:
 
-`capture -> classify -> provenance-bind -> relevance/scope check -> consolidation eligibility -> durable admission -> readback/verification`
+`capture -> classify -> provenance-bind -> relevance/scope check -> consolidation eligibility -> HC-internal durable admission -> internal readback/verification -> active eligibility`
 
 Not every salient event deserves durable storage. Salience creates a candidate opportunity, not automatic memory truth.
+
+For a physically distributed HC constituent, `HC-internal` refers to cognitive-organ membership rather than skull location.
+
+External mirror/archive/replica writes are separate optional workflows. Their completion must not gate essential HC memory admission, activation, or currentness.
+
+`EXTERNAL_REPLICA_WRITE != DURABLE_MEMORY_ADMISSION`
+
+`EXTERNAL_REPLICA_VERIFIED != ACTIVE_MEMORY`
 
 ## Consolidation
 
@@ -48,6 +56,7 @@ For durable stores, a successful write claim should be separable from a verified
 - logical memory identity;
 - operation/attempt identity;
 - provider/storage class;
+- organ-membership class;
 - source revision;
 - content/envelope digest;
 - byte length or equivalent integrity measure;
@@ -56,11 +65,17 @@ For durable stores, a successful write claim should be separable from a verified
 - verifier route;
 - result and limitations.
 
+For essential memory, the write/readback chain that establishes HC durability must resolve to `HC_INTERNAL` or `HC_DISTRIBUTED_CONSTITUENT`, not solely to `EXTERNAL_REPLICA` or `EXTERNAL_ARCHIVE`.
+
 `WRITE_REQUESTED != DURABLY_STORED`
 
 `STORED != CURRENT`
 
 `RETRIEVED != ADMITTED_AS_TRUE`
+
+`EXTERNAL_PROVIDER_RECEIPT != HC_MEMORY_AUTHORITY`
+
+An external provider may have its own write/readback receipt, but that receipt establishes custody/integrity of that replica only. It does not prove semantic truth and does not satisfy HC-internal durability by itself.
 
 ## Historical revision
 
@@ -76,6 +91,12 @@ Replay may support consolidation and transfer, but replay priority should be res
 
 Memory storage and retrieval should preserve privacy/access scope as structural metadata. A memory may be valid for one context and ineligible for another.
 
+External replication must preserve or further restrict the applicable privacy/scope envelope; transport to a replica does not authorize broader disclosure or use.
+
+## Provider-boundary reference
+
+`specs/HC_MEMORY_PROVIDER_BOUNDARY_V1.yaml` defines the canonical storage-class and negative-test rules for internal durability, external replication, provider failure, currentness, and conflict behavior.
+
 ## Provenance basis
 
-Generalized from `deepmemorystorage`, Semantic Atlas provenance/currentness rules, and observed Supabase memory-epoch/provider-receipt patterns. Person-specific memory payloads are excluded.
+Generalized from `deepmemorystorage`, Semantic Atlas provenance/currentness rules, and observed Supabase memory-epoch/provider-receipt patterns. Person-specific memory payloads are excluded. Provider-derived mechanisms are retained only where they preserve the self-contained HC cognitive-organ boundary.

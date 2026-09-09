@@ -8,6 +8,22 @@ Derived from structural patterns observed in the production Supabase schema on 2
 
 Current memory is a fast, revisable state surface. It is not the durable historical ledger and it is not automatically authoritative simply because it is active.
 
+## Cognitive-organ / substrate boundary
+
+This document transfers state-model patterns from an observed provider schema; it does **not** make Supabase, a cloud database, or any external service the architectural owner of current memory.
+
+For a conforming complete HC, essential current cognitive state and continuity-bearing state must reside on HC-owned substrate inside the cognitive-organ boundary. A database implementation may be:
+
+- an HC-internal storage mechanism;
+- a local projection/index over HC-owned state;
+- an external mirror, backup, synchronization target, archive, or optional retrieval accelerator.
+
+A true external provider must not become the only place where essential current memory, self-state, goals, commitments, body schema, or other continuity-critical state exists.
+
+`SCHEMA_PATTERN_TRANSFER != PROVIDER_DEPENDENCY`
+
+`EXTERNAL_CURRENT_STATE_COPY != CURRENT_MEMORY_AUTHORITY`
+
 ## Recommended record classes
 
 Current memory should be able to represent several distinct kinds of active context, for example:
@@ -88,4 +104,6 @@ Retrieval metadata such as tags and last-reference timestamps can improve access
 - permissions or boundaries silently treated as permanent;
 - old preference reactivated merely because it was retrieved;
 - current context promoted into durable identity state without admission;
-- private context exported beyond its declared scope.
+- private context exported beyond its declared scope;
+- external provider availability mistaken for current-memory existence;
+- external replica silently becoming the sole authoritative current-state store.

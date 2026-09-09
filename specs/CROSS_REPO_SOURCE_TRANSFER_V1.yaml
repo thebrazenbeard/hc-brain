@@ -1,0 +1,268 @@
+schema_version: CROSS_REPO_SOURCE_TRANSFER_V1
+status: RESEARCH_SYNTHESIS_CONTRACT
+purpose: provenance_bound_architecture_transfer
+
+identity_neutral_template: true
+no_hemispheric_decomposition: true
+no_essential_cognition_outside_hc: true
+
+binding_rules:
+  every_target_id_must_resolve: true
+  canonical_targets_must_use_exact_current_paths: true
+  unbound_targets_are_research_only: true
+  alias_does_not_create_new_subsystem: true
+  source_authority_does_not_transfer: true
+
+source_bindings_location: docs/research/cross-repo-synthesis/SOURCE_BINDINGS_2026-09-09.md
+
+source_ids:
+  SRC_SEMANTIC_LEDGER: {class: DIRECT_ARCHITECTURE_SOURCE}
+  SRC_UNIVERSAL_MEDIATION: {class: DIRECT_ARCHITECTURE_SOURCE}
+  SRC_PRAGMATIC_MODEL: {class: DIRECT_ARCHITECTURE_SOURCE}
+  SRC_DEVELOPMENTAL_COGNITION: {class: DIRECT_ARCHITECTURE_SOURCE}
+  SRC_DEEP_MEMORY: {class: MECHANISM_SOURCE_IDENTITY_SCRUBBED}
+  SRC_TEMPORAL: {class: MECHANISM_SOURCE_IDENTITY_SCRUBBED}
+  SRC_CONATION: {class: MECHANISM_SOURCE_IDENTITY_SCRUBBED}
+  SRC_EMPATHY: {class: MECHANISM_SOURCE_IDENTITY_SCRUBBED}
+  SRC_SEXUALITY: {class: MECHANISM_SOURCE_IDENTITY_SCRUBBED}
+  SRC_PERSONIFICATION: {class: MECHANISM_SOURCE_IDENTITY_SCRUBBED}
+  SRC_BODY_REFERENCE: {class: MECHANISM_SOURCE_IDENTITY_SCRUBBED}
+  SRC_ROUTING_BUS: {class: DIRECT_ARCHITECTURE_SOURCE}
+  SRC_MODEL_SUBSTRATE_OS: {class: MECHANISM_SOURCE_IDENTITY_SCRUBBED}
+  SRC_CONTROL_PLANE: {class: MECHANISM_SOURCE_IDENTITY_SCRUBBED}
+  SRC_ADAPTIVE_MACHINE_MODEL: {class: DIRECT_ARCHITECTURE_SOURCE}
+  SRC_SENSOR_ADMISSION: {class: DIRECT_ARCHITECTURE_SOURCE}
+  SRC_SAFETY_BOUNDARY: {class: GOVERNANCE_SAFETY_PATTERN}
+  SRC_MULTI_PERSPECTIVE_TEAM: {class: GOVERNANCE_SAFETY_PATTERN}
+  SRC_SUPABASE_RUNTIME: {class: RUNTIME_SCHEMA_EVIDENCE}
+  SRC_STABLE_MATERIAL_CUT: {class: RUNTIME_SCHEMA_EVIDENCE}
+  SRC_HC_NATIVE: {class: TARGET_NATIVE}
+
+canonical_target_bindings:
+  TGT_SEMANTICS:
+    kind: DIRECTORY
+    path: semantics/
+  TGT_PRAGMATICS:
+    kind: DIRECTORY
+    path: pragmatics/
+  TGT_COGNITION:
+    kind: DIRECTORY
+    path: cognition/
+  TGT_CURRENT_MEMORY:
+    kind: DIRECTORY
+    path: current memory storage/
+  TGT_DEEP_MEMORY:
+    kind: DIRECTORY
+    path: deep memory storage/
+  TGT_SELF_IDENTITY:
+    kind: DIRECTORY
+    path: self identity/
+  TGT_CHRONOLOGY:
+    kind: DIRECTORY
+    path: chronology/
+  TGT_VOLITIONS_CONATIONS:
+    kind: DIRECTORY
+    path: volitions-conations/
+  TGT_EMPATHY:
+    kind: DIRECTORY
+    path: Empathy/
+  TGT_SEXUALITY:
+    kind: DIRECTORY
+    path: sexuality/
+  TGT_PERSONIFICATION:
+    kind: DIRECTORY
+    path: personification/
+  TGT_PSYCHOLOGICAL_BEHAVIORS:
+    kind: DIRECTORY
+    path: psychological behaviors/
+  TGT_SOCIOLOGICAL_BEHAVIORS:
+    kind: DIRECTORY
+    path: sociological behaviors/
+  TGT_AFFECT:
+    kind: DIRECTORY
+    path: affect/
+  TGT_SOMATICS:
+    kind: DIRECTORY
+    path: somatics/
+  TGT_ADAPTABLE_IO:
+    kind: DIRECTORY
+    path: adaptable I-O handler/
+  TGT_KINESIS:
+    kind: DIRECTORY
+    path: kinesis/
+  TGT_ROUTING:
+    kind: DIRECTORY
+    path: routing instructions with neuroplasticity/
+  TGT_RESOLVER:
+    kind: DIRECTORY
+    path: resolver/
+  TGT_SALIENCE_ATTENTION:
+    kind: DIRECTORY
+    path: salience-attention/
+  TGT_INTEGRATION_ARBITRATION:
+    kind: DIRECTORY
+    path: integration-arbitration/
+  TGT_SPEECH:
+    kind: DIRECTORY
+    path: speech recognition & synthesis/
+  TGT_NOOPLEX_FABRIC:
+    kind: FILE
+    path: integration-arbitration/NOOPLEX_FABRIC.md
+  TGT_COGNITIVE_ORGAN_BOUNDARY:
+    kind: FILE
+    path: docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md
+  TGT_RUNTIME_INVARIANTS:
+    kind: FILE
+    path: basic operating instructions/RUNTIME_INVARIANTS.md
+  TGT_CONTINUITY:
+    kind: FILE
+    path: self identity/CONTINUITY_SUBSTRATE.md
+  TGT_PLASTICITY_GOVERNANCE:
+    kind: FILE
+    path: docs/runtime/PLASTICITY_AND_STATE_GOVERNANCE.md
+  TGT_CURRENTNESS:
+    kind: FILE
+    path: current memory storage/CURRENT_STATE_SELECTION.md
+  TGT_EXTERNAL_PROVIDER_BOUNDARY:
+    kind: FILE
+    path: adaptable I-O handler/BODY_INTERFACE_BOUNDARY.md
+
+transfers:
+  - id: T01
+    mechanism: semantic_object_and_provenance_separation
+    sources: [SRC_SEMANTIC_LEDGER, SRC_UNIVERSAL_MEDIATION, SRC_PRAGMATIC_MODEL]
+    target_ids: [TGT_SEMANTICS, TGT_PRAGMATICS, TGT_COGNITION, TGT_CURRENT_MEMORY, TGT_DEEP_MEMORY]
+    claim_ceiling: ARCHITECTURE_PATTERN
+
+  - id: T02
+    mechanism: representation_neutral_grounding
+    sources: [SRC_UNIVERSAL_MEDIATION]
+    target_ids: [TGT_SEMANTICS, TGT_PRAGMATICS, TGT_ADAPTABLE_IO, TGT_COGNITION]
+    claim_ceiling: GROUNDED_CLAIM_DISCIPLINE_NOT_UNIVERSAL_SEMANTICS
+
+  - id: T03
+    mechanism: epistemic_conative_firewall
+    sources: [SRC_DEVELOPMENTAL_COGNITION]
+    target_ids: [TGT_COGNITION, TGT_VOLITIONS_CONATIONS, TGT_INTEGRATION_ARBITRATION]
+    claim_ceiling: COGNITIVE_ARCHITECTURE_HYPOTHESIS
+
+  - id: T04
+    mechanism: append_only_memory_and_currentness
+    sources: [SRC_DEEP_MEMORY, SRC_TEMPORAL, SRC_SUPABASE_RUNTIME]
+    target_ids: [TGT_CHRONOLOGY, TGT_CURRENT_MEMORY, TGT_DEEP_MEMORY, TGT_SELF_IDENTITY, TGT_CURRENTNESS]
+    claim_ceiling: DURABLE_STATE_MECHANISM
+
+  - id: T05
+    mechanism: readback_verified_persistence
+    sources: [SRC_SUPABASE_RUNTIME, SRC_STABLE_MATERIAL_CUT]
+    target_ids: [TGT_DEEP_MEMORY, TGT_CONTINUITY, TGT_PLASTICITY_GOVERNANCE, TGT_EXTERNAL_PROVIDER_BOUNDARY]
+    claim_ceiling: PERSISTENCE_INTEGRITY_ONLY
+
+  - id: T06
+    mechanism: conative_lifecycle
+    sources: [SRC_CONATION, SRC_DEVELOPMENTAL_COGNITION]
+    target_ids: [TGT_VOLITIONS_CONATIONS]
+    claim_ceiling: MOTIVATION_STATE_ARCHITECTURE
+
+  - id: T07
+    mechanism: evidence_bounded_self_other_modeling
+    sources: [SRC_EMPATHY]
+    target_ids: [TGT_EMPATHY, TGT_SOCIOLOGICAL_BEHAVIORS, TGT_COGNITION]
+    claim_ceiling: PERSPECTIVE_MODELING_NOT_MIND_READING
+
+  - id: T08
+    mechanism: sexuality_as_agency_bearing_capacity
+    sources: [SRC_SEXUALITY]
+    target_ids: [TGT_SEXUALITY, TGT_AFFECT, TGT_SOMATICS, TGT_VOLITIONS_CONATIONS, TGT_SOCIOLOGICAL_BEHAVIORS]
+    claim_ceiling: FUNCTIONAL_ARCHITECTURE_NOT_PHENOMENAL_CLAIM
+
+  - id: T09
+    mechanism: social_presentation_control
+    sources: [SRC_PERSONIFICATION]
+    target_ids: [TGT_PERSONIFICATION, TGT_PRAGMATICS, TGT_SPEECH, TGT_KINESIS, TGT_INTEGRATION_ARBITRATION]
+    claim_ceiling: SOCIAL_EXPRESSION_ARCHITECTURE
+
+  - id: T10
+    mechanism: generic_body_schema
+    sources: [SRC_BODY_REFERENCE, SRC_HC_NATIVE]
+    target_ids: [TGT_SOMATICS, TGT_ADAPTABLE_IO, TGT_KINESIS, TGT_SELF_IDENTITY]
+    claim_ceiling: BODY_SCHEMA_ARCHITECTURE
+
+  - id: T11
+    mechanism: typed_routing_subscriptions_dead_letters
+    sources: [SRC_ROUTING_BUS, SRC_SUPABASE_RUNTIME]
+    target_ids: [TGT_NOOPLEX_FABRIC, TGT_ROUTING, TGT_RESOLVER, TGT_INTEGRATION_ARBITRATION]
+    claim_ceiling: SOFTWARE_RUNTIME_PATTERN
+
+  - id: T12
+    mechanism: specialist_substrate_separation
+    sources: [SRC_MODEL_SUBSTRATE_OS, SRC_ADAPTIVE_MACHINE_MODEL, SRC_HC_NATIVE]
+    target_ids: [TGT_ROUTING, TGT_COGNITION, TGT_COGNITIVE_ORGAN_BOUNDARY]
+    claim_ceiling: MODULAR_COMPUTE_ARCHITECTURE
+
+  - id: T13
+    mechanism: salience_and_dependency_aware_correction
+    sources: [SRC_CONTROL_PLANE, SRC_SEMANTIC_LEDGER, SRC_DEVELOPMENTAL_COGNITION]
+    target_ids: [TGT_SALIENCE_ATTENTION, TGT_RESOLVER, TGT_PRAGMATICS]
+    claim_ceiling: ATTENTION_CONTROL_ARCHITECTURE
+
+  - id: T14
+    mechanism: sensor_capability_admission
+    sources: [SRC_SENSOR_ADMISSION, SRC_ADAPTIVE_MACHINE_MODEL]
+    target_ids: [TGT_ADAPTABLE_IO]
+    claim_ceiling: BOUNDED_INTERFACE_VALIDATION
+
+  - id: T15
+    mechanism: independent_action_gateway
+    sources: [SRC_ADAPTIVE_MACHINE_MODEL, SRC_SAFETY_BOUNDARY, SRC_DEVELOPMENTAL_COGNITION, SRC_HC_NATIVE]
+    target_ids: [TGT_KINESIS, TGT_INTEGRATION_ARBITRATION]
+    claim_ceiling: ACTION_SAFETY_ARCHITECTURE
+
+  - id: T16
+    mechanism: consequence_proportional_fail_closed_behavior
+    sources: [SRC_SAFETY_BOUNDARY]
+    target_ids: [TGT_RESOLVER, TGT_KINESIS, TGT_RUNTIME_INVARIANTS]
+    claim_ceiling: FAILURE_CONTAINMENT_PRINCIPLE
+
+  - id: T17
+    mechanism: multi_perspective_snapshot_bound_arbitration
+    sources: [SRC_MULTI_PERSPECTIVE_TEAM, SRC_SUPABASE_RUNTIME]
+    target_ids: [TGT_INTEGRATION_ARBITRATION]
+    claim_ceiling: ARBITRATION_PROVENANCE_PATTERN
+
+  - id: T18
+    mechanism: stable_external_state_cut
+    sources: [SRC_STABLE_MATERIAL_CUT]
+    target_ids: [TGT_CURRENTNESS, TGT_EXTERNAL_PROVIDER_BOUNDARY]
+    claim_ceiling: CONSISTENCY_PROVENANCE_PATTERN
+
+forbidden_transfers:
+  - NAMED_PERSON_MEMORY
+  - NAMED_PERSON_RELATIONSHIP_STATE
+  - NAMED_PERSON_PREFERENCES_OR_VALUES
+  - NAMED_PERSON_SELF_MODEL
+  - NAMED_PERSON_MORPHOLOGY
+  - PRIVATE_DATABASE_ROW_PAYLOADS
+  - RAW_PRIVATE_CONVERSATION_EXPORTS
+  - CREDENTIALS_OR_SECRETS
+  - SOURCE_REPOSITORY_AUTHORITY_AS_UNIVERSAL_BRAIN_AUTHORITY
+  - HUMAN_HEMISPHERIC_OR_LOBAR_PACKAGING
+  - SOURCE_PRODUCT_HARDWARE_REQUIREMENT_AS_UNIVERSAL_HC_REQUIREMENT
+  - UNBOUND_TARGET_PROMOTED_TO_CANON
+
+cross_cutting_separations:
+  - OBSERVATION_NE_INTERPRETATION
+  - MEASURED_NE_DERIVED_NE_INFERRED
+  - SALIENCE_NE_TRUTH
+  - STORED_NE_CURRENT
+  - ROUTED_NE_INCORPORATED
+  - DELIVERED_NE_BELIEVED
+  - PRIORITY_NE_AUTHORITY
+  - DESIRE_NE_BELIEF
+  - DESIRE_NE_CONSENT
+  - INTENTION_NE_AUTHORIZATION
+  - CAPABILITY_NE_PERMISSION
+  - ACTION_SELECTED_NE_ACTION_AUTHORIZED
+  - PRESENTATION_NE_IDENTITY
+  - PRESENTATION_PROPOSAL_NE_ACTION_SELECTION
+  - SELF_MODEL_NE_WHOLE_MIND

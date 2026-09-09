@@ -40,6 +40,8 @@ Therefore:
 
 `DISCRIMINATIVE_FEATURE != CAUSAL_MECHANISM`
 
+`CONFIGURED_STRATEGY != EXECUTED_STRATEGY_WITHOUT_PATH_VERIFICATION`
+
 ## Fidelity vector
 
 A consequential transformation should declare which fidelity dimensions were actually tested. Candidate dimensions include:
@@ -169,13 +171,19 @@ Reproducibility strengthens the claim that a signal is stable under the tested p
 
 ## Implementation verification
 
-Architecture names and comments do not establish runtime behavior.
+Architecture names, comments, selected modes, configuration values, and strategy objects do not establish runtime behavior.
 
-If a component claims properties such as cluster-specific learning, source-specific routing, protected retention, modality-specific processing, topology preservation, or ground-truth preservation, qualification should trace the actual data/state path and inspect the exact objective/test implementation.
+If a component claims properties such as cluster-specific learning, source-specific routing, protected retention, modality-specific processing, topology preservation, ground-truth preservation, weighted exchange, selected policy behavior, or a mode-dependent strategy, qualification should trace the actual data/state/effect path and inspect the exact objective/test implementation.
 
 `NAMED_BEHAVIOR != VERIFIED_EXECUTION`
 
-Instrumentation, controlled fixtures, negative controls, state/index tracing, and metric-specific counterexamples are preferred over assuming that loop labels, class names, paper terminology, or diagrams match executed behavior.
+`SELECTED_POLICY_OBJECT != EFFECT_PATH_USES_SELECTED_POLICY`
+
+`FEATURE_FLAG_SET != GUARANTEED_BEHAVIOR_CHANGE`
+
+A configuration parser or local variable may correctly select one strategy while a later hard-coded path invokes another. Verification therefore follows the causal execution path to the material state/effect boundary rather than stopping at the configuration surface.
+
+Instrumentation, controlled fixtures, negative controls, state/index tracing, branch/path coverage, and metric-specific counterexamples are preferred over assuming that loop labels, class names, paper terminology, diagrams, configuration names, or strategy selectors match executed behavior.
 
 ## Failure modes
 
@@ -188,6 +196,8 @@ Instrumentation, controlled fixtures, negative controls, state/index tracing, an
 - stable discriminative feature becomes a claimed causal mechanism;
 - high fidelity on a static graph masks timing-order failure;
 - a named cluster/modality route processes the wrong partition at runtime;
+- a configured strategy is selected but bypassed by a hard-coded downstream call;
+- a feature flag changes metadata/logging but not the material effect path;
 - implementation test verifies output score without verifying intended state flow.
 
 ## Conformance questions
@@ -203,13 +213,16 @@ Instrumentation, controlled fixtures, negative controls, state/index tracing, an
 9. Has claimed partition-specific or route-specific behavior been traced at runtime?
 10. Are causal or semantic claims being inferred from discrimination, attribution, or reproducibility alone?
 11. Can a counterexample preserve the reported fidelity metrics while materially changing an untested structural dimension?
+12. Does the configured/selected strategy actually control the material execution path, or can a later direct/hard-coded call bypass it?
 
 ## Evidence provenance
 
-This contract was motivated by source study of BASIRA Lab multigraph integration/generation methods and their evaluation implementations, including MultiGraphGAN, topoGAN, MGN-Net, MICNet, netNorm, SM-netFusion, NAGFS, ReMI-Net, SG-Net, and the comparative multigraph-integration survey.
+This contract was motivated by source study of BASIRA Lab multigraph integration/generation methods and their evaluation implementations, including MultiGraphGAN, topoGAN, MGN-Net, MICNet, netNorm, SM-netFusion, NAGFS, ReMI-Net, SG-Net, 4D-FED-GNN/4D-FedGNN-Plus, and the comparative multigraph-integration survey.
 
 The SG-Net code-level review provided a concrete example in which a claimed topology-preserving objective combines tensor L1 reconstruction, Pearson correlation, and eigenvector-centrality matching. This strengthens the requirement that fidelity claims remain scoped to the exact implemented metrics rather than the method label.
 
+The 4D-FedGNN-Plus code-level review provided a complementary implementation-path example: a strategy function is selected into a local variable, while an inspected training path later directly invokes a specific ordering function. The static mismatch is source-specific evidence for tracing configured behavior to the executed path; it is not generalized into a claim about published experiment validity.
+
 The computational methods provide examples of scoped optimization and validation patterns. They do not prove HC's complete synthetic-organ design or elevate any graph metric into a cognitive primitive.
 
-See `docs/research/BASIRA_MULTIGRAPH_TOPOLOGY_FIDELITY_2026-09-09.md` and `docs/research/BASIRA_SGNET_FIDELITY_CODE_REVIEW_2026-09-09.md` for source-specific observations and transfer limits.
+See `docs/research/BASIRA_MULTIGRAPH_TOPOLOGY_FIDELITY_2026-09-09.md`, `docs/research/BASIRA_SGNET_FIDELITY_CODE_REVIEW_2026-09-09.md`, and `docs/research/BASIRA_4D_FED_GNN_DISTRIBUTED_LEARNING_2026-09-09.md` for source-specific observations and transfer limits.

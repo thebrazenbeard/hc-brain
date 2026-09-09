@@ -1,0 +1,262 @@
+schema_version: HC_PERCEPTUAL_COMMUNICATION_OBJECTS_V1
+status: TEMPLATE_MACHINE_COMPANION
+
+scope:
+  systems:
+    - optics
+    - phoenetics
+    - speech_recognition_and_synthesis
+  canonical_phonetic_contract: phoenetics/PHONETIC_EVIDENCE_CONTRACT.md
+  canonical_core_invariants: specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml
+  purpose: >-
+    Preserve evidence, form, interpretation, identity, intent, and action as
+    distinct machine-readable object families across visual and acoustic
+    communication paths while remaining subordinate to canonical focused
+    subsystem contracts.
+
+invariants:
+  - MEASURED_NE_DERIVED
+  - DERIVED_NE_INFERRED
+  - OPTICAL_MEASUREMENT_NE_SCENE_HYPOTHESIS
+  - SCENE_HYPOTHESIS_NE_WORLD_TRUTH
+  - ACOUSTIC_SIGNAL_NE_PHONETIC_PARSE
+  - PHONETIC_PARSE_NE_LEXICAL_FORM
+  - LEXICAL_FORM_NE_SEMANTIC_TRUTH
+  - RECOGNIZED_UTTERANCE_NE_SPEAKER_INTENT
+  - VOICE_MATCH_NE_PERSON_IDENTITY
+  - GAZE_DIRECTION_NE_COGNITIVE_ATTENTION
+  - SPEECH_FORM_PLAN_NE_ACTION_AUTHORIZATION
+  - SPEECH_FORM_PLAN_NE_BOUND_OUTPUT_INTERFACE
+  - COMMAND_SENT_NE_EFFECT_CONFIRMED
+  - EXTERNAL_MODEL_OUTPUT_NE_HC_BELIEF
+  - HUMAN_LATERALITY_NE_HC_TOPOLOGY
+  - OBSERVATION_INTERVAL_NE_INSTANT_ONLY
+
+object_families:
+  VisualObservation:
+    class: EVIDENCE_OBJECT
+    required_concepts:
+      - source_interface
+      - observation_time_or_interval
+      - modality
+      - calibration_state
+      - provenance
+      - evidence_class
+    optional_concepts:
+      - embodiment_binding
+      - exposure_interval
+      - clock_uncertainty
+      - spectral_range
+      - lens_focus_zoom_state
+      - pose_or_extrinsic_estimate
+      - raw_or_referenced_frame
+      - saturation_state
+      - dynamic_range
+      - dropped_frame_or_event_state
+      - reliability
+      - currentness_or_expiry
+
+  SceneHypothesis:
+    class: INFERRED_STATE
+    required_concepts:
+      - supporting_observations
+      - hypothesis_identity
+      - confidence
+      - provenance
+    optional_concepts:
+      - candidate_entities
+      - candidate_identities
+      - spatial_relations
+      - temporal_relations
+      - motion_or_trajectory_hypotheses
+      - visibility_or_occlusion_state
+      - coordinate_frames
+      - cross_modal_links
+      - competing_hypotheses
+      - unresolved_conflicts
+      - currentness_or_expiry
+    rules:
+      - MULTIPLE_SCENE_HYPOTHESES_MAY_COEXIST
+      - REPEATED_VISUAL_SIMILARITY_DOES_NOT_ESTABLISH_PERSISTENT_IDENTITY
+
+  AcousticObservation:
+    class: EVIDENCE_OBJECT
+    required_concepts:
+      - source_interface
+      - observation_interval
+      - acoustic_payload_or_reference
+      - calibration_state
+      - provenance
+      - evidence_class
+    optional_concepts:
+      - observation_time_anchor
+      - embodiment_binding
+      - clock_uncertainty
+      - encoding_or_sample_state
+      - channel_state
+      - source_direction_evidence
+      - noise_or_degradation_state
+      - reliability
+      - currentness_or_expiry
+    rules:
+      - INTERVAL_PRESERVES_DURATION_AND_BOUNDARY_UNCERTAINTY_WHEN_MATERIAL
+
+  SignalSegmentationHypothesis:
+    class: DERIVED_HYPOTHESIS
+    required_concepts:
+      - parent_acoustic_observations
+      - candidate_boundaries_or_units
+      - confidence
+      - provenance
+    optional_concepts:
+      - competing_segmentations
+      - timing_or_prosody_evidence
+      - language_or_convention_assumptions
+      - boundary_uncertainty
+    rules:
+      - SEGMENTATION_IS_REVISABLE
+      - NO_WORD_LIKE_UNIT_REQUIRED_WHEN_EVIDENCE_DOES_NOT_SUPPORT_ONE
+
+  PhoneticPhonologicalHypothesis:
+    class: DERIVED_HYPOTHESIS
+    required_concepts:
+      - parent_acoustic_or_segmentation_refs
+      - candidate_sound_form
+      - confidence
+      - provenance
+    optional_concepts:
+      - prosody
+      - rhythm
+      - emphasis
+      - silence_or_hesitation
+      - competing_candidates
+      - language_or_convention_hypotheses
+      - timing_features
+    rules:
+      - FORM_HYPOTHESIS_DOES_NOT_SELF_PROMOTE_TO_LEXICAL_OR_SEMANTIC_TRUTH
+
+  LexicalFormHypothesis:
+    class: OPTIONAL_DERIVED_HYPOTHESIS
+    required_concepts:
+      - parent_phonetic_or_signal_hypothesis
+      - candidate_lexical_form
+      - confidence
+      - provenance
+    optional_concepts:
+      - unit_or_boundary_refs
+      - competing_lexical_forms
+      - language_or_convention_hypotheses
+      - context_refs
+      - semantic_hypothesis_refs
+    rules:
+      - LEXICAL_FORM_OBJECT_IS_OPTIONAL
+      - NO_LEXICAL_UNIT_REQUIRED_WHEN_SIGNAL_SYSTEM_DOES_NOT_SUPPORT_ONE
+      - LEXICAL_FORM_DOES_NOT_SELF_PROMOTE_TO_SEMANTIC_TRUTH
+
+  SpeechRecognitionHypothesis:
+    class: INFERRED_STATE
+    required_concepts:
+      - parent_signal_evidence
+      - recognized_form_or_structure
+      - confidence
+      - provenance
+    optional_concepts:
+      - lexical_candidates
+      - lexical_form_hypothesis_refs
+      - language_or_dialect_hypotheses
+      - speaker_hypotheses
+      - turn_state
+      - prosodic_features
+      - competing_recognition_paths
+      - semantic_hypothesis_refs
+      - pragmatic_hypothesis_refs
+      - currentness_or_expiry
+    rules:
+      - TRANSCRIPT_IS_DERIVED_NOT_PRIVILEGED
+      - RECOGNITION_MAY_REVISE_WITH_LATER_EVIDENCE
+      - SPEAKER_IDENTITY_REQUIRES_EVIDENCE_BEYOND_VOICE_MATCH_WHEN_MATERIAL
+
+  SpeechFormPlan:
+    class: ACTION_PREPARATION
+    required_concepts:
+      - communicative_parent_refs
+      - phonetic_or_phonological_realization
+      - provenance
+    optional_concepts:
+      - target_output_interface
+      - linguistic_formulation
+      - prosody
+      - emphasis
+      - timing
+      - voice_or_presentation_parameters
+      - alternatives
+      - uncertainty
+      - canonical_effect_authorization_ref
+    rules:
+      - PRESENTATION_PARAMETERS_DO_NOT_CREATE_CONTENT_OR_IDENTITY
+      - SPEECH_PLAN_DOES_NOT_SELF_AUTHORIZE_EXTERNAL_EFFECT
+      - SPEECH_PLAN_MAY_EXIST_BEFORE_OUTPUT_INTERFACE_BINDING
+      - OUTPUT_SHOULD_SUPPORT_EFFECT_CONFIRMATION_WHERE_AVAILABLE
+
+canonical_phonetic_binding:
+  canonical_object: PHONETIC_EVIDENCE
+  machine_decomposition:
+    source_channel_refs: AcousticObservation.source_interface
+    observation_interval: AcousticObservation.observation_interval
+    raw_or_feature_refs: AcousticObservation.acoustic_payload_or_reference
+    segmentation_hypothesis: SignalSegmentationHypothesis
+    phonetic_candidates: PhoneticPhonologicalHypothesis
+    phonological_candidates: PhoneticPhonologicalHypothesis
+    prosodic_features: PhoneticPhonologicalHypothesis.prosody
+    timing_rhythm_pause_features: PhoneticPhonologicalHypothesis.timing_features
+    language_or_code_hypotheses: PhoneticPhonologicalHypothesis.language_or_convention_hypotheses
+    confidence: hypothesis_confidence
+    alternatives: competing_hypotheses
+    calibration_state: AcousticObservation.calibration_state
+    source_quality: AcousticObservation.reliability
+    provenance: provenance
+  rules:
+    - MACHINE_DECOMPOSITION_MUST_NOT_CONTRADICT_CANONICAL_PHONETIC_CONTRACT
+    - DECOMPOSITION_DOES_NOT_PROMOTE_LEXICAL_OR_SEMANTIC_CLAIMS
+    - CANONICAL_PHONETIC_EVIDENCE_MAY_REMAIN_AGGREGATED_WHEN_DECOMPOSITION_IS_UNNECESSARY
+
+multimodal_binding:
+  preserve_modality_specific_evidence: true
+  required_dimensions_when_material:
+    - observation_time_or_interval
+    - transport_delay_or_uncertainty
+    - processing_delay_or_uncertainty
+    - coordinate_frame
+    - calibration_state
+    - provenance
+  explicit_conflict_states:
+    - MODALITY_CONFLICT
+    - CALIBRATION_SUSPECT
+    - TEMPORAL_MISALIGNMENT
+    - SOURCE_UNAVAILABLE
+    - UNRESOLVED
+
+computation_boundary:
+  allowed_roles:
+    - HC_INTERNAL_SERVICE
+    - EXTERNAL_COMPUTATIONAL_PERIPHERAL
+  external_result_requirements:
+    - TYPED_RESULT
+    - MODEL_OR_SERVICE_REVISION_WHEN_MATERIAL
+    - PROVENANCE
+    - UNCERTAINTY_WHEN_AVAILABLE
+  prohibited_promotions:
+    - DIRECT_HC_BELIEF
+    - DIRECT_PERSON_IDENTITY
+    - DIRECT_SEMANTIC_TRUTH
+    - DIRECT_ACTION_AUTHORITY
+  rules:
+    - ESSENTIAL_UNIQUE_EXTERNAL_COGNITIVE_SERVICE_MUST_BE_RECLASSIFIED_AS_HC_INTERNAL_SUBSTRATE
+    - INTERNAL_SERVICE_CLASSIFICATION_DOES_NOT_BYPASS_EVIDENCE_OR_AUTHORITY_SEPARATIONS
+
+morphology_and_topology:
+  fixed_human_eye_count_required: false
+  fixed_human_vocal_anatomy_required: false
+  human_hemispheric_processing_required: false
+  distributed_or_remote_sensors_allowed: true
+  embodiment_transfer_requires_recalibration_when_material: true

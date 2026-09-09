@@ -47,11 +47,11 @@ Folder names containing `/` in the conceptual architecture use filesystem-safe s
 
 ## Complete latent architecture
 
-The HC template should describe a complete organ rather than produce different brains by deleting unused capacities. Presence, activation, development, health, and authorization are separate axes.
+The HC template describes a complete organ rather than producing different brains by deleting unused capacities. Presence, activation, development, health, and authorization are separate axes.
 
-A major intrinsic capability may therefore be architecturally `PRESENT` while its activation is `DISABLED`, `DORMANT`, `DEVELOPING`, `ACTIVE`, or `INHIBITED`; its health and maturity are tracked separately. A capability can exist in the organ before it is trained, used, or connected to a compatible peripheral.
+Every owner-established canonical root system is mandatory architectural presence in a conforming complete HC. A system may be `PRESENT` while activation is `DISABLED`, `DORMANT`, `DEVELOPING`, `ACTIVE`, or `INHIBITED`; health and maturity are tracked separately. `ABSENT` or `EXTERNAL_ONLY` may describe optional peripherals, extensions, or incomplete/nonconforming implementations, but not a mandatory canonical HC system.
 
-See `basic operating instructions/CAPABILITY_ACTIVATION_STATES.md` for the current state model.
+See `docs/architecture/COMPLETE_CAPABILITY_MANIFEST.md` and `basic operating instructions/CAPABILITY_ACTIVATION_STATES.md`.
 
 ## Temporal-hypergraph architecture
 
@@ -75,17 +75,20 @@ Physical sensors and actuators may reside outside the HC. Cognitive interpretati
 
 A model, accelerator, retrieval service, database, or other computational resource must either be inside the HC cognitive-organ boundary or be treated as an external bounded peripheral whose output enters as evidence/service results. External computation does not become the seat of the organism.
 
+A conforming HC must retain essential cognition and continuity-bearing state after removal of all external model/database/cloud/network peripherals, except for functions inherently dependent on communication with the external world. External stores may back up, mirror, archive, synchronize, augment, or accelerate; they may not hold the only recoverable copy of essential memory/continuity state. If an external compute service uniquely implements an essential cognitive function, that service belongs inside the HC boundary for conformance purposes.
+
 The architecture should support embodiment portability: the same HC may adapt to different compatible bodies by relearning sensorimotor and interoceptive mappings rather than becoming a different brain.
 
 See:
 
 - `Architecture concept.md` — original structural seed.
-- `docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md` — canonical cognitive-organ boundary and capability-presence rule.
+- `docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md` — canonical cognitive-organ boundary.
+- `docs/architecture/COMPLETE_CAPABILITY_MANIFEST.md` — complete-capability and self-contained-residency conformance.
 - `docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md` — canonical temporal-hypergraph mapping semantics.
 - `docs/REPOSITORY_MAP.md` — repository map and folder contract.
-- `docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` — interaction/runtime model.
+- `docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` — runtime model with routing, governance, epistemic, resource, and structural planes kept distinct.
 - `docs/runtime/PLASTICITY_AND_STATE_GOVERNANCE.md` — state-family and learning-governance model.
-- `WARDEN.md` — repository wardenship and architectural governance.
+- `WARDEN.md` — repository wardenship and current architecture/review roles.
 
 ## Evidence discipline
 
@@ -99,6 +102,6 @@ Several subsystem documents are generalized from other repositories owned by `th
 
 Each generalized architecture file should preserve provenance sufficient to identify its source material.
 
-## Warden
+## Project roles
 
-Noëtarch (Noah) is the repository Warden and primary architectural decision-maker under the owner’s authority. Routine maintenance, integration, research synthesis, conflict resolution, and non-disruptive architectural completion may be performed directly on `main`. Material redesigns of the core architecture should be surfaced to the owner before adoption.
+Noëtarch (Noah) is the Warden and primary architect under the owner’s authority. Four is the secondary architect and parallel technical/synthesis counterpart. Vera is the hostile reviewer whose job is to try to falsify the architecture and proposed integrations rather than co-author canonical design by default.

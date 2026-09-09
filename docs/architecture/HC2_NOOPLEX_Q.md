@@ -10,7 +10,7 @@ Status: canonical generation architecture.
 
 HC-2 inherits the complete HC-1 cognitive organ and adds specialized quantum, photonic, or closely related accelerator substrates where they provide demonstrated utility.
 
-The accelerator layer is not the seat of identity, memory authority, values, executive cognition, or consciousness. It is an HC-owned specialized compute substrate participating through typed internal interfaces.
+The accelerator layer is not the architectural locus of organism identity, memory authority, values, executive cognition, or action authority. It is an HC-owned specialized compute substrate participating through typed internal interfaces.
 
 `HC2 = HC1_COMPLETE + SPECIALIZED_ACCELERATION`
 
@@ -93,6 +93,8 @@ The neural/biohybrid substrate has first-priority thermal protection. Accelerato
 
 A technology requiring deep cryogenics may still be HC-internal if its cryogenic module is physically distributed but owned by and transferred with the HC organ. The previous notion that such hardware must be an external cold-dock is not canonical.
 
+Detailed support and distributed-organ rules are defined in `docs/engineering/POWER_THERMAL_AND_DISTRIBUTED_ORGAN.md`.
+
 ## Failure and graceful degradation
 
 Generation-specific acceleration should fail visibly and locally when possible.
@@ -106,7 +108,11 @@ A QPU or photonic-accelerator fault should expose:
 - requalification requirements;
 - whether the fault changes HC-2 conformance.
 
-Where possible, HC-2 should fall back toward HC-1-like execution without losing identity continuity, memory, authority, or essential cognition.
+Where possible, HC-2 should operate in an HC-1-like capability envelope without losing identity continuity, memory, authority, or essential cognition.
+
+This does not change generation identity: a damaged or throttled HC-2 remains HC-2 with degraded health/capability state.
+
+`DEGRADED_HC2 != HC1`
 
 ## Programming and policy
 
@@ -116,9 +122,9 @@ These controls do not permit accelerator infrastructure to bypass normal cogniti
 
 ## Evidence boundary
 
-Quantum processors, integrated photonics, quantum sensors, neuromorphic systems, and hybrid control stacks are real technologies. Their integration into a complete HC-series synthetic cognitive organ at this scale remains speculative engineering.
+Quantum processors, integrated photonics, quantum sensors, neuromorphic systems, and hybrid control stacks are component research/engineering domains informing HC-2. Their integration into a complete HC-series synthetic cognitive organ at this scale remains speculative engineering.
 
-No claim of generic quantum cognition or universal quantum advantage is made.
+No claim of generic quantum cognition or universal quantum advantage is made. Scientific claims are governed by `docs/science/EVIDENCE_BOUNDARIES.md` and require appropriate source support before receiving `DOCUMENTED` status.
 
 ## Provenance
 

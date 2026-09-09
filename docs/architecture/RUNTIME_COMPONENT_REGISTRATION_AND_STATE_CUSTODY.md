@@ -36,6 +36,10 @@ A component can influence output while being absent from parent-level registrati
 
 `RUNTIME_MEMBER != EFFECT_AUTHORITY`
 
+`RECURRENT_STATE_PRESENT != CROSS_ENTITY_CARRYOVER_AUTHORIZED`
+
+`PREVIOUS_FORWARD_STATE != CURRENT_ENTITY_CONTEXT`
+
 ## Managed-component record
 
 A consequential stateful component should be representable by a record such as:
@@ -47,6 +51,7 @@ RUNTIME_COMPONENT {
   owner_subsystem
   registration_scope
   state_families[]
+  state_owner_or_referent_scope
   learning_or_update_path
   durability_or_checkpoint_path
   substrate_or_device_assignment
@@ -68,6 +73,7 @@ State that can materially influence cognition must have an explicit custody path
 For mutable/learned state this includes, where applicable:
 
 - who may update it;
+- which referent, sequence, task, coalition, session, body, or organism scope owns it;
 - what learning or update mechanism can reach it;
 - intended state family and lifetime;
 - whether loss on restart is allowed;
@@ -97,6 +103,34 @@ Implementations may use finer taxonomies, but material mutable state should make
 `EPHEMERAL_BY_DESIGN != ACCIDENTALLY_UNCHECKPOINTED`
 
 A state item may change class only through the relevant admission/promotion process. A cache or task-local adaptation cannot silently become durable preference, value, identity, memory authority, or protected architecture.
+
+## Referent and sequence scope
+
+Mutable temporal state may validly persist across several calls, but persistence has to be attached to a declared scope.
+
+Possible scopes include:
+
+- one request;
+- one temporary coalition;
+- one perceptual stream;
+- one body-control episode;
+- one conversation/task;
+- one modeled external agent;
+- one subject/entity sequence;
+- one organism session;
+- organism-wide durable learned state.
+
+A runtime object being reused does not itself authorize state carryover between those scopes.
+
+`OBJECT_REUSE != STATE_SCOPE_CONTINUITY`
+
+`SAME_MODEL_INSTANCE != SAME_REFERENT`
+
+`NEXT_CALL != NEXT_EVENT_IN_SAME_SEQUENCE`
+
+When a component uses hidden/recurrent/reservoir state, its contract should specify reset, retain, fork, merge, transfer, checkpoint, and invalidation behavior at sequence boundaries. If a batch, ordering, or referent switch can alter outputs through hidden carryover, that dependency must be surfaced rather than treated as pure function behavior.
+
+Cross-entity carryover may be intentional in some architectures, but then it is a modeled shared-state mechanism and requires provenance/authority appropriate to that role. Silent leakage is not equivalent to intentional shared context.
 
 ## Registration planes
 
@@ -172,6 +206,8 @@ Useful negative tests include:
 - checkpoint/restore and verify outputs/state when one causal child or dynamic state item was omitted;
 - restart between fitting dynamic output/adaptation state and prediction and verify behavior matches the declared lifetime;
 - run an inference-like interface with adaptation side input and verify the state mutation is recorded rather than classified as pure inference;
+- reuse one recurrent runtime object across two unrelated referents and verify reset/retention follows declared state scope;
+- reorder independent entity sequences and detect any output change caused by unauthorized hidden-state carryover;
 - enumerate health state and verify every essential stateful component is represented;
 - simulate constituent loss and verify the HC reports degradation instead of silently using stale/untracked state;
 - create a dynamically admitted component, give it durable influence, and verify it cannot bypass lifecycle admission;
@@ -184,6 +220,8 @@ Useful negative tests include:
 - a causal module is omitted from `state_dict` or equivalent durability state;
 - a registered component creates learned causal tensors later that are absent from checkpoint/migration/recovery;
 - an inference-like function performs fitting or adaptation without declaring state mutation;
+- recurrent hidden state from one entity silently influences another because the model object was reused without a scope transition;
+- evaluation order changes outputs because state carryover is undeclared;
 - a distributed accelerator contains unique learned state that is not covered by HC backup/recovery;
 - a component is routed and callable but absent from fault/health accounting;
 - a body/QPU constituent is electrically connected yet has no ownership/version/lifecycle record;
@@ -193,16 +231,17 @@ Useful negative tests include:
 
 ## Governing invariant
 
-> **Any component or dynamically created state whose content materially influences HC cognition must be explicitly governed by the lifecycle and state-custody mechanisms claimed for that state. Component registration and computational participation alone do not establish complete managed HC membership.**
+> **Any component or dynamically created state whose content materially influences HC cognition must be explicitly governed by the lifecycle, referent-scope, and state-custody mechanisms claimed for that state. Component registration and computational participation alone do not establish complete managed HC membership.**
 
 ## Provenance
 
 Generalized from the HC cognitive-organ, lifecycle, recovery, provider-boundary, and protected-update contracts and reinforced by code-level studies of BASIRA GSR-Net and DynGNN.
 
-GSR-Net supplies a concrete pattern where `nn.Module` children can participate in forward computation while being stored outside ordinary framework registration. DynGNN supplies a complementary pattern where a registered child module dynamically assigns recurrent/learned causal tensors after initialization and an inference-like high-level call can fit output state before prediction. These source mechanisms motivate custody tests; source-specific implementation choices are not imported as HC design requirements.
+GSR-Net supplies a concrete pattern where `nn.Module` children can participate in forward computation while being stored outside ordinary framework registration. DynGNN supplies complementary patterns where a registered child module dynamically assigns recurrent/learned causal tensors after initialization, an inference-like high-level call can fit output state before prediction, and recurrent hidden state persists across forward calls. These source mechanisms motivate custody and scope tests; source-specific implementation choices are not imported as HC design requirements.
 
 See:
 
 - `docs/research/BASIRA_GSRNET_REGISTERED_RUNTIME_AND_SUPERRESOLUTION_2026-09-09.md`
 - `docs/research/PYTORCH_MODULE_REGISTRATION_PROBE_2026-09-09.md`
 - `docs/research/BASIRA_DYNGNN_DYNAMIC_MEMORY_CUSTODY_2026-09-09.md`
+- `docs/research/BASIRA_DYNGNN_VALIDATION_IDENTITY_AND_STATE_SCOPE_2026-09-09.md`

@@ -70,7 +70,7 @@ Primary condition: independent hostile/secondary review and implementation recov
 
 Focused architecture qualification for protected-invariant mutation, update authority, identity/value/memory/consent firewalling, distributed activation consistency, interrupted-update recovery, continuity-safe rollback/forward repair, and post-update requalification.
 
-Outcome: `CONDITIONAL PASS` for its stated snapshot.
+Outcome: `CONDITIONAL PASS` for its stated architecture snapshot. A later repository-map/index-only commit does not silently extend that snapshot or change the recorded result.
 
 Primary condition: independent hostile review, secondary implementation-readiness challenge, and actual protected-update negative/recovery testing remain outstanding.
 

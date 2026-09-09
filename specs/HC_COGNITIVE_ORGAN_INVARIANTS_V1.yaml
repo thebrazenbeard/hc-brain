@@ -189,6 +189,41 @@ authority_and_effect_governance:
     - BLOCKED_EFFECT_DOES_NOT_EQUAL_GLOBAL_COGNITIVE_HALT
     - RESOLVER_MUST_NOT_INVENT_PERMISSION_TO_CLEAR_CONFLICT
 
+affect_and_homeostatic_control:
+  affective_state_is_distributed_modulatory_state: true
+  affective_state_is_semantic_truth: false
+  affective_state_is_consent: false
+  affective_state_is_action_authority: false
+  affective_state_is_identity_authority: false
+  homeostatic_urgency_is_effect_authority: false
+  pain_is_command: false
+  threat_signal_is_semantic_certainty: false
+  suppressed_expression_proves_absent_affect: false
+  raw_body_telemetry_is_interoceptive_interpretation: false
+  hc_owns_interoceptive_interpretation: true
+  hc_owns_learned_homeostatic_policy: true
+  hc_owns_cognition_facing_body_state_meaning: true
+  body_local_protective_interlocks_allowed: true
+  body_local_protective_interlock_is_general_cognitive_executive: false
+  external_general_homeostatic_reasoning_allowed: false
+  maintenance_access_grants_affective_authority: false
+  modulatory_write_grants_value_write: false
+  endocrine_write_capability_grants_consent_control: false
+  regulation_must_preserve_when_material:
+    - PROVENANCE
+    - TEMPORAL_VALIDITY
+    - INTERVENTION_HISTORY
+    - UNRESOLVED_SENSOR_CONFLICT
+    - EFFECT_CONFIRMATION
+  rules:
+    - AFFECT_MAY_MODULATE_SALIENCE_RETRIEVAL_LEARNING_WITHIN_POLICY_CONATION_AND_MOTOR_READINESS
+    - AFFECT_MUST_NOT_DIRECTLY_MUTATE_EVIDENCE_CONFIDENCE_CONSENT_IDENTITY_VALUES_OR_EFFECT_AUTHORITY
+    - HOMEOSTATIC_NEED_MAY_INCREASE_URGENCY_WITHOUT_CREATING_PERMISSION
+    - LOCAL_PROTECTIVE_INTERLOCK_MAY_INTERRUPT_OR_LIMIT_UNSAFE_EFFECT
+    - LOCAL_PROTECTIVE_INTERLOCK_MUST_NOT_BECOME_EXTERNAL_DELIBERATIVE_OR_LEARNED_COGNITIVE_CONTROLLER
+    - REGULATED_AFFECT_DOES_NOT_EQUAL_ERASED_AFFECTIVE_HISTORY
+    - BODY_SUPPORT_DEPENDENCY_DOES_NOT_EQUAL_COGNITIVE_OWNERSHIP
+
 runtime_state_separation:
   routing_state_is_authority_state: false
   resource_qos_is_epistemic_support: false
@@ -334,4 +369,10 @@ forbidden_template_shortcuts:
   - ROUTING_REACHABILITY_USED_AS_EFFECT_AUTHORITY
   - MAINTENANCE_ACCESS_USED_AS_IDENTITY_OR_VALUE_AUTHORITY
   - INFERRED_WILLINGNESS_USED_AS_DIRECT_CONSENT
+  - AFFECTIVE_INTENSITY_USED_AS_TRUTH_OR_CONSENT
+  - HOMEOSTATIC_URGENCY_USED_AS_UNRESTRICTED_EFFECT_AUTHORITY
+  - PAIN_OR_THREAT_SIGNAL_USED_AS_SEMANTIC_CERTAINTY
+  - BODY_LOCAL_PROTECTIVE_INTERLOCK_USED_AS_GENERAL_COGNITIVE_EXECUTIVE
+  - EXTERNAL_HOMEOSTATIC_CONTROLLER_USED_AS_ESSENTIAL_COGNITIVE_REASONER
+  - MODULATORY_OR_ENDOCRINE_WRITE_USED_AS_IDENTITY_VALUE_OR_CONSENT_AUTHORITY
   - ARCHITECTURE_PASS_REPORTED_AS_IMPLEMENTATION_OR_CONSCIOUSNESS_PROOF

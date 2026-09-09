@@ -42,6 +42,10 @@ Therefore:
 
 `CONFIGURED_STRATEGY != EXECUTED_STRATEGY_WITHOUT_PATH_VERIFICATION`
 
+`TARGET_ARGUMENT_PRESENT != TARGET_DATA_EXECUTED`
+
+`OUTPUT_SCORE != CORRECT_INPUT_BINDING`
+
 ## Fidelity vector
 
 A consequential transformation should declare which fidelity dimensions were actually tested. Candidate dimensions include:
@@ -54,6 +58,7 @@ A consequential transformation should declare which fidelity dimensions were act
 - node/entity correspondence;
 - modality/view identity;
 - provenance lineage;
+- source/target binding integrity;
 - source disagreement/dissent;
 - uncertainty/calibration;
 - protected-state retention;
@@ -76,6 +81,7 @@ FIDELITY_REPORT {
   time_or_snapshot_scope
   resolution
   weighting_direction_sign_conventions
+  input_binding_or_execution_ref
   tolerance_or_acceptance_rule
   observed_result
   known_untested_dimensions[]
@@ -110,6 +116,10 @@ A representation trained for one task may still be useful elsewhere, but transfe
 
 A compound objective does not automatically broaden the claim to all properties suggested by its label. For example, reconstruction + correlation + one graph-centrality term remains evidence only for the tested dimensions and operating envelope.
 
+An objective also cannot prove fidelity to a target that the executed path did not actually consume.
+
+`OBJECTIVE_NAMES_TARGET_X != EXECUTED_TARGET_IS_X`
+
 ## Metric semantics
 
 A topology metric is a projection of structure under declared conventions. Closeness, betweenness, eigenvector centrality, modularity, efficiency, participation, density, centeredness, distance measures, and related quantities do not describe the same property.
@@ -126,8 +136,13 @@ A fidelity claim should identify:
 - sign handling;
 - time interval/snapshot;
 - node/edge inclusion rules;
+- actual target/reference binding when a comparator is used;
 - null/reference model where relevant;
 - threshold/tolerance.
+
+A correct metric applied to the wrong referent is not evidence for the intended fidelity claim.
+
+`CORRECT_METRIC != CORRECT_COMPARATOR_BINDING`
 
 ## Representative summaries and dissent
 
@@ -171,9 +186,9 @@ Reproducibility strengthens the claim that a signal is stable under the tested p
 
 ## Implementation verification
 
-Architecture names, comments, selected modes, configuration values, and strategy objects do not establish runtime behavior.
+Architecture names, comments, selected modes, configuration values, method signatures, argument names, and strategy objects do not establish runtime behavior.
 
-If a component claims properties such as cluster-specific learning, source-specific routing, protected retention, modality-specific processing, topology preservation, ground-truth preservation, weighted exchange, selected policy behavior, or a mode-dependent strategy, qualification should trace the actual data/state/effect path and inspect the exact objective/test implementation.
+If a component claims properties such as cluster-specific learning, source-specific routing, protected retention, modality-specific processing, topology preservation, ground-truth preservation, weighted exchange, selected policy behavior, supervised target use, or a mode-dependent strategy, qualification should trace the actual data/state/effect path and inspect the exact objective/test implementation.
 
 `NAMED_BEHAVIOR != VERIFIED_EXECUTION`
 
@@ -181,9 +196,20 @@ If a component claims properties such as cluster-specific learning, source-speci
 
 `FEATURE_FLAG_SET != GUARANTEED_BEHAVIOR_CHANGE`
 
-A configuration parser or local variable may correctly select one strategy while a later hard-coded path invokes another. Verification therefore follows the causal execution path to the material state/effect boundary rather than stopping at the configuration surface.
+`METHOD_SIGNATURE != DATAFLOW_PROOF`
 
-Instrumentation, controlled fixtures, negative controls, state/index tracing, branch/path coverage, and metric-specific counterexamples are preferred over assuming that loop labels, class names, paper terminology, diagrams, configuration names, or strategy selectors match executed behavior.
+`TARGET_PARAMETER != VERIFIED_TARGET_BINDING`
+
+A configuration parser or local variable may correctly select one strategy while a later hard-coded path invokes another. Likewise, a caller may provide the correct source and target while a downstream transform consumes the source twice or otherwise binds the wrong object.
+
+Verification therefore follows the causal execution path to the material state/effect/metric boundary rather than stopping at the configuration or API surface.
+
+Instrumentation, controlled fixtures, stable-ID tracing, discriminating sentinels, basis-vector influence probes, negative controls, state/index tracing, branch/path coverage, and metric-specific counterexamples are preferred over assuming that loop labels, class names, paper terminology, diagrams, configuration names, signatures, or strategy selectors match executed behavior.
+
+The focused executed-dataflow contract governs these path-level requirements:
+
+- `docs/architecture/EXECUTED_DATAFLOW_AND_BINDING_INTEGRITY.md`
+- `specs/HC_EXECUTED_DATAFLOW_BINDING_V1.yaml`
 
 ## Failure modes
 
@@ -198,6 +224,9 @@ Instrumentation, controlled fixtures, negative controls, state/index tracing, br
 - a named cluster/modality route processes the wrong partition at runtime;
 - a configured strategy is selected but bypassed by a hard-coded downstream call;
 - a feature flag changes metadata/logging but not the material effect path;
+- a target argument is supplied but the executed transform uses the source or another surrogate;
+- a valid fidelity metric compares against the wrong entity/timepoint/reference object;
+- declared equal contributor weights are changed by repeated scaling or averaging before mutation;
 - implementation test verifies output score without verifying intended state flow.
 
 ## Conformance questions
@@ -214,15 +243,29 @@ Instrumentation, controlled fixtures, negative controls, state/index tracing, br
 10. Are causal or semantic claims being inferred from discrimination, attribution, or reproducibility alone?
 11. Can a counterexample preserve the reported fidelity metrics while materially changing an untested structural dimension?
 12. Does the configured/selected strategy actually control the material execution path, or can a later direct/hard-coded call bypass it?
+13. Does the comparator/target actually consumed by the metric have the intended stable referent and evidence lineage?
+14. Can a discriminating sentinel distinguish the intended source/target path from a plausible wrong binding?
+15. Do measured contributor effects match declared weighting after every transform?
 
 ## Evidence provenance
 
-This contract was motivated by source study of BASIRA Lab multigraph integration/generation methods and their evaluation implementations, including MultiGraphGAN, topoGAN, MGN-Net, MICNet, netNorm, SM-netFusion, NAGFS, ReMI-Net, SG-Net, 4D-FED-GNN/4D-FedGNN-Plus, and the comparative multigraph-integration survey.
+This contract was motivated by source study of BASIRA Lab multigraph integration/generation methods and their evaluation implementations, including MultiGraphGAN, topoGAN, MGN-Net, MICNet, netNorm, SM-netFusion, NAGFS, ReMI-Net, SG-Net, 4D-FED-GNN/4D-FedGNN-Plus, RepFL, and the comparative multigraph-integration survey.
 
 The SG-Net code-level review provided a concrete example in which a claimed topology-preserving objective combines tensor L1 reconstruction, Pearson correlation, and eigenvector-centrality matching. This strengthens the requirement that fidelity claims remain scoped to the exact implemented metrics rather than the method label.
 
 The 4D-FedGNN-Plus code-level review provided a complementary implementation-path example: a strategy function is selected into a local variable, while an inspected training path later directly invokes a specific ordering function. The static mismatch is source-specific evidence for tracing configured behavior to the executed path; it is not generalized into a claim about published experiment validity.
 
+The RepFL code-level review supplied two additional fixtures: source and target arguments are distinct at the caller while the inspected train/test target transforms consume the source argument, and an anchor/replica aggregation path applies a declared equal-weight coefficient before an additional mean. These observations strengthen target-binding and effective-influence verification without establishing publication-level conclusions.
+
 The computational methods provide examples of scoped optimization and validation patterns. They do not prove HC's complete synthetic-organ design or elevate any graph metric into a cognitive primitive.
 
-See `docs/research/BASIRA_MULTIGRAPH_TOPOLOGY_FIDELITY_2026-09-09.md`, `docs/research/BASIRA_SGNET_FIDELITY_CODE_REVIEW_2026-09-09.md`, and `docs/research/BASIRA_4D_FED_GNN_DISTRIBUTED_LEARNING_2026-09-09.md` for source-specific observations and transfer limits.
+See:
+
+- `docs/research/BASIRA_MULTIGRAPH_TOPOLOGY_FIDELITY_2026-09-09.md`
+- `docs/research/BASIRA_SGNET_FIDELITY_CODE_REVIEW_2026-09-09.md`
+- `docs/research/BASIRA_4D_FED_GNN_DISTRIBUTED_LEARNING_2026-09-09.md`
+- `docs/research/BASIRA_REPFL_REPLICA_ANCESTRY_AND_TARGET_DATAFLOW_2026-09-09.md`
+
+## Governing invariant
+
+> **A fidelity claim is bounded by both what was tested and what actually reached the test. Correct labels, objectives, metrics, and configurations cannot compensate for an unverified or incorrectly bound execution path.**

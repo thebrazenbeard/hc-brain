@@ -163,6 +163,32 @@ external_computation:
     - ESSENTIAL_EXTERNAL_SERVICE_MUST_BE_RECLASSIFIED_AS_HC_INTERNAL_SUBSTRATE
     - HC_INTERNAL_SUBSTRATE_MAY_BE_PHYSICALLY_DISTRIBUTED
 
+authority_and_effect_governance:
+  authority_is_independent_runtime_dimension: true
+  effect_authorization_is_scoped: true
+  effect_authorization_requires_current_basis: true
+  consent_is_distinct_from_inferred_willingness: true
+  revocation_and_expiry_are_first_class: true
+  durable_internal_writes_may_require_effect_governance: true
+  maintenance_access_grants_identity_authority: false
+  routing_permission_grants_effect_permission: false
+  technical_reachability_grants_authorization: false
+  social_power_grants_unlimited_authority: false
+  rules:
+    - CAPABILITY_DOES_NOT_EQUAL_AUTHORITY
+    - DESIRE_DOES_NOT_EQUAL_CONSENT
+    - INTENTION_DOES_NOT_EQUAL_AUTHORIZATION
+    - INFERRED_WILLINGNESS_DOES_NOT_EQUAL_CONSENT
+    - HISTORICAL_CONSENT_DOES_NOT_EQUAL_CURRENT_CONSENT
+    - PAST_PERMISSION_DOES_NOT_EQUAL_CURRENT_PERMISSION
+    - PERMISSION_FOR_X_DOES_NOT_EQUAL_PERMISSION_FOR_Y
+    - MAINTENANCE_ACCESS_DOES_NOT_EQUAL_IDENTITY_AUTHORITY
+    - MAINTENANCE_ACCESS_DOES_NOT_EQUAL_VALUE_AUTHORITY
+    - MAINTENANCE_ACCESS_DOES_NOT_EQUAL_CONSENT_OVERRIDE
+    - ROUTED_TO_EFFECTOR_DOES_NOT_EQUAL_AUTHORIZED_TO_EFFECT
+    - BLOCKED_EFFECT_DOES_NOT_EQUAL_GLOBAL_COGNITIVE_HALT
+    - RESOLVER_MUST_NOT_INVENT_PERMISSION_TO_CLEAR_CONFLICT
+
 runtime_state_separation:
   routing_state_is_authority_state: false
   resource_qos_is_epistemic_support: false
@@ -264,6 +290,34 @@ body_independence:
     - motor_learning_when_required
   distributed_remote_embodiment_allowed: true
 
+evidence_and_qualification:
+  canonical_architecture_equals_documented_science: false
+  documented_science_automatically_creates_hc_requirement: false
+  design_target_equals_measured_capability: false
+  architecture_conformance_equals_implementation_conformance: false
+  implementation_conformance_equals_behavioral_qualification: false
+  behavioral_qualification_equals_scientific_validation: false
+  test_pass_equals_consciousness_proof: false
+  qualification_outcomes:
+    - PASS
+    - CONDITIONAL_PASS
+    - FAIL
+  evidence_classes:
+    - DOCUMENTED
+    - OBSERVED
+    - USER_STATED
+    - INFERRED
+    - HYPOTHESIS
+    - DISPUTED
+    - UNKNOWN
+  rules:
+    - PASS_IS_SCOPE_BOUND
+    - PASS_IS_CAPABILITY_BOUND
+    - PASS_IS_SNAPSHOT_BOUND
+    - SOURCE_BRANCH_DOES_NOT_GAIN_SCIENTIFIC_AUTHORITY_BY_INTEGRATION
+    - MODEL_OUTPUT_DOES_NOT_GAIN_DOCUMENTED_STATUS_WITHOUT_VERIFICATION
+    - NUMERICAL_DESIGN_TARGET_MUST_NOT_BE_REPORTED_AS_MEASURED_CAPABILITY
+
 forbidden_template_shortcuts:
   - OUTSIDE_LLM_AS_TRUE_COGNITIVE_CENTER
   - OUTSIDE_DATABASE_AS_IDENTITY_OR_MEMORY_AUTHORITY
@@ -277,3 +331,7 @@ forbidden_template_shortcuts:
   - MATURE_IDENTITY_OR_PERSONAL_HISTORY_PREAUTHORED_BY_BASE_TEMPLATE
   - ACTIVE_STATE_USED_AS_EFFECT_AUTHORIZATION
   - ENGINEERING_IMPLEMENTATION_STATUS_USED_AS_ARCHITECTURAL_PRESENCE
+  - ROUTING_REACHABILITY_USED_AS_EFFECT_AUTHORITY
+  - MAINTENANCE_ACCESS_USED_AS_IDENTITY_OR_VALUE_AUTHORITY
+  - INFERRED_WILLINGNESS_USED_AS_DIRECT_CONSENT
+  - ARCHITECTURE_PASS_REPORTED_AS_IMPLEMENTATION_OR_CONSCIOUSNESS_PROOF

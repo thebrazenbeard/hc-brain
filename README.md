@@ -47,13 +47,23 @@ Folder names containing `/` in the conceptual architecture use filesystem-safe s
 
 ## Complete latent architecture
 
-The HC template should describe a complete organ rather than produce different brains by deleting unused capacities. Presence and activation are separate.
+The HC template should describe a complete organ rather than produce different brains by deleting unused capacities. Presence, activation, development, health, and authorization are separate axes.
 
-A subsystem may be `PRESENT_DISABLED`, `DORMANT`, `DEVELOPING`, `ACTIVE`, `INHIBITED`, `DEGRADED`, or `FAULTED`. A capability may therefore exist in the organ before it is trained, used, or connected to a compatible peripheral.
+A major intrinsic capability may therefore be architecturally `PRESENT` while its activation is `DISABLED`, `DORMANT`, `DEVELOPING`, `ACTIVE`, or `INHIBITED`; its health and maturity are tracked separately. A capability can exist in the organ before it is trained, used, or connected to a compatible peripheral.
+
+See `basic operating instructions/CAPABILITY_ACTIVATION_STATES.md` for the current state model.
+
+## Temporal-hypergraph architecture
+
+The Hyperconnectome Brain **is a typed, attributed, multilayer temporal hypergraph**. Hypergraph theory is not merely a visualization aid or optional analogy here; it is the formal mapping language for an architecture whose higher-order relations, coalition membership, effective connectivity, modulation, synchronization, and plasticity change over time.
+
+Ordinary pairwise edges remain valid where the relationship is genuinely pairwise. Higher-order cognitive events are represented as hyperedges, and dynamically instantiated task/context coalitions are operational temporal hyperedges with bounded lifetime and state.
+
+See `docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md` for the canonical mapping semantics.
 
 ## Internal integration
 
-The HC is not an ordinary left/right cerebral architecture and is not a flat all-to-all graph. Top-level systems are functional responsibility domains participating in a dynamically composed, multilayer, temporally reconfigurable network.
+The HC is not an ordinary left/right cerebral architecture and is not a flat all-to-all graph. Top-level systems are functional responsibility domains participating in the temporal hypergraph.
 
 The central integration concept is the **Noöplex / Hyperconnectome Fabric**: HC-owned dynamic routing, coalition formation, synchronization, arbitration, attention allocation, state propagation, plasticity, conflict handling, and cross-system integration. It is infrastructure, not a homuncular executive.
 
@@ -71,6 +81,7 @@ See:
 
 - `Architecture concept.md` — original structural seed.
 - `docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md` — canonical cognitive-organ boundary and capability-presence rule.
+- `docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md` — canonical temporal-hypergraph mapping semantics.
 - `docs/REPOSITORY_MAP.md` — repository map and folder contract.
 - `docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` — interaction/runtime model.
 - `docs/runtime/PLASTICITY_AND_STATE_GOVERNANCE.md` — state-family and learning-governance model.

@@ -265,4 +265,4 @@ History remains available without silently becoming standing present state.
 
 ## Sources
 
-See `[S65-S68]` in `SOURCES.md`. Engineering evidence-topology and authorization constraints are additionally summarized in `PROJECT_SOURCE_SYNTHESIS.md`.
+See `[S65-S68]` in `SOURCES_SUPPLEMENT_2026-09-09.md`. Engineering evidence-topology and authorization constraints are additionally summarized in `PROJECT_SOURCE_SYNTHESIS.md`.

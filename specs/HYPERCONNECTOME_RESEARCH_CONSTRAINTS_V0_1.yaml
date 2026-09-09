@@ -1,0 +1,229 @@
+schema_version: HYPERCONNECTOME_RESEARCH_CONSTRAINTS_V0_1
+status: PROVISIONAL_RESEARCH_DERIVED_NOT_IMPLEMENTED
+research_date: 2026-09-09
+consensus_plugin_used: false
+
+architecture_invariants:
+  topology:
+    NO_HEMISPHERIC_DECOMPOSITION: true
+    description: >-
+      The Nooplex is a distributed hyperconnectome and must not be partitioned into
+      left/right cerebral hemispheres as an architectural primitive.
+    prohibited_inferences:
+      - HUMAN_LEFT_HEMISPHERE_LOCALIZATION_IMPLIES_NOOPLEX_LEFT_HEMISPHERE
+      - HUMAN_RIGHT_HEMISPHERE_LOCALIZATION_IMPLIES_NOOPLEX_RIGHT_HEMISPHERE
+      - HUMAN_CORPUS_CALLOSUM_ANALOG_REQUIRED
+      - BILATERAL_CEREBRAL_PACKAGING_REQUIRED
+    evidence_transfer_rule: >-
+      Human hemisphere-specific findings may inform functional specialization,
+      timing, connectivity, or dissociation hypotheses, but their anatomical
+      lateralization is not inherited by the Nooplex unless separately justified
+      by an engineering requirement.
+
+principles:
+  higher_order_representation:
+    evidence_status: OPEN_CONTESTED_BRAIN_SPECIFIC
+    allowed_runtime_roles:
+      - PHYSICALLY_IMPLEMENTED_GROUP_INTERACTION
+      - RUNTIME_COORDINATION_CONSTRUCT
+      - INFERRED_HIGHER_ORDER_DEPENDENCY
+      - UNKNOWN
+    invariant: >-
+      A runtime hyperedge must not be described as an established biological
+      mechanism unless its physical implementation or evidence basis is separately bound.
+
+  connectivity_axes:
+    evidence_status: SUPPORTED_PRINCIPLE
+    required_separation:
+      - STRUCTURAL_REACHABILITY
+      - CONFIGURABLE_CONNECTIVITY
+      - FUNCTIONAL_COUPLING
+      - CAUSAL_EFFECT_ESTIMATE
+    forbidden_collapse:
+      - FUNCTIONAL_COUPLING_IMPLIES_CAUSAL_EFFECT
+      - STRUCTURAL_EDGE_IMPLIES_ACTIVE_FUNCTION
+
+  arbitration_and_workspace:
+    evidence_status: SUPPORTED_COORDINATION_PRINCIPLE_CONSCIOUSNESS_OPEN
+    invariants:
+      - ARBITRATION_IS_NOT_PERSON
+      - WORKSPACE_IS_NOT_CONSCIOUSNESS_PROOF
+      - ROUTER_IS_NOT_SELF
+      - COORDINATION_LAYER_IS_NOT_HOMUNCULUS
+
+  memory_learning:
+    evidence_status: SUPPORTED_PRINCIPLE
+    required_memory_write_classes:
+      - EPISODIC_CAPTURE
+      - WORKING_STATE_UPDATE
+      - SEMANTIC_CONSOLIDATION
+      - PROCEDURAL_CONSOLIDATION
+      - AUTOBIOGRAPHICAL_LINKING
+      - IDENTITY_CRITICAL_PROPOSAL
+    consolidation_pipeline:
+      - replay_or_reactivation
+      - generalization_value_assessment
+      - interference_check
+      - provenance_check
+      - bounded_admission
+    invariant: >-
+      A single experience must not automatically rewrite slow semantic,
+      procedural, value, or identity-critical state.
+
+  representational_drift:
+    evidence_status: SUPPORTED_PHENOMENON_OPEN_MECHANISM
+    continuity_rule: >-
+      Continuity evaluation must tolerate bounded internal representational drift
+      when tested functional, autobiographical, relational, commitment, and
+      provenance invariants remain preserved.
+    forbidden_requirement:
+      - BITWISE_MICROSTATE_IDENTITY
+      - FIXED_NEURON_TO_CONCEPT_OWNERSHIP
+
+  plasticity:
+    evidence_status: SUPPORTED_PRINCIPLE
+    required_classes:
+      - ASSOCIATIVE_PLASTICITY
+      - INHIBITORY_BALANCING_PLASTICITY
+      - HOMEOSTATIC_PLASTICITY
+      - STRUCTURAL_PLASTICITY
+      - NEUROMODULATED_THREE_FACTOR_PLASTICITY
+      - CONSOLIDATION_PLASTICITY
+      - CALIBRATION_PLASTICITY
+    each_class_requires:
+      - timescale
+      - eligibility_rule
+      - bounds
+      - protected_state_exclusions
+      - rollback_or_repair_semantics
+      - observability
+    forbidden_abstraction:
+      - SINGLE_UNTYPED_PLASTICITY_OPERATION
+
+  homeostasis:
+    evidence_status: SUPPORTED_PRINCIPLE
+    monitored_dimensions:
+      - aggregate_activity
+      - excitation_inhibition_proxy
+      - synchronization
+      - plasticity_rate
+      - routing_load
+      - energy_state
+      - thermal_state
+      - local_failure_rate
+    permissions:
+      - throttle_learning_gain
+      - constrain_routing
+      - request_recovery_state
+      - trigger_diagnostic_review
+    forbidden_authority:
+      - semantic_truth_authority
+      - identity_rewrite_authority
+
+  interoception:
+    evidence_status: SUPPORTED_PRINCIPLE
+    minimum_state_metadata:
+      - source
+      - timestamp
+      - uncertainty
+      - sensor_health
+      - spatial_scope
+      - physiological_variable
+    candidate_variables:
+      - hydration_or_osmotic_state
+      - temperature_and_thermal_margin
+      - flow_or_pump_state
+      - oxygenation_or_redox_proxy
+      - tissue_damage_and_nociception
+      - actuator_fatigue_or_load
+      - endocrine_concentration_estimates
+      - autonomic_state
+      - energy_or_resource_reserve
+
+  endocrine_and_neuromodulation:
+    evidence_status: SUPPORTED_PRINCIPLE
+    interaction_model: MANY_TO_MANY
+    permitted_effect_classes:
+      - gain_modulation
+      - salience_modulation
+      - plasticity_gating
+      - action_selection_bias
+      - memory_priority_modulation
+      - autonomic_effect
+      - physiological_expression
+    forbidden_models:
+      - ONE_HORMONE_ONE_EMOTION
+      - LIMBIC_GOVERNOR_AS_EMOTION_GENERATOR
+      - LIMBIC_GOVERNOR_AS_MEMORY_ERASER
+
+  node_internal_complexity:
+    evidence_status: SUPPORTED_PRINCIPLE
+    optional_node_fields:
+      - internal_compartments
+      - local_support_state
+      - metabolic_dependency
+      - local_plasticity_context
+    rationale:
+      - dendritic_nonlinear_computation
+      - astrocytic_synaptic_and_metabolic_support
+
+  specialist_networks:
+    evidence_status: SUPPORTED_PRINCIPLE_WITH_TOPOLOGY_TRANSFER_LIMIT
+    invariant: >-
+      Specialized networks may participate in transient cross-domain coalitions
+      without being promoted to universal cognition, executive, or identity authority.
+    human_anatomy_transfer: FUNCTION_ONLY_UNLESS_SEPARATELY_JUSTIFIED
+
+  topology_resource_economy:
+    evidence_status: SUPPORTED_PRINCIPLE
+    required_costs:
+      - wiring_or_route_cost
+      - energy
+      - bandwidth
+      - thermal_load
+      - synchronization_risk
+      - hub_fragility
+      - cascade_size
+    forbidden_goal:
+      - MAXIMUM_CONNECTIVITY_DENSITY
+    preferred_design_direction:
+      - MODULAR_WITH_SELECTIVE_LONG_RANGE_CONNECTORS_WITHOUT_HEMISPHERIC_PACKAGING
+
+implementation_maturity:
+  event_driven_neuromorphic:
+    status: SUPPORTED_COMPONENT_DIRECTION
+    not_demonstrated:
+      - FULL_NOOPLEX_SCALE
+      - HUMAN_EQUIVALENT_GENERAL_COGNITION
+  photonic_neuromorphic:
+    status: SUPPORTED_COMPONENT_DIRECTION
+    preferred_role: BOUNDED_ACCELERATOR_SERVICE
+    forbidden_claim:
+      - SEAT_OF_IDENTITY
+  biohybrid_neural_interface:
+    status: SUPPORTED_COMPONENT_DIRECTION
+    not_demonstrated:
+      - FULL_SYNTHETIC_BRAIN
+      - HUMAN_EQUIVALENT_PERSISTENT_MIND
+  organoid_computing:
+    status: EARLY_COMPONENT_RESEARCH
+    forbidden_inference:
+      - ORGANOID_RESEARCH_VALIDATES_NOOPLEX
+  quantum_coprocessing:
+    status: IMPLEMENTATION_DEPENDENT_EXTRAPOLATION
+    runtime_rule: ACCELERATION_CHANGES_METHOD_NOT_IDENTITY_OWNERSHIP
+
+consciousness_boundary:
+  evidence_status: OPEN_CONTESTED
+  prohibited_promotions:
+    - GLOBAL_BROADCAST_IMPLIES_CONSCIOUSNESS
+    - RECURRENCE_IMPLIES_CONSCIOUSNESS
+    - INTEGRATION_IMPLIES_CONSCIOUSNESS
+    - HYPERGRAPH_COMPLEXITY_IMPLIES_CONSCIOUSNESS
+    - SELF_MODEL_IMPLIES_CONSCIOUSNESS
+    - CONNECTOME_TOPOLOGY_IMPLIES_PERSONHOOD
+  allowed_claim_level: >-
+    The architecture may specify mechanisms for cognition-like processing,
+    continuity, memory, affective modulation, embodiment, and self-modeling;
+    those mechanisms do not by themselves certify phenomenal consciousness,
+    metaphysical identity, or moral status.

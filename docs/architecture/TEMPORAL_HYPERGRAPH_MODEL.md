@@ -93,6 +93,10 @@ The set of structurally possible nodes, edges, hyperedges, interfaces, and admis
 
 The relations and higher-order configurations that are actually effective during a bounded time interval.
 
+The effective hypergraph may be narrower, differently weighted, or temporarily enriched relative to durable logical eligibility because current task state, gating, salience, resources, inhibition, fault compensation, prediction, or coalition context changes which relations are computationally operative.
+
+A task-local generated relation is part of the effective computational topology only within its declared scope. Its effectiveness does not establish physical connectivity, durable learned connectivity, or an observed relation in the external world.
+
 ### History of hypergraph states
 
 The provenance-preserving record of how configurations formed, changed, weakened, dissolved, recurred, or altered future connectivity through plasticity.
@@ -129,30 +133,93 @@ This is especially important for distributed functions such as contextual interp
 The HC does not have only one kind of connectivity. Higher-order and pairwise relations may participate in distinct planes:
 
 ```text
-STRUCTURAL
-FUNCTIONAL
-EFFECTIVE
+PHYSICAL
+DURABLE_LOGICAL
+CONFIGURED
+FUNCTIONAL_EFFECTIVE
 MODULATORY
 PLASTIC
 TEMPORAL
 GOVERNANCE
+WORLD_MODEL_RELATIONAL
 ```
 
 The same participants may therefore be connected differently on different planes. No plane silently substitutes for another.
 
-## 8. Temporal order can change computation
+Core separations include:
+
+`PHYSICAL_REACHABILITY != DURABLE_LOGICAL_ELIGIBILITY`
+
+`DURABLE_LOGICAL_ELIGIBILITY != CONFIGURED_FLOW_POLICY`
+
+`CONFIGURED_FLOW_POLICY != TEMPORAL_EFFECTIVE_TOPOLOGY`
+
+`TEMPORAL_EFFECTIVE_TOPOLOGY != PLASTICITY_COMMIT`
+
+`ACTIVE_COMPUTATIONAL_EDGE != WORLD_MODEL_FACT`
+
+A concrete implementation may use different names or combine storage structures, but it must preserve the semantic distinctions where they affect behavior, evidence, recovery, authority, or learning.
+
+## 8. Temporary effective topology and generated relations
+
+An HC computation may suppress, reweight, or instantiate relations for one bounded execution without changing the durable architecture.
+
+For example, a coalition can:
+
+- filter eligible routes according to current state;
+- temporarily open a task-local relation;
+- generate a reasoning graph from current hypotheses;
+- reroute around a degraded constituent;
+- form one higher-order hyperedge for a particular interpretation or plan;
+- dissolve those effective relations at task completion.
+
+These operations are normal temporal-hypergraph behavior, not necessarily plasticity.
+
+`FORWARD_LOCAL_EDGE_FILTER != STRUCTURAL_EDGE_REMOVAL`
+
+`TASK_LOCAL_ROUTE != DURABLE_LEARNED_ROUTE`
+
+`GENERATED_REASONING_GRAPH != OBSERVED_RELATION_GRAPH`
+
+`ROUTE_USED_NOW != ROUTE_LEARNED_FOR_FUTURE`
+
+A transient relation can produce evidence for a later plasticity candidate, but persistent logical or plastic topology changes require the relevant admission/governance process.
+
+Where consequential or qualification-relevant, temporary effective-topology events should retain enough scope/provenance to establish their parent topology, producing rule, state snapshot, execution/coalition identity, onset/expiry, and whether they are computational-only, evidence-bearing, or eligible for durable learning.
+
+Generated topology objects must satisfy structural and referential integrity before activation. A malformed task-local edge/hyperedge object should fail locally rather than silently mutating another topology plane.
+
+## 9. Temporal order can change computation
 
 A static member set does not fully define a cognitive event. The same systems can produce different effective computation under different ordering, latency, synchronization, or duration relationships.
 
 Therefore topology plus timing, not topology alone, defines the effective cognitive configuration.
 
-## 9. Plasticity over temporal hypergraph history
+## 10. Plasticity over temporal hypergraph history
 
 A recurring successful higher-order configuration may alter the future probability, threshold, weight, or routing preference for forming a similar configuration again.
 
 Plasticity changes future hypergraph behavior but does not rewrite the historical event that produced the change.
 
-## 10. Complete cognitive-organ boundary
+Repeated effective use is evidence available to plasticity; it is not itself a durable topology commit.
+
+`REPEATED_EFFECTIVE_EDGE != AUTOMATIC_DURABLE_EDGE`
+
+## 11. Epistemic and authority boundary for topology scores
+
+A value used to choose or weight an effective route is not automatically evidence about the external world, causal importance, or action authority.
+
+`FLOW_SCORE != EPISTEMIC_CONFIDENCE`
+
+`FLOW_SCORE != CAUSAL_IMPORTANCE`
+
+`FLOW_SCORE != AUTHORITY`
+
+`COMPUTATIONAL_ROUTE_SCORE != WORLD_RELATION_EVIDENCE`
+
+If an effective relation contributes to a world-model claim, normal epistemic admission and provenance rules still apply. If it contributes to an action, normal authority/consent/effect gates still apply.
+
+## 12. Complete cognitive-organ boundary
 
 All essential cognitive hypergraph activity occurs inside the HC boundary.
 
@@ -160,7 +227,7 @@ External cameras, microphones, motors, radios, databases, accelerators, LLMs, sp
 
 An external peripheral is not part of the organism's temporal cognitive hypergraph merely because it performs computation. Essential cognition remains an internal HC event.
 
-## 11. No hemispheres and no homunculus
+## 13. No hemispheres and no homunculus
 
 The temporal hypergraph has no left/right hemisphere primitive and requires no bilateral duplication or corpus-callosum analogue.
 
@@ -170,12 +237,20 @@ The Noöplex/Hyperconnectome Fabric is the internal integration substrate that s
 
 The fabric enables distributed cognition; it does not replace it with a homunculus.
 
-## 12. Formal-description target
+## 14. Formal-description target
 
-> **A typed, attributed, multilayer temporal hypergraph with dynamically instantiated higher-order relations, bounded coalition state, governed plasticity, and an internal Noöplex integration fabric.**
+> **A typed, attributed, multilayer temporal hypergraph with dynamically instantiated higher-order relations, bounded coalition state, execution-scoped effective topology, governed plasticity, and an internal Noöplex integration fabric.**
 
 Future implementation technology may vary, but a conforming implementation must preserve these temporal-hypergraph semantics.
 
 ## Provenance
 
 Selective Warden integration of the temporal-hypergraph correction from `research/hyperconnectome-foundations-20260909`, reviewed against current `main`. The branch's alternative root taxonomy was not adopted by this integration.
+
+Later strengthened through code-level study of state-dependent graph information-flow control. BASIRA DeltaGNN supplied a concrete computational fixture in which activation-derived scores filter message-passing edges and construct a second task-local graph during forward processing. The source mechanism is not an HC requirement; it sharpened the existing distinction among durable logical, configured, temporary effective, plastic, and world-model relation planes.
+
+See:
+
+- `routing instructions with neuroplasticity/TYPED_ROUTING_AND_PLASTICITY.md`
+- `specs/HC_EFFECTIVE_TOPOLOGY_TRANSITIONS_V1.yaml`
+- `docs/research/BASIRA_DELTAGNN_EFFECTIVE_TOPOLOGY_AND_FLOW_CONTROL_2026-09-09.md`

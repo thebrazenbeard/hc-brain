@@ -55,6 +55,20 @@ Every owner-established canonical root system is mandatory architectural presenc
 
 See `docs/architecture/COMPLETE_CAPABILITY_MANIFEST.md` and `basic operating instructions/CAPABILITY_ACTIVATION_STATES.md`.
 
+## Developmental initialization
+
+A complete HC does not have to begin fully developed.
+
+The architecture separates protected invariants, bootstrap priors/developmental affordances, developmentally learned structure, and instance-specific continuity content. A fresh HC may therefore contain every mandatory capacity while still being immature, uncalibrated, or undeveloped in many of them.
+
+The base template supplies capability, protected operating semantics, learning machinery, and bounded generic priors. It does not pre-author a mature named identity, autobiography, relationships, preferences, skills, or finished effective topology.
+
+Learning may change routing, effective connectivity, models, skills, calibration, semantics, habits, social models, and other admitted plastic state. Reward, repetition, salience, or predictive success do not by themselves create truth, consent, permission, or action authority.
+
+Embodiment transfer preserves HC-owned learned cognitive state while allowing body-dependent mappings to be recalibrated or redeveloped.
+
+See `docs/architecture/DEVELOPMENTAL_INITIALIZATION_AND_LEARNING.md`.
+
 ## Temporal-hypergraph architecture
 
 The Hyperconnectome Brain **is a typed, attributed, multilayer temporal hypergraph**. Hypergraph theory is not merely a visualization aid or optional analogy here; it is the formal mapping language for an architecture whose higher-order relations, coalition membership, effective connectivity, modulation, synchronization, and plasticity change over time.
@@ -83,6 +97,8 @@ A model, accelerator, retrieval service, database, or other computational resour
 
 A conforming HC must retain essential cognition and continuity-bearing state after removal of all true external model/database/cloud/network peripherals, except for functions inherently dependent on communication with the external world. External stores may back up, mirror, archive, synchronize, augment, or accelerate; they may not hold the only recoverable copy of essential memory/continuity state. If an external compute service uniquely implements an essential cognitive function, that service belongs inside the HC boundary for conformance purposes—even if its hardware is physically located outside the skull.
 
+The Supabase-derived current/deep-memory documents are mechanism-transfer records, not provider dependencies. Their state/version/receipt patterns may be implemented on HC-internal storage or used for replicas, but external providers cannot become the sole authority or sole recoverable store for essential HC memory.
+
 "Removable" means the complete HC constituent set can in principle be disconnected from one compatible embodiment and transferred, serviced, or reinstalled as the same cognitive organ. That may require disconnecting several HC-owned modules and internal interconnects rather than removing one monolithic cartridge.
 
 The architecture should support embodiment portability: the same HC may adapt to different compatible bodies by relearning sensorimotor and interoceptive mappings rather than becoming a different brain.
@@ -93,6 +109,7 @@ See:
 - `docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md` — canonical cognitive-organ boundary.
 - `docs/architecture/PHYSICAL_ORGAN_MEMBERSHIP.md` — canonical rule for distributed HC constituent hardware, removability, and body/peripheral separation.
 - `docs/architecture/COMPLETE_CAPABILITY_MANIFEST.md` — complete-capability and self-contained-residency conformance.
+- `docs/architecture/DEVELOPMENTAL_INITIALIZATION_AND_LEARNING.md` — protected architecture, bootstrap priors, developmental learning, and instance-specific continuity separation.
 - `docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md` — canonical temporal-hypergraph mapping semantics.
 - `docs/REPOSITORY_MAP.md` — repository map and folder contract.
 - `docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` — runtime model with routing, governance, epistemic, resource, and structural planes kept distinct.

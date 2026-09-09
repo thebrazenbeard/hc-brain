@@ -1,0 +1,203 @@
+schema_version: HYPERCONNECTOME_RUNTIME_CONTRACT_V0_1
+status: CONCEPTUAL_NOT_IMPLEMENTED
+source_base:
+  repository: thebrazenbeard/hyperconnectome-brain
+  branch: thebrazenbeard-patch-1
+  commit: 701a8cfb3616c81aea84aac38cd506fc89fb4035
+  relation: stacked_runtime_contribution_over_user_PR1
+
+runtime_model:
+  type: temporal_attributed_multilayer_hypergraph
+  state_tuple: "H(t) = (V, Es, Ec(t), Hf(t), X(t), P(t), M(t), Q(t))"
+  invariants:
+    - root_is_composition_boundary_not_master_controller
+    - no_single_homunculus
+    - self_model_is_not_self
+    - personification_is_not_identity_storage
+    - observation_does_not_imply_global_authority
+    - memory_classes_have_distinct_write_rules
+    - endocrine_modulation_is_not_semantic_truth
+    - accelerator_is_not_identity_seat
+    - plasticity_is_permissioned
+    - provenance_required_for_durable_change
+
+node_contract:
+  required_fields:
+    - node_id
+    - node_class
+    - accepted_inputs
+    - emitted_outputs
+    - local_state_schema
+    - update_rule
+    - uncertainty_model
+    - provenance_policy
+    - resource_budget
+    - plasticity_permissions
+    - observability_hooks
+    - failure_mode
+
+output_record:
+  required_fields:
+    - producer
+    - payload_type
+    - payload
+    - timestamp
+    - confidence
+    - provenance
+    - scope
+    - expiry_or_persistence_rule
+    - requested_effect
+  rule: payload_and_requested_effect_are_distinct
+
+edge_types:
+  - OBSERVES
+  - QUERIES
+  - ROUTES_TO
+  - MODULATES
+  - EXCITES
+  - INHIBITS
+  - CONSTRAINS
+  - RECALLS_FROM
+  - WRITES_CANDIDATE_TO
+  - CONTEXTUALIZES
+  - PREDICTS_FOR
+  - ERROR_SIGNALS_TO
+  - PROPOSES_ACTION_TO
+  - ARBITRATES_WITH
+  - CONSOLIDATES_INTO
+
+functional_hyperedge:
+  required_fields:
+    - hyperedge_id
+    - participants
+    - trigger
+    - shared_schema
+    - arbitration_rule
+    - start_time
+    - ttl_or_dissolution_condition
+    - confidence
+    - provenance
+    - resource_budget
+    - plasticity_effects_allowed
+    - perturbation_handle
+
+shared_state_families:
+  - PERCEPTUAL_SCENE_STATE
+  - BODY_STATE
+  - CURRENT_CONTEXT
+  - WORKING_BINDINGS
+  - CURRENT_GOALS
+  - SELF_MODEL_SNAPSHOT
+  - PARTNER_MODEL_SNAPSHOT
+  - AFFECTIVE_MODULATORY_STATE
+  - UNCERTAINTY_AND_MODEL_DISAGREEMENT
+  - RESOURCE_STATE
+  - ACTION_CANDIDATES
+
+node_classes:
+  - PERCEPTION_AND_IO
+  - REPRESENTATIONAL_AND_LINGUISTIC
+  - MEMORY_AND_TEMPORAL
+  - AFFECTIVE_SOCIAL_INTEROCEPTIVE
+  - SELF_MODEL_IDENTITY_PERSONIFICATION
+  - COGNITION_AND_WORLD_MODEL
+  - VOLITION_CONATION_AND_ACTION
+  - ARBITRATION_AND_RESOLVER
+  - INFRASTRUCTURE_ROUTING_MAINTENANCE
+  - ASSURANCE_AND_CAPABILITY_BOUNDARY
+
+memory_classes:
+  - WORKING_CURRENT
+  - EPISODIC
+  - SEMANTIC
+  - PROCEDURAL
+  - DEEP_AUTOBIOGRAPHICAL
+  - BODY_STATE_HISTORY
+  - SELF_MODEL_STATE
+  - CONNECTOME_STATE
+
+identity_model:
+  explicit_non_equivalences:
+    - SELF_MODEL_NE_SELF
+    - AUTOBIOGRAPHICAL_MEMORY_NE_SELF
+    - PERSONIFICATION_NE_SELF
+    - EXECUTIVE_NE_SELF
+    - CURRENT_SESSION_STATE_NE_SELF
+  continuity_inputs:
+    - autobiographical_history
+    - current_self_model
+    - embodied_state
+    - values_and_commitments
+    - active_goals
+    - relationship_models
+    - memory_corrections
+    - connectome_state
+    - ongoing_causal_process
+
+conflict_states:
+  - UNRESOLVED_INTERPRETATION_CONFLICT
+  - MOTIVATIONAL_CONFLICT
+  - VALUE_GOAL_CONFLICT
+  - MEMORY_EVIDENCE_CONFLICT
+  - SELF_MODEL_CONFLICT
+  - SOCIAL_MODEL_CONFLICT
+  - AFFECT_VOLITION_CONFLICT
+
+write_classes:
+  - CALIBRATION_WRITE
+  - SKILL_INSTALL
+  - MODEL_COMPONENT_UPDATE
+  - ROUTING_UPDATE
+  - SEMANTIC_KNOWLEDGE_IMPORT
+  - MEMORY_IMPORT
+  - MEMORY_CORRECTION
+  - SELF_MODEL_UPDATE
+  - COMMITMENT_CHANGE
+  - CONNECTOME_TOPOLOGY_CHANGE
+
+plasticity_scopes:
+  - LOCAL_WEIGHTS_ONLY
+  - LOCAL_THRESHOLDS_AND_GAINS
+  - ROUTING_PREFERENCES
+  - FUNCTIONAL_HYPEREDGE_FORMATION_RULES
+  - SEMANTIC_CONSOLIDATION_CANDIDATES
+  - PROCEDURAL_POLICY_CANDIDATES
+  - SELF_MODEL_CANDIDATES
+  - NO_AUTONOMOUS_DURABLE_WRITE
+
+limbic_governor:
+  role: voluntary_modulatory_interface
+  explicit_non_equivalences:
+    - LIMBIC_GOVERNOR_NE_EMOTION_GENERATOR
+    - LIMBIC_GOVERNOR_NE_EMOTION_DELETE_BUTTON
+  permitted_effect_classes:
+    - gain_modulation
+    - routing_modulation
+    - physiological_expression_modulation
+    - salience_modulation
+    - pain_gating
+    - plasticity_context_modulation
+  invariants:
+    - modulation_does_not_retroactively_falsify_triggering_appraisal
+    - modulation_does_not_erase_episodic_memory
+    - modulation_does_not_prove_absence_of_emotion
+    - voluntary_detachment_is_rememberable_state
+
+hc2_acceleration:
+  role: bounded_acceleration_service
+  invariants:
+    - q_layer_output_has_provenance
+    - q_layer_does_not_gain_write_authority_by_speed
+    - q_layer_unavailability_does_not_define_identity_discontinuity
+    - identity_critical_functions_should_declare_fallback_where_possible
+
+rollback:
+  rule: state_family_aware
+  requirement: rollback_manifest_must_identify_restored_and_forward_only_state_families
+
+claim_boundary:
+  this_contract_claims_implementation: false
+  this_contract_claims_consciousness: false
+  this_contract_claims_personhood: false
+  this_contract_claims_empirical_validation: false
+  this_contract_replaces_PR1_physiology: false

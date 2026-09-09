@@ -10,6 +10,8 @@ A dataset, scenario set, behavioral trace, simulation, embodiment episode, adver
 
 This applies to ordinary learned components, developmental learning, self-models, plasticity, protected updates, degraded-mode tuning, embodiment calibration, and behavioral qualification.
 
+Qualification must also declare the evaluation regime when test-time information is allowed to shape inference state. Transductive or test-time-adaptive evaluation can be valid, but it supports that regime rather than silently proving inductive/frozen generalization.
+
 ## Core separations
 
 `TRAINING_EVIDENCE != VALIDATION_EVIDENCE`
@@ -26,6 +28,14 @@ This applies to ordinary learned components, developmental learning, self-models
 
 `ADVERSARIAL_CASE_USED_TO_PATCH != NOVEL_ADVERSARIAL_HOLDOUT`
 
+`TRANSDUCTIVE_INFERENCE != INDUCTIVE_INFERENCE`
+
+`TRANSDUCTIVE_TEST_ACCESS != AUTOMATICALLY_INVALID`
+
+`TRANSDUCTIVE_RESULT != INDUCTIVE_GENERALIZATION_EVIDENCE`
+
+`TEST_TIME_ADAPTATION != FROZEN_INFERENCE`
+
 ## Evidence roles
 
 Qualification evidence should declare a role such as:
@@ -40,6 +50,30 @@ Qualification evidence should declare a role such as:
 
 Evidence may move from independent holdout to diagnostic/regression after it is inspected and acted upon. The historical result remains valid for the snapshot tested, but the same case cannot silently remain an untouched holdout for the modified successor.
 
+## Evaluation regimes
+
+Where material, a qualification should identify the operating/evaluation regime being tested. Useful values include:
+
+- `INDUCTIVE_FROZEN` — representation/model state is fit before evaluation and the current evaluation cohort does not alter that fitted state;
+- `TRANSDUCTIVE` — unlabeled evaluation inputs or the evaluation cohort may participate in representation/manifold construction or inference preparation;
+- `TEST_TIME_ADAPTIVE` — the current test input may alter temporary or durable model state before its output is scored;
+- `ONLINE_ADAPTIVE` — prior evaluation/production interactions may update state used for later cases;
+- `MIXED` — different components operate under different declared regimes;
+- `UNKNOWN` — available provenance does not establish the regime.
+
+The regime record should state which test-time information is visible, such as:
+
+- current input only;
+- unlabeled cohort inputs;
+- labels;
+- target outputs/ground truth;
+- prior evaluation outcomes;
+- aggregate evaluation metrics;
+- human/evaluator feedback;
+- production feedback after effect.
+
+Access to unlabeled test inputs can be legitimate in a transductive deployment. It must not be described as evidence for a deployment in which such access is absent.
+
 ## Evidence object
 
 A qualification-evidence record should support:
@@ -50,6 +84,8 @@ QUALIFICATION_EVIDENCE {
   role
   source
   generation_method
+  evaluation_regime
+  test_time_information_visible[]
   target_snapshot_first_exposed
   exposure_history[]
   adaptations_influenced[]
@@ -81,6 +117,8 @@ A behavioral qualification may define a frozen or bounded evaluation interval in
 - post-evaluation incorporation, if allowed, is recorded as a later learning event;
 - online-learning qualification separately tests the adaptation process itself rather than treating adaptive exposure as untouched holdout evidence.
 
+For transductive/test-time-adaptive qualification, the allowed adaptation scope and information boundary should be explicit, and the resulting PASS is scoped to that regime.
+
 ## Protected updates
 
 A protected update must not be accepted solely because it performs well on evidence repeatedly used to design or tune that update.
@@ -104,6 +142,8 @@ A hostile reviewer should be able to ask:
 - Are multiple "independent" tests descendants of the same generated source or template?
 - Was the same simulation seed family used for both optimization and qualification?
 - Did the evaluator adapt prompts, routing, heuristics, or model state after seeing intermediate holdout results?
+- Was the evaluation transductive/test-time-adaptive while the reported claim sounds inductive/frozen?
+- Did aggregate holdout statistics or unlabeled cohort structure influence the target even if individual labels were hidden?
 
 ## Failure modes
 
@@ -113,16 +153,19 @@ A hostile reviewer should be able to ask:
 - generated variants of one source being counted as independent test cases;
 - body calibration scenarios reused as independent body-transfer qualification without declaring prior exposure;
 - post-failure patching followed by a PASS based only on the original failed case;
-- using production outcomes to adapt a model while still calling those same outcomes independent external validation.
+- using production outcomes to adapt a model while still calling those same outcomes independent external validation;
+- fitting a manifold/template to the unlabeled evaluation cohort and reporting the result as inductive generalization without declaring transductive access;
+- test-time adaptation changing durable state while the record claims a frozen target snapshot;
+- evaluator/human feedback changing prompts or routes during the holdout without recording that exposure.
 
 ## Qualification relationship
 
-This contract does not require every test to be independent. Regression, tuning, diagnostic, and training evidence are all useful. It requires that their role be represented honestly and that claims of independence not exceed the provenance.
+This contract does not require every test to be independent. Regression, tuning, diagnostic, transductive, test-time-adaptive, online-adaptive, and training evidence are all useful. It requires that their role and regime be represented honestly and that claims of independence/generalization not exceed the provenance.
 
 ## Governing invariant
 
-> **Evidence that shaped the target cannot silently serve as untouched independent evidence for the same shaped target. Exposure and adaptation lineage are part of qualification provenance.**
+> **Evidence that shaped the target cannot silently serve as untouched independent evidence for the same shaped target. Exposure, adaptation lineage, and evaluation regime are part of qualification provenance.**
 
 ## Provenance
 
-Generalized from HC qualification/update-governance requirements and a code-level study of BASIRA DGN where the inspected cross-validation implementation uses fold test error for early stopping/checkpoint restoration. See `docs/research/BASIRA_DGN_HOLDOUT_ISOLATION_AND_TEMPLATE_LEARNING_2026-09-09.md`.
+Generalized from HC qualification/update-governance requirements and reinforced by code-level study of BASIRA DGN and HADA. The inspected DGN cross-validation implementation uses fold test error for early stopping/checkpoint restoration. The inspected HADA implementation fits part of its source-space manifold using combined train-plus-current-test source inputs, providing a concrete transductive evaluation pattern that is legitimate only under appropriately scoped evaluation claims. See the corresponding records under `docs/research/`.

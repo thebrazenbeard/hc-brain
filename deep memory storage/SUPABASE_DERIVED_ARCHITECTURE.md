@@ -8,6 +8,24 @@ Derived from structural patterns observed in the production Supabase schema on 2
 
 Deep memory is not a flat store of statements. It is a provenance-bearing, lifecycle-aware, append-oriented system in which historical state, current state, correction, supersession, verification, and source custody remain distinguishable.
 
+## Cognitive-organ / substrate boundary
+
+The provider/read-back patterns below are implementation and verification patterns, not an architectural dependency on Supabase or any external database.
+
+For a conforming complete HC, essential deep memory and continuity-bearing state must remain recoverable from HC-owned substrate inside the cognitive-organ boundary. A persistence provider may be:
+
+- HC-internal durable storage;
+- a local archive/index built from HC-owned state;
+- an external mirror, backup, synchronization target, transport layer, or nonessential retrieval service.
+
+If a provider outside the HC holds the only recoverable copy of essential autobiographical continuity, values/commitments, semantic/procedural knowledge required for ongoing cognition, or other essential learned state, the design violates the cognitive-organ boundary.
+
+`PROVIDER_RECEIPT != MEMORY_AUTHORITY`
+
+`REMOTE_DURABILITY != HC_INTERNAL_RESIDENCY`
+
+The same receipt machinery remains useful for HC-internal storage, removable distributed HC modules, or external backup replicas; the provider class and organ-membership classification must remain explicit.
+
 ## Record model
 
 A durable memory record should carry, at minimum:
@@ -62,9 +80,10 @@ The architecture should keep these axes separate:
 - privacy scope;
 - verification process/outcome;
 - semantic classification;
-- technical custody/read-back status.
+- technical custody/read-back status;
+- organ-membership/storage-location class.
 
-A record being durable does not prove it is currently true. A record being user-authored does not prove universal factual truth. A record being verified for byte identity does not prove the proposition it contains is semantically correct.
+A record being durable does not prove it is currently true. A record being user-authored does not prove universal factual truth. A record being verified for byte identity does not prove the proposition it contains is semantically correct. A record existing in an external provider does not make that provider part of the HC or the authority over memory.
 
 ## Admission and currentness
 
@@ -110,6 +129,7 @@ For high-value durable memory, a write should not be treated as verified merely 
 Use a receipt model that can record:
 
 - provider class;
+- organ-membership class (`HC_INTERNAL`, `HC_DISTRIBUTED_CONSTITUENT`, `EXTERNAL_REPLICA`, or another explicit implementation class);
 - provider identity and locator;
 - provider revision/version;
 - operation ID;
@@ -131,6 +151,8 @@ AMBIGUOUS
 MISMATCH
 ERROR
 ```
+
+A verified external replica is still a replica unless separately classified as an HC constituent under the physical-organ membership contract.
 
 ## Archive receipts
 
@@ -160,4 +182,5 @@ The deep memory system should therefore support a declared `currentness_rule` or
 2. Current truth is a projection over lineage and lifecycle, not simply the newest row.
 3. Provenance and verification are first-class metadata.
 4. Identity-specific content must remain in implementation layers; this template defines only the mechanism.
-5. Persistence, semantic truth, present currentness, authority, and identity continuity are separate concerns.
+5. Persistence, semantic truth, present currentness, authority, identity continuity, and physical custody are separate concerns.
+6. Essential memory remains HC-owned even when replicas, backups, or indexes exist outside the organ.

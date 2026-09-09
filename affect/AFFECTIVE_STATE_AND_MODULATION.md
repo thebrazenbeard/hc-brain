@@ -177,12 +177,16 @@ Where persistent affective state is claimed, the implementation should expose at
 
 - exact state identity;
 - triggering/update evidence;
-- state readback;
+- substrate-appropriate state verification or estimation evidence;
 - currentness and supersession;
 - decay/reset/reversibility semantics;
 - causal effect on eligible processing;
 - negative-transfer containment;
 - provenance.
+
+Direct state readback is one valid verification method where the substrate exposes meaningful addressable state. It is not universally available or sufficient for a distributed, biohybrid, reconstructed, or estimator-based affective state. Other methods may include declared state estimation, intervention/causal probes, reconstruction from distributed state, or bounded behavioral/control signatures with an explicit claim ceiling.
+
+`STATE_VERIFICATION_EVIDENCE != DIRECT_READBACK_ONLY`
 
 ## Metaplasticity and saturation
 

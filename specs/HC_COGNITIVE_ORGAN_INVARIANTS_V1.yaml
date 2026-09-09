@@ -21,6 +21,7 @@ temporal_hypergraph:
     - PAIRWISE_EDGE_DOES_NOT_SUBSTITUTE_FOR_HIGHER_ORDER_RELATION_WHEN_JOINT_MEMBERSHIP_IS_CAUSALLY_OR_FUNCTIONALLY_MATERIAL
     - TOPOLOGY_WITHOUT_TIMING_DOES_NOT_FULLY_DEFINE_EFFECTIVE_COGNITIVE_CONFIGURATION
     - PLASTICITY_CHANGES_FUTURE_HYPERGRAPH_BEHAVIOR_WITHOUT_REWRITING_HISTORICAL_EVENTS
+    - PHYSICAL_REACHABILITY_DOES_NOT_EQUAL_LEARNED_LOGICAL_ELIGIBILITY
 
 cognitive_organ_boundary:
   no_essential_cognition_outside_hc: true
@@ -44,6 +45,58 @@ cognitive_organ_boundary:
     - body_schema
     - neuroplasticity
 
+complete_capability_manifest:
+  mandatory_presence: PRESENT
+  mandatory_canonical_systems:
+    - Empathy
+    - cognition
+    - sexuality
+    - self_identity
+    - psychological_behaviors
+    - sociological_behaviors
+    - semantics
+    - pragmatics
+    - phoenetics
+    - somatics
+    - chronology
+    - personification
+    - current_memory_storage
+    - deep_memory_storage
+    - volitions_conations
+    - resolver
+    - basic_operating_instructions
+    - kinesis
+    - adaptable_io_handler
+    - optics
+    - speech_recognition_and_synthesis
+    - routing_instructions_with_neuroplasticity
+    - homeostasis_interoception
+    - salience_attention
+    - affect
+    - integration_arbitration
+  rules:
+    - MANDATORY_CANONICAL_SYSTEM_CANNOT_BE_ABSENT
+    - MANDATORY_CANONICAL_SYSTEM_CANNOT_BE_EXTERNAL_ONLY
+    - PRESENT_DOES_NOT_EQUAL_ACTIVE
+    - DISABLED_DOES_NOT_EQUAL_DELETED
+
+self_contained_residency:
+  essential_cognitive_state_recoverable_without_external_provider: true
+  external_storage_may_be:
+    - BACKUP
+    - MIRROR
+    - ARCHIVE
+    - IMPORT_EXPORT_TRANSPORT
+    - SYNCHRONIZATION
+    - OPTIONAL_AUGMENTATION
+    - NONESSENTIAL_RETRIEVAL_ACCELERATION
+  external_storage_must_not_be:
+    - SOLE_COPY_OF_ESSENTIAL_MEMORY
+    - SOLE_COPY_OF_IDENTITY_CONTINUITY_STATE
+    - SOLE_COPY_OF_VALUES_OR_COMMITMENTS_REQUIRED_FOR_CONTINUITY
+    - SOLE_COPY_OF_BODY_SCHEMA_REQUIRED_FOR_CONTINUITY
+  external_peripheral_ablation_rule: ESSENTIAL_COGNITION_AND_CONTINUITY_REMAIN_AVAILABLE
+
 external_computation:
   allowed_roles:
     - HC_INTERNAL_SERVICE
@@ -52,6 +105,25 @@ external_computation:
     - EXTERNAL_OUTPUT_DOES_NOT_EQUAL_INTERNAL_BELIEF
     - EXTERNAL_RECOMMENDATION_DOES_NOT_EQUAL_HC_DECISION
     - MODEL_RESPONSE_DOES_NOT_EQUAL_ORGANISM_IDENTITY
+    - NO_ESSENTIAL_COGNITIVE_FUNCTION_EXISTS_ONLY_IN_EXTERNAL_PERIPHERAL
+    - EXTERNAL_PERIPHERAL_ABLATION_MAY_REDUCE_PERFORMANCE_BUT_NOT_REMOVE_ESSENTIAL_COGNITION
+    - ESSENTIAL_EXTERNAL_SERVICE_MUST_BE_RECLASSIFIED_AS_HC_INTERNAL_SUBSTRATE
+
+runtime_state_separation:
+  routing_state_is_authority_state: false
+  resource_qos_is_epistemic_support: false
+  physical_reachability_is_logical_structural_eligibility: false
+  planes:
+    - PHYSICAL_SUBSTRATE_REACHABILITY
+    - LOGICAL_STRUCTURAL_ELIGIBILITY
+    - CONFIGURED_ROUTING_AND_BINDINGS
+    - FUNCTIONAL_HYPEREDGES_AND_COALITIONS
+    - RUNTIME_STATE
+    - PLASTIC_STATE
+    - MODULATORY_INTEROCEPTIVE_STATE
+    - RESOURCE_QOS_STATE
+    - GOVERNANCE_AUTHORITY_STATE
+    - EPISTEMIC_SUPPORT_STATE
 
 nooplex_fabric:
   role: DISTRIBUTED_INTERNAL_INTEGRATION_SUBSTRATE
@@ -114,6 +186,8 @@ body_independence:
 forbidden_template_shortcuts:
   - OUTSIDE_LLM_AS_TRUE_COGNITIVE_CENTER
   - OUTSIDE_DATABASE_AS_IDENTITY_OR_MEMORY_AUTHORITY
+  - OUTSIDE_PROVIDER_AS_SOLE_ESSENTIAL_MEMORY_SUBSTRATE
+  - ESSENTIAL_COGNITION_IMPLEMENTED_ONLY_BY_EXTERNAL_PERIPHERAL
   - CENTRAL_HOMUNCULUS_EXECUTIVE
   - HEMISPHERIC_HUMAN_BRAIN_PACKAGING
   - NAMED_PERSON_DEFAULT_IDENTITY_PAYLOAD

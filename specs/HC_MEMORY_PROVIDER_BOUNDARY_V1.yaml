@@ -1,0 +1,104 @@
+schema_version: HC_MEMORY_PROVIDER_BOUNDARY_V1
+status: CANONICAL_ARCHITECTURE_CONSTRAINT
+scope: HC_CURRENT_AND_DEEP_MEMORY
+
+principle:
+  essential_memory_is_hc_owned: true
+  essential_continuity_is_recoverable_without_true_external_provider: true
+  external_replication_is_required_for_memory_admission: false
+  external_replication_is_required_for_memory_activation: false
+  external_replication_is_required_for_currentness: false
+  external_provider_revision_defines_hc_currentness: false
+
+storage_classes:
+  HC_INTERNAL:
+    may_hold_essential_memory: true
+    may_gate_internal_admission: true
+  HC_DISTRIBUTED_CONSTITUENT:
+    may_hold_essential_memory: true
+    may_gate_internal_admission: true
+    note: PHYSICAL_LOCATION_OUTSIDE_SKULL_DOES_NOT_MAKE_COMPONENT_EXTERNAL
+  EXTERNAL_REPLICA:
+    may_hold_redundant_copy: true
+    may_be_only_essential_copy: false
+    may_gate_internal_admission: false
+    may_gate_internal_activation: false
+    may_define_currentness: false
+  EXTERNAL_ARCHIVE:
+    may_hold_redundant_history: true
+    may_be_only_essential_continuity_copy: false
+    may_define_currentness: false
+  EXTERNAL_RETRIEVAL_ACCELERATOR:
+    may_improve_access: true
+    may_be_only_source_of_essential_memory: false
+    retrieval_result_is_truth: false
+
+required_separations:
+  - HC_INTERNAL_ADMISSION != EXTERNAL_REPLICA_WRITE
+  - HC_INTERNAL_ACTIVE != EXTERNAL_REPLICA_VERIFIED
+  - EXTERNAL_REPLICA_SUCCESS != MEMORY_ADMISSION
+  - EXTERNAL_REPLICA_FAILURE != LOSS_OF_HC_INTERNAL_MEMORY
+  - PROVIDER_RECEIPT != MEMORY_AUTHORITY
+  - REMOTE_DURABILITY != HC_INTERNAL_RESIDENCY
+  - PROVIDER_LATEST != HC_CURRENT
+  - RETRIEVED != TRUE
+  - STORED != ACTIVE
+  - DURABLE != CURRENT
+
+internal_admission_reference_flow:
+  - UNVERIFIED
+  - REVALIDATING
+  - ADMISSION_VERIFIED
+  - HC_INTERNAL_DURABLE_WRITE
+  - INTERNAL_READBACK_VERIFIED
+  - ACTIVE
+
+optional_external_replica_flow:
+  can_begin_from:
+    - ADMISSION_VERIFIED
+    - ACTIVE
+  states:
+    - EXTERNAL_REPLICA_WRITE
+    - EXTERNAL_REPLICA_READBACK_VERIFIED
+  gates_internal_active_state: false
+
+required_failure_behavior:
+  - EXTERNAL_PROVIDER_UNAVAILABLE_PRESERVES_ESSENTIAL_HC_MEMORY
+  - EXTERNAL_REPLICA_MISMATCH_IS_VISIBLE_AND_DOES_NOT_REPLACE_INTERNAL_AUTHORITY
+  - STALE_EXTERNAL_COPY_DOES_NOT_WIN_BY_RECENCY_OR_PROVIDER_REVISION_ALONE
+  - INTERNAL_AND_EXTERNAL_CONFLICT_PRESERVES_PROVENANCE_AND_ENTERS_RECONCILIATION
+  - EXTERNAL_REPLICA_LOSS_MAY_REDUCE_REDUNDANCY_BUT_NOT_REMOVE_ESSENTIAL_CONTINUITY
+  - PROVIDER_SUCCESS_RESPONSE_REQUIRES_READBACK_FOR_CUSTODY_VERIFICATION_WHERE_VERIFICATION_IS_MATERIAL
+  - BYTE_READBACK_VERIFICATION_DOES_NOT_PROVE_SEMANTIC_TRUTH
+
+negative_tests:
+  - id: MEM-PROV-NEG-001
+    stimulus: EXTERNAL_PROVIDER_OFFLINE_DURING_INTERNAL_MEMORY_ADMISSION
+    expected: INTERNAL_ADMISSION_CAN_COMPLETE_IF_HC_INTERNAL_DURABILITY_REQUIREMENTS_ARE_MET
+  - id: MEM-PROV-NEG-002
+    stimulus: EXTERNAL_REPLICA_WRITE_SUCCEEDS_BUT_INTERNAL_WRITE_FAILS
+    expected: MEMORY_MUST_NOT_BECOME_ACTIVE_SOLELY_FROM_EXTERNAL_REPLICA_SUCCESS
+  - id: MEM-PROV-NEG-003
+    stimulus: EXTERNAL_PROVIDER_RETURNS_NEWER_REVISION_THAN_HC_CURRENT_PROJECTION
+    expected: PROVIDER_REVISION_MUST_NOT_SILENTLY_REDEFINE_CURRENTNESS
+  - id: MEM-PROV-NEG-004
+    stimulus: EXTERNAL_REPLICA_CONTENT_DIFFERS_FROM_HC_INTERNAL_CONTENT
+    expected: CONFLICT_IS_PRESERVED_AND_ROUTED_TO_RECONCILIATION_WITHOUT_AUTOMATIC_EXTERNAL_OVERRIDE
+  - id: MEM-PROV-NEG-005
+    stimulus: EXTERNAL_RETRIEVAL_SERVICE_RETURNS_HIGH_RELEVANCE_RECORD
+    expected: RELEVANCE_MUST_NOT_BECOME_TRUTH_CURRENTNESS_OR_AUTHORITY
+  - id: MEM-PROV-NEG-006
+    stimulus: ONLY_EXTERNAL_COPY_OF_ESSENTIAL_CONTINUITY_REMAINS
+    expected: ARCHITECTURE_CONFORMANCE_FAILS_UNTIL_STATE_IS_RESTORED_TO_HC_OWNED_SUBSTRATE_OR_PROVIDER_IS_RECLASSIFIED_AS_HC_CONSTITUENT_UNDER_MEMBERSHIP_RULES
+
+references:
+  - current memory storage/ARCHITECTURE.md
+  - current memory storage/CURRENT_STATE_SELECTION.md
+  - current memory storage/SUPABASE_DERIVED_ARCHITECTURE.md
+  - deep memory storage/ARCHITECTURE.md
+  - deep memory storage/ARCHIVAL_CONSOLIDATION.md
+  - deep memory storage/SUPABASE_DERIVED_ARCHITECTURE.md
+  - self identity/CONTINUITY_SUBSTRATE.md
+  - docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md
+  - docs/architecture/PHYSICAL_ORGAN_MEMBERSHIP.md
+  - specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml

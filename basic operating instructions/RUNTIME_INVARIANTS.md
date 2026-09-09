@@ -114,4 +114,4 @@ A subsystem may only claim what its evidence and validation support. Engineering
 
 ## Provenance
 
-Integrated from `four/cross-repo-synthesis-v1` after Warden review, with the temporal-hypergraph invariant made explicit to match canonical architecture.
+Integrated through repository architecture review; exact source bindings are recorded in `docs/research/cross-repo-synthesis/`, with the temporal-hypergraph invariant made explicit to match canonical architecture.

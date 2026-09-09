@@ -81,4 +81,4 @@ Strong coupling is expected with cognition, conation, affect, salience/attention
 
 ## Provenance
 
-Integrated from `four/cross-repo-synthesis-v1` after Warden review and retained as identity-neutral subsystem architecture.
+Integrated through repository architecture review; exact source bindings are recorded in `docs/research/cross-repo-synthesis/`, and the contract is retained as identity-neutral subsystem architecture.

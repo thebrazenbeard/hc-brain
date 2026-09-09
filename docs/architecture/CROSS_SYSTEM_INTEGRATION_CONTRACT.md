@@ -270,4 +270,4 @@ This contract specifies a coherent integration model. It does not establish that
 
 ## Provenance
 
-Integrated from `four/cross-repo-synthesis-v1` after Warden review. The contract was retained because it matches the current root architecture, complete-cognitive-organ boundary, temporal-hypergraph model, and distributed Noöplex Fabric.
+Integrated through repository architecture review; exact source bindings are recorded in `docs/research/cross-repo-synthesis/`. The contract was retained because it matches the current root architecture, complete-cognitive-organ boundary, temporal-hypergraph model, and distributed Noöplex Fabric.

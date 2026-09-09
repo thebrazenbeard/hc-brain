@@ -91,4 +91,4 @@ A body may contain external local protective circuits for hard-real-time damage 
 
 ## Provenance
 
-Integrated from `four/cross-repo-synthesis-v1` after Warden review and generalized to the current cognitive-organ boundary.
+Integrated through repository architecture review; exact source bindings are recorded in `docs/research/cross-repo-synthesis/`, and the contract is generalized to the current cognitive-organ boundary.

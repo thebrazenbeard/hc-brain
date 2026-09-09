@@ -6,7 +6,7 @@ Status: identity-neutral template architecture synthesis.
 
 The semantics subsystem needs more than a concept graph. It needs a runtime discipline for deciding what counts as observation, interpretation, proposition, convention, operational correspondence, semantic correspondence, current meaning, and unresolved uncertainty.
 
-The design here synthesizes reusable mechanisms from Semantic Atlas, UNVTRSLR, SPM, Noema, and adaptive-system work. It does not import any identity-specific semantic state.
+The design here synthesizes reusable mechanisms from the source families bound in `docs/research/cross-repo-synthesis/`. It does not import any identity-specific semantic state.
 
 ## Runtime object separation
 

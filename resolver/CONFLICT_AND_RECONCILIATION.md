@@ -55,4 +55,4 @@ Resolver output can establish that technical conflict has been repaired. It does
 
 ## Provenance
 
-Integrated from `four/cross-repo-synthesis-v1` after Warden review.
+Integrated through repository architecture review; exact source bindings are recorded in `docs/research/cross-repo-synthesis/`.

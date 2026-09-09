@@ -54,4 +54,4 @@ Strong coupling is expected with affect, pragmatics, semantics, memory, conation
 
 ## Provenance
 
-Integrated from `four/cross-repo-synthesis-v1` after Warden review.
+Integrated through repository architecture review; exact source bindings are recorded in `docs/research/cross-repo-synthesis/`.

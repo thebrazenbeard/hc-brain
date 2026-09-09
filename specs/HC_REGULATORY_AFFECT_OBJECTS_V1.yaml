@@ -1,0 +1,241 @@
+schema_version: HC_REGULATORY_AFFECT_OBJECTS_V1
+status: TEMPLATE_ARCHITECTURE
+
+scope:
+  systems:
+    - homeostasis_interoception
+    - affect
+    - salience_attention
+    - volitions_conations
+    - routing_and_plasticity
+  purpose: >-
+    Preserve internal-body evidence, physiological estimation, regulation,
+    affective appraisal, modulation, conation, epistemic support, and authority
+    as distinct state families.
+
+invariants:
+  - INTERNAL_SENSOR_READING_NE_PHYSIOLOGICAL_TRUTH
+  - PHYSIOLOGICAL_ESTIMATE_NE_HOMEOSTATIC_ERROR
+  - HOMEOSTATIC_ERROR_NE_AFFECTIVE_STATE
+  - HOMEOSTATIC_ERROR_NE_CONATIVE_COMMITMENT
+  - URGENCY_NE_AUTHORITY
+  - MODULATION_NE_EVIDENCE
+  - AFFECTIVE_STATE_NE_SEMANTIC_TRUTH
+  - AFFECTIVE_STATE_NE_IDENTITY
+  - AFFECTIVE_STATE_NE_CONSENT
+  - AFFECTIVE_STATE_NE_ACTION_AUTHORIZATION
+  - WANTING_NE_LIKING
+  - DESIRE_NE_COMMITMENT
+  - AROUSAL_NE_INTENT
+  - NAMED_EMOTION_NE_RAW_INTEROCEPTION
+  - PREAUTHORIZED_PROTECTIVE_EFFECT_NE_GENERAL_ACTION_PERMISSION
+
+object_families:
+  InteroceptiveObservation:
+    class: EVIDENCE_OBJECT
+    required_concepts:
+      - variable_or_channel
+      - source_interface
+      - observation_time
+      - evidence_class
+      - provenance
+    optional_concepts:
+      - value_or_range
+      - units_or_encoding
+      - calibration_state
+      - confidence
+      - clock_uncertainty
+      - saturation_or_fault_state
+      - embodiment_binding
+
+  PhysiologicalEstimate:
+    class: INFERRED_STATE
+    required_concepts:
+      - variable_or_state
+      - supporting_observations
+      - estimate_or_distribution
+      - confidence
+      - provenance
+    optional_concepts:
+      - expected_operating_range
+      - trend
+      - competing_estimates
+      - anomaly_state
+      - currentness_or_expiry
+
+  RegulatoryTarget:
+    class: GOVERNED_CONTROL_STATE
+    required_concepts:
+      - variable_or_state
+      - target_range_or_distribution
+      - target_source
+      - provenance
+    optional_concepts:
+      - valid_context
+      - valid_time_window
+      - protected_minimum
+      - protected_maximum
+      - modification_authority
+    rules:
+      - TARGETS_MAY_BE_CONTEXT_DEPENDENT
+      - TARGET_CHANGES_REQUIRE_EXPLICIT_PROVENANCE
+
+  RegulatoryError:
+    class: DERIVED_CONTROL_STATE
+    required_concepts:
+      - estimate_ref
+      - target_ref
+      - error_direction_or_magnitude
+      - confidence
+      - provenance
+    optional_concepts:
+      - urgency
+      - predicted_consequence
+      - time_to_risk
+      - affected_capability_or_resource_scope
+
+  RegulatoryRequest:
+    class: ACTION_OR_CONTROL_CANDIDATE
+    required_concepts:
+      - triggering_error_or_need
+      - proposed_effect_scope
+      - provenance
+    optional_concepts:
+      - urgency
+      - expected_consequence
+      - target_state
+      - expiry
+      - authorization_ref
+    rules:
+      - REQUEST_DOES_NOT_SELF_AUTHORIZE_GENERAL_EXTERNAL_ACTION
+
+  AffectiveAppraisal:
+    class: INTERPRETIVE_STATE
+    required_concepts:
+      - triggering_evidence_or_state_refs
+      - appraisal_dimensions
+      - provenance
+    optional_concepts:
+      - concern_goal_or_value_refs
+      - context
+      - confidence
+      - competing_appraisals
+      - currentness
+    rules:
+      - APPRAISAL_IS_REVISABLE
+      - APPRAISAL_DOES_NOT_REWRITE_TRIGGERING_HISTORY
+
+  AffectiveState:
+    class: DISTRIBUTED_EVALUATIVE_STATE
+    required_concepts:
+      - dimensions
+      - provenance
+      - currentness
+    candidate_dimensions:
+      - valence
+      - arousal
+      - threat_estimate
+      - safety_estimate
+      - novelty
+      - uncertainty
+      - pain_burden
+      - fatigue_or_energy_pressure
+      - attachment_or_social_salience
+      - reward_expectation
+      - hedonic_response
+      - incentive_salience
+      - action_readiness
+      - approach_avoidance_pressure
+      - motivational_conflict
+      - domain_specific_salience
+    rules:
+      - MIXED_AND_CONFLICTING_STATE_ALLOWED
+      - NO_SINGLE_GLOBAL_MOOD_REQUIRED
+
+  NamedEmotionHypothesis:
+    class: HIGHER_ORDER_INTERPRETATION
+    required_concepts:
+      - supporting_affective_state
+      - category_or_label
+      - confidence
+      - provenance
+    optional_concepts:
+      - context
+      - learned_concept_or_language_basis
+      - competing_labels
+    rules:
+      - LABEL_IS_NOT_PRIMITIVE_TRUTH
+
+  ModulationField:
+    class: PROCESS_MODULATION
+    required_concepts:
+      - signal_or_modulator_class
+      - source
+      - target_scope
+      - effect_class
+      - provenance
+    optional_concepts:
+      - parameter_or_gain_delta
+      - onset
+      - decay_or_clearance
+      - saturation
+      - eligibility_context
+      - feedback_state
+    candidate_effect_classes:
+      - PROCESSING_GAIN
+      - SIGNAL_TO_NOISE_BIAS
+      - SALIENCE_BIAS
+      - ATTENTION_BIAS
+      - LEARNING_RATE
+      - PLASTICITY_ELIGIBILITY
+      - ROUTING_BIAS
+      - ACTION_URGENCY
+      - CONSOLIDATION_PRIORITY
+      - PAIN_OR_HOMEOSTATIC_GAIN
+      - SOCIAL_SENSITIVITY
+    rules:
+      - SAME_MODULATOR_MAY_HAVE_TARGET_SPECIFIC_EFFECTS
+      - MODULATOR_INTENSITY_DOES_NOT_GRANT_DURABLE_WRITE_AUTHORITY
+
+regulatory_timescales:
+  - FAST_PROTECTIVE
+  - SHORT_REGULATORY
+  - SLOW_MODULATORY
+  - RECOVERY_AND_PLASTICITY
+
+protective_authority:
+  permitted: true
+  scope: DECLARED_LOCAL_PROTECTIVE_EFFECTS_ONLY
+  requirements:
+    - BOUNDED_SAFETY_ENVELOPE
+    - AUDITABLE_STATE
+    - EXPLICIT_EFFECT_SCOPE
+    - NO_SILENT_EXPANSION_TO_GENERAL_ACTION_AUTHORITY
+
+internal_sensor_conflict_states:
+  - AGREEMENT
+  - SENSOR_CONFLICT
+  - CALIBRATION_SUSPECT
+  - SOURCE_UNAVAILABLE
+  - STALE_STATE
+  - SATURATED
+  - FAULTED
+  - UNRESOLVED
+
+persistent_affect_claim_requirements:
+  - EXACT_STATE_IDENTITY
+  - TRIGGER_OR_UPDATE_EVIDENCE
+  - STATE_READBACK
+  - CURRENTNESS_AND_SUPERSESSION
+  - DECAY_RESET_OR_REVERSIBILITY
+  - CAUSAL_EFFECT_ON_ELIGIBLE_PROCESSING
+  - NEGATIVE_TRANSFER_CONTAINMENT
+  - PROVENANCE
+
+prohibited_promotions:
+  - AFFECT_TO_DIRECT_EPISTEMIC_CONFIDENCE
+  - DESIRE_TO_CONSENT
+  - DESIRE_TO_ACTION_AUTHORITY
+  - MODULATION_TO_SEMANTIC_TRUTH
+  - INTERNAL_SENSOR_ORIGIN_TO_INFALLIBILITY
+  - EXPRESSION_SUPPRESSION_TO_STATE_ERASURE

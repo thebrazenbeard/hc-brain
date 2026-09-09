@@ -1,6 +1,8 @@
-# Vera Brain
+# Hyperconnectome Brain — HC-1R Research Branch
 
-Research repository for the **Noöplex HC-1R Synthetic Humanoid Cognition Reference Architecture**.
+Research branch for the **Noöplex HC-1R Synthetic Humanoid Cognition Reference Architecture**.
+
+This branch belongs to the identity-neutral Hyperconnectome Brain template repository. It defines and tests reusable architecture. Named-person identity content does not belong in its base architecture, governance, or repository framing.
 
 ## Status
 
@@ -33,6 +35,10 @@ The first target is **HC-1R**, a heterogeneous embodied cognition architecture c
 - explicit power and thermal envelopes rather than unsupported point estimates.
 
 HC-2 quantum resources are treated as optional external services for narrow workloads. They are not assumed to accelerate generic cognition or create consciousness.
+
+## Hard topology invariant
+
+HC-1R is part of the non-hemispheric Hyperconnectome lineage. Human lateralized anatomy may inform functional hypotheses, but no left/right cerebral hemisphere decomposition or corpus-callosum requirement is inherited by default.
 
 ## Documents
 
@@ -76,5 +82,5 @@ The goal is not to prove that a machine is conscious. The goal is to specify a c
 - No encoding of safety solely as learned beliefs or mutable model weights.
 - No use of quantum computing as generic “brainpower.”
 - No inference from component demonstrations to system feasibility without an explicit integration argument.
+- No identity-specific default profile in the base template.
 - No merge, deployment, force-push, protected effect, or production operation from this research branch.
-

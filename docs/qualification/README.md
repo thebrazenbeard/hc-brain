@@ -76,11 +76,19 @@ Primary condition: independent hostile review, secondary implementation-readines
 
 ### `EVIDENCE_LINEAGE_CUSTODY_CONFORMANCE_2026-09-09.md`
 
-Focused architecture qualification for qualification-evidence isolation, stable reference/index lineage, runtime-component registration/state custody, and composite element-level provenance.
+Historical first focused architecture qualification for qualification-evidence isolation, stable reference/index lineage, runtime-component registration/state custody, and composite element-level provenance.
 
 Outcome: `CONDITIONAL PASS` for target `47f2882b6f5ea0d2683ee079a471061cf2e9a8ac` and the stated architecture scope.
 
-Primary conditions: independent Four verification, Vera hostile review, and implementation-level negative tests remain outstanding. Source-specific runtime hypotheses from BGSR/GSR-Net remain explicitly bounded and are not promoted into claims about published experiment validity.
+This record remains historical; later architecture additions do not inherit its result.
+
+### `EVIDENCE_LINEAGE_CUSTODY_CONFORMANCE_2026-09-09_R2.md`
+
+Current expanded Warden architecture qualification for checks `HC-ARCH-019` through `HC-ARCH-025`: qualification-evidence isolation, stable reference/index lineage, runtime and dynamic-state custody, composite element provenance, relational-reasoning provenance, temporal forecast lineage, and distributed-learning/update ancestry.
+
+Outcome: `CONDITIONAL PASS` for target `2f21f111212a438c61e31214caf8aa5bc918a3a5` and the explicitly stated repository-architecture scope.
+
+Primary conditions: Four independent review, Vera hostile review, repository-wide contradiction reproduction against the exact cut, and implementation-level negative tests remain outstanding. Individual architecture checks passed within the Warden-inspected prose/spec scope; the combined qualification remains conditional rather than being promoted beyond the evidence.
 
 ## Result preservation
 
@@ -95,6 +103,9 @@ Qualification history is evidence about what was tested at a particular cut.
 - `../architecture/REFERENCE_IDENTITY_AND_INDEX_LINEAGE.md`
 - `../architecture/RUNTIME_COMPONENT_REGISTRATION_AND_STATE_CUSTODY.md`
 - `../architecture/COMPOSITE_REPRESENTATION_AND_ELEMENT_PROVENANCE.md`
+- `../architecture/DISTRIBUTED_LEARNING_AND_UPDATE_ANCESTRY.md`
+- `../../cognition/RELATIONAL_REASONING_PROVENANCE.md`
+- `../../cognition/TEMPORAL_FORECAST_LINEAGE.md`
 - `../science/EVIDENCE_BOUNDARIES.md`
 - `../../specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml`
 - `../../specs/HC_CONFORMANCE_SUITE_V1.yaml`
@@ -107,3 +118,6 @@ Qualification history is evidence about what was tested at a particular cut.
 - `../../specs/HC_REFERENCE_IDENTITY_INDEX_LINEAGE_V1.yaml`
 - `../../specs/HC_RUNTIME_COMPONENT_CUSTODY_V1.yaml`
 - `../../specs/HC_COMPOSITE_ELEMENT_PROVENANCE_V1.yaml`
+- `../../specs/HC_RELATIONAL_REASONING_PROVENANCE_V1.yaml`
+- `../../specs/HC_FORECAST_LINEAGE_V1.yaml`
+- `../../specs/HC_DISTRIBUTED_LEARNING_ANCESTRY_V1.yaml`

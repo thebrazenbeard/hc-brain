@@ -10,6 +10,7 @@ governing_contracts:
   - docs/architecture/CONNECTIVITY_INFERENCE_AND_TOPOLOGY_EVIDENCE.md
   - docs/architecture/TOPOLOGY_DESIGN_CONSTRAINTS.md
   - docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md
+  - docs/architecture/MULTIGRAPH_MULTILAYER_AND_HYPEREDGE_SEMANTICS.md
   - docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md
   - docs/runtime/PLASTICITY_AND_STATE_GOVERNANCE.md
 
@@ -80,6 +81,36 @@ invariants:
   - TOPOLOGICAL_IMPORTANCE_DOES_NOT_EQUAL_SEMANTIC_IMPORTANCE
   - MESSAGE_FLOW_CONTROL_DOES_NOT_EQUAL_COGNITIVE_AUTHORITY
   - HIGH_FLOW_CAPACITY_DOES_NOT_EQUAL_EFFECT_PERMISSION
+  - MULTIPLE_EDGE_TYPES_DO_NOT_EQUAL_HYPEREDGE
+  - MULTIVIEW_GRAPH_DOES_NOT_EQUAL_HYPERGRAPH
+  - MULTIPLEX_LAYER_DOES_NOT_EQUAL_COGNITIVE_PLANE
+  - INTER_LAYER_MAPPING_DOES_NOT_EQUAL_NODE_IDENTITY
+  - FUSED_EDGE_DOES_NOT_EQUAL_ORIGINAL_LAYER_SET
+  - PAIRWISE_AGGREGATION_DOES_NOT_EQUAL_HIGHER_ORDER_CAUSAL_RELATION
+  - HYPEREDGE_DOES_NOT_EQUAL_CLIQUE_EXPANSION
+  - PROJECTED_GRAPH_DOES_NOT_EQUAL_ORIGINAL_HYPERGRAPH
+  - STATIC_MULTILAYER_SNAPSHOT_DOES_NOT_EQUAL_TEMPORAL_HYPERGRAPH_HISTORY
+
+relation_semantics:
+  pairwise_relations:
+    preserve_relation_type: true
+    preserve_topology_plane: true
+    preserve_temporal_validity: true
+    preserve_provenance_when_material: true
+    same_endpoints_may_have_multiple_distinct_relations: true
+  multilayer_or_multiplex:
+    preserve_layer_identity_when_material: true
+    numeric_layer_compatibility_implies_semantic_interchangeability: false
+    fusion_replaces_source_layers: false
+    inter_layer_mapping_implies_entity_identity: false
+  hyperedges:
+    joint_membership_is_material: true
+    clique_expansion_is_lossless_by_default: false
+    preserve_hyperedge_identity_under_projection: true
+    preserve_member_roles_when_material: true
+    preserve_temporal_scope: true
+    preserve_relation_type_and_plane: true
+    preserve_policy_and_authority_refs_when_material: true
 
 mutation_rules:
   derived_topology_directly_mutates_E_p: false
@@ -115,6 +146,7 @@ multimodal_fusion:
   preserve_calibration_and_domain_state: true
   alignment_transform_has_provenance: true
   stale_or_degraded_modality_remains_visible: true
+  fused_scalar_or_edge_declares_loss_profile_when_source_relations_are_collapsed: true
 
 domain_shift:
   applicability_state_required_when_material: true
@@ -160,9 +192,18 @@ implementation_negative_tests:
   - MODEL_CONFIDENCE_IS_REEVALUATED_UNDER_MATERIAL_DOMAIN_SHIFT
   - SOURCE_ABLATION_SENSITIVITY_IS_RECORDED_WITHOUT_AUTOMATIC_TRUTH_OR_CAUSAL_LABEL
   - FLOW_CONTROL_OPTIMIZATION_CANNOT_BYPASS_ROUTING_AUTHORITY_OR_EFFECT_GOVERNANCE
+  - MULTIPLE_MODALITY_EDGES_BETWEEN_SAME_NODES_DO_NOT_BECOME_ONE_HYPEREDGE_WITHOUT_JOINT_RELATION_SEMANTICS
+  - HYPEREDGE_CLIQUE_PROJECTION_DOES_NOT_DESTROY_ORIGINAL_HYPEREDGE_IDENTITY
+  - FUSED_MULTILAYER_EDGE_DOES_NOT_ERASE_SOURCE_LAYER_PROVENANCE
+  - INTER_LAYER_ALIGNMENT_DOES_NOT_CREATE_UNPROVEN_NODE_IDENTITY
+  - NUMERIC_ENCODING_OF_GOVERNANCE_AND_STATISTICAL_LAYERS_DOES_NOT_MAKE_THEM_SEMANTICALLY_INTERCHANGEABLE
+  - STATIC_MULTILAYER_EXPORT_DOES_NOT_CLAIM_COMPLETE_TEMPORAL_HISTORY_WITHOUT_REQUIRED_TIMING_AND_HIGHER_ORDER_STATE
 
 source_provenance:
   research_record: docs/research/NETWORK_NEUROSCIENCE_DEEP_SCOUR_2026-09-09.md
+  additional_research_records:
+    - docs/research/BASIRA_ALIGNMENT_REPRODUCIBILITY_SCOUR_2026-09-09.md
+    - docs/research/BASIRA_MULTIGRAPH_TOPOLOGY_FIDELITY_2026-09-09.md
   source_family:
     - nilearn/nilearn
     - cwatson/brainGraph
@@ -170,12 +211,21 @@ source_provenance:
     - basiralab/RegGNN
     - basiralab/GSR-Net
     - basiralab/HCAE
+    - basiralab/HUNet
+    - basiralab/ABMT
+    - basiralab/MultiGraphGAN
+    - basiralab/topoGAN
+    - basiralab/MGN-Net
+    - basiralab/MICNet
+    - basiralab/netNorm-PY
+    - basiralab/SM-netFusion-PY
     - basiralab/GraphGradIn
     - basiralab/FMDGNN
     - basiralab/TAF-GNN
     - basiralab/FLAT-Net
     - basiralab/GmTE-Net
     - basiralab/TIS-Net
+    - basiralab/ReMI-Net
     - basiralab/DynGNN
     - basiralab/predUncertaintywithDomainShift
     - basiralab/DeltaGNN

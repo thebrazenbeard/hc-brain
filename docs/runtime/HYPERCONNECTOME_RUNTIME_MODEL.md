@@ -4,7 +4,7 @@ Status: conceptual / unimplemented
 
 ## Runtime representation
 
-Represent an active Hyperconnectome implementation as a temporal attributed multilayer hypergraph:
+The Hyperconnectome Brain is a temporal attributed multilayer hypergraph. An active implementation can be represented as:
 
 `H(t) = (V, E_s, E_c(t), H_f(t), X(t), P(t), M(t), Q(t))`
 
@@ -18,6 +18,8 @@ Where:
 - `P(t)` = plastic parameters governing future state transitions;
 - `M(t)` = modulatory and interoceptive state;
 - `Q(t)` = resource and quality-of-service state such as energy, heat, bandwidth, latency, damage, and confidence.
+
+This representation is subordinate to the canonical temporal-hypergraph semantics in `docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md`; it is not merely an optional visualization choice.
 
 The HC is not an indiscriminate all-to-all network. It is a dynamically composed system in which specialized subsystems form transient coalitions when several domains jointly constrain an interpretation, prediction, memory update, or action.
 
@@ -91,7 +93,7 @@ Many meaningful HC events involve more than two subsystems simultaneously. A tra
 
 `{deep memory, current memory, pragmatics, affect, self identity} -> interpretation`
 
-is better modeled as a functional hyperedge than as an artificial serial chain with one supposed owner.
+is a functional hyperedge rather than an artificial serial chain with one supposed owner.
 
 Minimal form:
 
@@ -111,6 +113,8 @@ HYPEREDGE {
   perturbation_handle
 }
 ```
+
+A `COALITION` is the dynamically instantiated, task/context-scoped operational form of a temporal hyperedge.
 
 ## Shared state
 
@@ -157,4 +161,4 @@ Each subsystem and functional coalition should expose perturbation and observabi
 
 ## Provenance
 
-Adapted from `four/runtime-hyperconnectome-v1/docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` after Warden review. Identity-specific, embodiment-specific, and setting-specific material was deliberately excluded from the base runtime contract.
+Adapted from `four/runtime-hyperconnectome-v1/docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` after Warden review, then corrected to the canonical temporal-hypergraph invariant. Identity-specific, embodiment-specific, and setting-specific material was deliberately excluded from the base runtime contract.

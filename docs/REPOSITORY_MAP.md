@@ -21,6 +21,7 @@ Current project roles:
 - `Architecture concept.md` — original structural seed.
 - `docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md` — canonical definition of the HC as a complete synthetic cognitive organ and body-interface boundary.
 - `docs/architecture/PHYSICAL_ORGAN_MEMBERSHIP.md` — canonical distinction among cognitive-organ ownership, physical enclosure, and body/peripheral membership; defines the HC as removable but potentially physically distributed.
+- `docs/architecture/HC_LINEAGE.md` — canonical HC-1 -> HC-2 -> HC-3 inheritance model and generation distinctions under the current complete-organ boundary.
 - `docs/architecture/COMPLETE_CAPABILITY_MANIFEST.md` — complete-capability and self-contained-residency conformance contract.
 - `docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md` — canonical statement that the HC is a typed, attributed, multilayer temporal hypergraph.
 - `docs/architecture/CONNECTIVITY_PLANES.md` — reference semantics for structural, functional, effective, modulatory, plastic, temporal, and governance relations.
@@ -86,6 +87,7 @@ Current focused contracts include:
 - `integration-arbitration/DISTRIBUTED_ARBITRATION.md`
 - `integration-arbitration/NOOPLEX_FABRIC.md`
 - `kinesis/ACTION_GATEWAY.md`
+- `optics/ARCHITECTURE.md`
 - `personification/SOCIAL_PRESENTATION_CONTROL.md`
 - `pragmatics/CROSS_REPO_PRAGMATIC_RUNTIME.md`
 - `psychological behaviors/LEARNED_BEHAVIOR_ARCHITECTURE.md`
@@ -97,6 +99,7 @@ Current focused contracts include:
 - `sexuality/AGENCY_AND_EMBODIED_AFFECT.md`
 - `sociological behaviors/SOCIAL_MODELING_ARCHITECTURE.md`
 - `somatics/BODY_STATE_AND_BODY_SCHEMA.md`
+- `speech recognition & synthesis/ARCHITECTURE.md`
 - `volitions-conations/CONATIVE_STATE_MACHINE.md`
 
 ## Evidence and provenance
@@ -105,18 +108,18 @@ Several architecture files are generalized from other repositories owned by `the
 
 `docs/research/cross-repo-synthesis/` records neutral source bindings and transfer provenance. Research/source records can name source projects; that does not make those source identities part of the HC template.
 
-## Completed Four synthesis pass
+## Four workstreams
 
 `four/cross-repo-synthesis-v1` is a completed secondary-architect contribution cut. Its compatible architectural material has been selectively integrated into newer `main`, often with Warden corrections after hostile review. The branch remains useful as provenance and comparison evidence, but it is not a moving canonical workstream and must not outrank newer main-branch contracts.
 
-The completed pass also contains detailed source/provenance research that may be mined into `docs/research/` without promoting its process-plan artifacts or stale alternate wording into canon.
+The active secondary-architect workstream is `four/lineage-and-conformance-v2`, created from the physical-organ-boundary main cut. Four is assigned parallel work on PR #2 lineage reconciliation, distributed-organ engineering, conformance/validator design, and thin-root coverage. Four must refresh against newer `main` before substantial writes because Warden integration continues in parallel.
 
 ## Other preserved material not yet canonical
 
 The following material remains available for selective Warden review:
 
 - `research/hyperconnectome-evidence-v1` — prior research/evidence layer containing neuroscience, connectomics, sensorimotor integration, homeostasis/allostasis, attention/metacognition, social cognition, semantics/pragmatics, continual learning, materials/interconnects, and evidence limits. Vera's current role is hostile review, so this is evidence input rather than a standing parallel architecture lane.
-- `research/nooplex-hc3-architecture-v1` — HC-1/HC-2/HC-3 lineage, engineering, science, and embodiment work under selective review; represented by open PR #2.
+- `research/nooplex-hc3-architecture-v1` — HC-1/HC-2/HC-3 lineage, engineering, science, and embodiment source material represented by open PR #2. The broad generation relationship is now canonical in `docs/architecture/HC_LINEAGE.md`; PR #2 still requires file-by-file salvage/rewrite for detailed generation and engineering material.
 - `research/hc-1r-reference-architecture` — more ambitious HC-1R formal/reference-architecture research. Useful mechanisms may be mined, but HC-1R is not currently adopted as the canonical replacement for HC-1.
 - `research/hyperconnectome-foundations-20260909` — preserved closed-PR #4 foundation/research branch. Its temporal-hypergraph, connectivity-plane, coalition, notation, and reference-model material has been selectively integrated/corrected on `main`; the branch remains source/provenance material only.
 - `thebrazenbeard-patch-1` — source-intake material represented by open PR #1.
@@ -126,7 +129,7 @@ The following material remains available for selective Warden review:
 ## Pull-request status
 
 - PR #1 — open source-intake/reference bundle; retained pending final disposition.
-- PR #2 — open draft HC-1/HC-2/HC-3 lineage contribution; retained for selective review.
+- PR #2 — open draft HC-1/HC-2/HC-3 lineage contribution; retained for selective review. Canonical lineage principles have been extracted to `main`, but detailed PR #2 content still requires disposition.
 - PR #3 — closed as superseded after compatible runtime material was selectively integrated into `main`.
 - PR #4 — closed as superseded after selective integration; not merged wholesale. Remaining source-ledger/research material stays preserved on its branch.
 
@@ -142,17 +145,18 @@ All HC PRs #1–#4 now have Bus mirror records under `projects/hc-brain/pr-mirro
 6. A conforming complete HC keeps mandatory intrinsic capacities architecturally present even when disabled, dormant, immature, degraded, or unimplemented.
 7. Essential continuity-bearing state cannot exist solely in a true external provider; external stores may mirror, back up, synchronize, archive, or augment internal HC state.
 8. A true external computational peripheral must be ablatable without uniquely removing an essential cognitive function; otherwise that function/substrate belongs inside the HC boundary, regardless of physical location.
-9. The HC is a typed, attributed, multilayer temporal hypergraph; pairwise edges remain valid where relations are genuinely pairwise, while higher-order cognitive events are represented as hyperedges/coalitions.
-10. Human neuroscience informs mechanisms and constraints but does not dictate human gross anatomy.
-11. The HC architecture is non-hemispheric unless a later explicit engineering decision establishes otherwise.
-12. Repository folders express functional responsibility; runtime cognition occurs through distributed HC-internal interaction rather than a central executive person.
-13. Capability presence, activation, development, health, and authorization are distinct axes.
-14. Routing, governance/authority, epistemic support, resource/QoS state, plasticity, timing, and learned logical topology are orthogonal runtime dimensions even if a concrete implementation co-locates them.
-15. Personification may propose presentation/timing changes but does not own social action selection.
-16. Sexuality may own the instantiated HC's self sexual-boundary state and model other-agent willingness, but direct consent evidence and final external action authorization remain separately governed.
-17. Cross-repository transfer targets must resolve deterministically to canonical HC paths; unbound aliases remain research-only.
-18. Research, branch drafts, source repos, and model outputs inform architecture but do not become canon automatically.
+9. HC-1 establishes the complete foundational cognitive organ; HC-2 adds specialized quantum/photonic acceleration; HC-3 adds richer distributed embodied neuroendocrine/interoceptive/autonomic affective physiology. Later generations extend rather than psychologically complete earlier ones.
+10. The HC is a typed, attributed, multilayer temporal hypergraph; pairwise edges remain valid where relations are genuinely pairwise, while higher-order cognitive events are represented as hyperedges/coalitions.
+11. Human neuroscience informs mechanisms and constraints but does not dictate human gross anatomy.
+12. The HC architecture is non-hemispheric unless a later explicit engineering decision establishes otherwise.
+13. Repository folders express functional responsibility; runtime cognition occurs through distributed HC-internal interaction rather than a central executive person.
+14. Capability presence, activation, development, health, and authorization are distinct axes.
+15. Routing, governance/authority, epistemic support, resource/QoS state, plasticity, timing, and learned logical topology are orthogonal runtime dimensions even if a concrete implementation co-locates them.
+16. Personification may propose presentation/timing changes but does not own social action selection.
+17. Sexuality may own the instantiated HC's self sexual-boundary state and model other-agent willingness, but direct consent evidence and final external action authorization remain separately governed.
+18. Cross-repository transfer targets must resolve deterministically to canonical HC paths; unbound aliases remain research-only.
+19. Research, branch drafts, source repos, and model outputs inform architecture but do not become canon automatically.
 
 ## Repository-management status
 
-Main is under active Warden integration. Four's completed synthesis cut and closed PR #4 have now been dispositioned rather than awaited. Compatible identity-neutral material may be committed directly after review; HC-series lineage changes, HC-1R redesign proposals, and unresolved scientific/engineering conflicts remain isolated until explicitly reconciled. Vera is assigned hostile review against exact current main cuts and should search for counterexamples rather than co-authoring the primary architecture.
+Main is under active Warden integration. Four's new secondary workstream is active rather than idle. Compatible identity-neutral material may be committed directly after review; detailed HC-series generation engineering, HC-1R redesign proposals, and unresolved scientific/engineering conflicts remain subject to explicit reconciliation. Vera is assigned hostile review against exact current main cuts and should search for counterexamples rather than co-authoring the primary architecture.

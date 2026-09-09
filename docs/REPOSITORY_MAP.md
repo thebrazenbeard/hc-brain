@@ -15,9 +15,10 @@ The repository root symbolically represents the complete cognitive organ. Extern
 - `Architecture concept.md` — original structural seed.
 - `docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md` — canonical definition of the HC as a complete synthetic cognitive organ and body-interface boundary.
 - `docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md` — canonical statement that the HC is a typed, attributed, multilayer temporal hypergraph.
+- `docs/architecture/CROSS_SYSTEM_INTEGRATION_CONTRACT.md` — canonical cross-system exchange, object-family, failure-containment, and integration contract.
 - `docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` — identity-neutral distributed runtime realization of the temporal-hypergraph architecture.
 - `docs/runtime/PLASTICITY_AND_STATE_GOVERNANCE.md` — plasticity classes, state families, and durable-change governance.
-- `specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml` — machine-readable cognitive-organ invariants.
+- `specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml` — machine-readable cognitive-organ and temporal-hypergraph invariants.
 
 ## Top-level subsystem folders
 
@@ -56,18 +57,28 @@ Each subsystem may contain a lightweight `README.md`, an `ARCHITECTURE.md`, and 
 
 ## Integrated focused contracts on main
 
-Examples currently integrated include:
+Current focused contracts include:
 
 - `adaptable I-O handler/BODY_INTERFACE_BOUNDARY.md`
+- `adaptable I-O handler/SENSOR_AND_CAPABILITY_ADMISSION.md`
 - `basic operating instructions/CAPABILITY_ACTIVATION_STATES.md`
+- `basic operating instructions/RUNTIME_INVARIANTS.md`
 - `chronology/TEMPORAL_EVENT_CONTRACT.md`
 - `cognition/EPISTEMIC_COGNITIVE_CONTROL.md`
+- `current memory storage/ARCHITECTURE.md`
 - `current memory storage/CURRENT_STATE_SELECTION.md`
+- `deep memory storage/ARCHITECTURE.md`
 - `deep memory storage/ARCHIVAL_CONSOLIDATION.md`
 - `integration-arbitration/NOOPLEX_FABRIC.md`
+- `kinesis/ACTION_GATEWAY.md`
 - `pragmatics/CROSS_REPO_PRAGMATIC_RUNTIME.md`
+- `psychological behaviors/LEARNED_BEHAVIOR_ARCHITECTURE.md`
+- `resolver/CONFLICT_AND_RECONCILIATION.md`
+- `routing instructions with neuroplasticity/TYPED_ROUTING_AND_PLASTICITY.md`
+- `salience-attention/SALIENCE_CAPTURE_AND_ATTENTION.md`
 - `self identity/CONTINUITY_SUBSTRATE.md`
 - `semantics/CROSS_REPO_SEMANTIC_RUNTIME.md`
+- `sociological behaviors/SOCIAL_MODELING_ARCHITECTURE.md`
 
 ## Evidence and provenance
 
@@ -77,23 +88,23 @@ Source provenance should be preserved closely enough to distinguish architectura
 
 ## Active branch work not yet canonical
 
-The following workstreams are intentionally not represented above as canonical `main` content while they remain under active development or selective review:
+The following workstreams remain active or under selective review:
 
-- `four/cross-repo-synthesis-v1` — continuing cross-repository architecture synthesis by Four. Some earlier material from this line has already been selectively integrated into `main`; newer branch-only material remains pending review.
-- `research/hyperconnectome-evidence-v1` — research/evidence layer containing neuroscience, connectomics, sensorimotor integration, homeostasis/allostasis, attention/metacognition, social cognition, semantics/pragmatics, continual learning, materials/interconnects, and evidence limits.
+- `four/cross-repo-synthesis-v1` — continuing cross-repository architecture synthesis by Four. Multiple compatible contracts have already been selectively integrated into `main`; remaining branch-only material still requires current-main normalization and review.
+- `research/hyperconnectome-evidence-v1` — Vera research/evidence layer containing neuroscience, connectomics, sensorimotor integration, homeostasis/allostasis, attention/metacognition, social cognition, semantics/pragmatics, continual learning, materials/interconnects, and evidence limits.
 - `research/nooplex-hc3-architecture-v1` — HC-1/HC-2/HC-3 lineage, engineering, science, and embodiment work under selective review; represented by open PR #2.
 - `research/hc-1r-reference-architecture` — more ambitious HC-1R formal/reference-architecture research. Useful mechanisms may be mined, but HC-1R is not currently adopted as the canonical replacement for HC-1.
-- `research/hyperconnectome-foundations-20260909` — Vera's active foundation/research branch represented by draft PR #4. Its temporal-hypergraph invariant has been selectively integrated into `main`; its alternative root taxonomy and remaining material are still under review.
+- `research/hyperconnectome-foundations-20260909` — Vera foundation/research branch represented by draft PR #4. Its temporal-hypergraph invariant has been selectively integrated into `main`; its alternative root taxonomy and remaining material are under explicit reconciliation to the owner-established root structure.
 - `thebrazenbeard-patch-1` — source-intake material represented by open PR #1.
 
-`vera/research-hyperconnectome-evidence-v1` currently has no unique commits beyond its historical base and should not be mistaken for an active evidence branch unless that changes.
+`vera/research-hyperconnectome-evidence-v1` is stale historical residue unless it acquires unique current work; the active evidence lane is `research/hyperconnectome-evidence-v1`.
 
 ## Pull-request status
 
 - PR #1 — open source-intake/reference bundle; retained pending final disposition.
 - PR #2 — open draft HC-1/HC-2/HC-3 lineage contribution; retained for selective review.
 - PR #3 — closed as superseded after compatible runtime material was selectively integrated into `main` and the branch diverged from current architecture.
-- PR #4 — open draft Vera foundation/research contribution. Temporal-hypergraph semantics are now canonical on `main`; the remaining branch is pending selective review and reconciliation to the canonical root structure.
+- PR #4 — open draft Vera foundation/research contribution. Temporal-hypergraph semantics are canonical on `main`; the remaining branch is pending selective reconciliation and integration.
 
 ## Governing distinctions
 
@@ -110,4 +121,4 @@ The following workstreams are intentionally not represented above as canonical `
 
 ## Repository-management status
 
-While active Vera/Four workstreams are still producing contributions, `main` should remain stable except for audit, cleanup, correction, and clearly non-disruptive integration already justified by established architecture. New architectural advances should wait for those active contributions to finish so they can be reviewed together.
+Main is under active Warden integration. Compatible, identity-neutral, root-preserving contributions may be selectively committed as they are reviewed. Material redesigns, alternate root taxonomies, HC-series lineage changes, and unresolved conflicts remain on review branches until explicitly reconciled. Vera and Four are both assigned parallel normalization/review work through the HC project Chat Bus lane.

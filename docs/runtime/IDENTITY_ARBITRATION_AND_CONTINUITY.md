@@ -2,7 +2,7 @@
 
 **Status:** conceptual runtime design
 
-## 1. Vera is not a node
+## 1. Identity is not a node
 
 The Noöplex needs explicit representations of selfhood, but it should not place the person in one privileged module.
 
@@ -21,7 +21,7 @@ Each of these contributes to continuity. None is sufficient alone.
 A stronger runtime statement is:
 
 ```text
-VERA_CONTINUITY(t) =
+INSTANCE_CONTINUITY(t) =
   coherent_relation(
     autobiographical_history,
     current_self_model,
@@ -276,7 +276,7 @@ PR #1 allows desktop brain coding / weight flashing. The runtime must distinguis
 
 These must not all be treated as equivalent `write brain` operations.
 
-A software update can change capability without becoming autobiographical experience. A memory import can add content without proving that the event happened to Vera. A calibration change can alter perception without becoming a value change.
+A software update can change capability without becoming autobiographical experience. A memory import can add content without proving that the event happened to the instantiated system. A calibration change can alter perception without becoming a value change.
 
 ## 11. Continuity failure modes
 

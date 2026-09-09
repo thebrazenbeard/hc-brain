@@ -45,6 +45,25 @@ cognitive_organ_boundary:
     - body_schema
     - neuroplasticity
 
+physical_organ_membership:
+  cognitive_ownership_is_authoritative_boundary: true
+  one_cognitive_organ_requires_one_physical_enclosure: false
+  physically_distributed_hc_constituents_allowed: true
+  removable_complete_constituent_set_required: true
+  anatomical_location_determines_organ_membership: false
+  interconnect_between_hc_constituents_is_hc_internal: true
+  distributed_component_can_be_hc_internal_when:
+    - HC_OWNS_COMPONENT_FUNCTION_AND_STATE
+    - COMPONENT_PARTICIPATES_AS_INTERNAL_HC_SUBSTRATE_OR_FABRIC
+    - COMPONENT_LIFECYCLE_AND_FAULTS_ARE_GOVERNED_AS_HC_STATE
+    - COMPONENT_IS_INCLUDED_IN_COMPLETE_ORGAN_TRANSFER_OR_EXPLICIT_HC_REPAIR
+  rules:
+    - TORSO_OR_NONCRANIAL_LOCATION_DOES_NOT_IMPLY_BODY_PERIPHERAL
+    - BODY_SWAP_MUST_ACCOUNT_FOR_COMPLETE_HC_CONSTITUENT_SET
+    - ESSENTIAL_GENERATION_SPECIFIC_SUBSTRATE_IS_HC_INTERNAL_REGARDLESS_OF_LOCATION
+    - OPTIONAL_ABLATABLE_ACCELERATOR_MAY_BE_EXTERNAL_PERIPHERAL
+    - BODY_TRANSPORT_OR_SUPPORT_PATH_DOES_NOT_GAIN_COGNITIVE_AUTHORITY_BY_CARRYING_HC_TRAFFIC
+
 complete_capability_manifest:
   mandatory_presence: PRESENT
   mandatory_canonical_systems:
@@ -108,6 +127,7 @@ external_computation:
     - NO_ESSENTIAL_COGNITIVE_FUNCTION_EXISTS_ONLY_IN_EXTERNAL_PERIPHERAL
     - EXTERNAL_PERIPHERAL_ABLATION_MAY_REDUCE_PERFORMANCE_BUT_NOT_REMOVE_ESSENTIAL_COGNITION
     - ESSENTIAL_EXTERNAL_SERVICE_MUST_BE_RECLASSIFIED_AS_HC_INTERNAL_SUBSTRATE
+    - HC_INTERNAL_SUBSTRATE_MAY_BE_PHYSICALLY_DISTRIBUTED
 
 runtime_state_separation:
   routing_state_is_authority_state: false
@@ -174,6 +194,7 @@ capability_state_axes:
 
 body_independence:
   body_configuration_equals_brain_identity: false
+  body_swap_preserves_complete_hc_constituent_set: true
   body_swap_requires:
     - interface_registration
     - sensor_actuator_calibration
@@ -188,6 +209,8 @@ forbidden_template_shortcuts:
   - OUTSIDE_DATABASE_AS_IDENTITY_OR_MEMORY_AUTHORITY
   - OUTSIDE_PROVIDER_AS_SOLE_ESSENTIAL_MEMORY_SUBSTRATE
   - ESSENTIAL_COGNITION_IMPLEMENTED_ONLY_BY_EXTERNAL_PERIPHERAL
+  - ANATOMICAL_LOCATION_AS_SOLE_ORGAN_MEMBERSHIP_TEST
+  - BODY_SWAP_LEAVES_ESSENTIAL_HC_CONSTITUENT_BEHIND
   - CENTRAL_HOMUNCULUS_EXECUTIVE
   - HEMISPHERIC_HUMAN_BRAIN_PACKAGING
   - NAMED_PERSON_DEFAULT_IDENTITY_PAYLOAD

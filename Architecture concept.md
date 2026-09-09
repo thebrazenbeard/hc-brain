@@ -1,5 +1,5 @@
-# vera-brain
-Vera's conceptual Noöplex hyperconnectome brain
+# Hyperconnectome Brain
+Conceptual Noöplex hyperconnectome brain template
 
 ## Architecture:
 

@@ -26,6 +26,7 @@ invariants:
   - BIOLOGICAL_SLEEP_STAGE_NE_REQUIRED_HC_RUNTIME_STAGE
   - OFFLINE_NE_UNGOVERNED_PLASTICITY
   - PRIMARY_MODE_NE_EXCLUSIVE_ACTIVE_FUNCTION
+  - VERIFICATION_NE_DIRECT_READBACK_ONLY
 
 mode_classes:
   - FULL_ENGAGEMENT
@@ -171,7 +172,7 @@ object_families:
       - resource_cost
       - plasticity_eligibility
       - conflicting_or_contradicting_refs
-      - readback_requirement
+      - persistence_verification_requirement
     consolidation_classes:
       - STRENGTHEN_ASSOCIATION
       - GENERALIZE_OR_ABSTRACT
@@ -187,6 +188,7 @@ object_families:
       - FREQUENT_REPLAY_DOES_NOT_PROMOTE_EVIDENCE_CLASS
       - GENERATED_COUNTERFACTUAL_DOES_NOT_BECOME_OBSERVED_AUTOBIOGRAPHY
       - DURABLE_ADMISSION_STILL_USES_MEMORY_AND_PLASTICITY_GOVERNANCE
+      - PERSISTENCE_VERIFICATION_METHOD_MATCHES_SUBSTRATE_AND_STATE_CLASS
 
   MaintenanceTask:
     class: INTERNAL_SERVICE_OR_REPAIR_TASK
@@ -202,7 +204,7 @@ object_families:
       - resource_budget
       - interruptibility
       - protected_transition_refs
-      - readback_or_verification_requirements
+      - verification_requirements
       - failure_or_rollback_state
     task_classes:
       - SENSOR_OR_INTERFACE_RECALIBRATION
@@ -218,6 +220,7 @@ object_families:
       - OTHER_DECLARED_TASK
     rules:
       - MAINTENANCE_MODE_DOES_NOT_GRANT_EXTRA_PROTECTED_WRITE_AUTHORITY
+      - DIRECT_READBACK_IS_ONE_OPTIONAL_VERIFICATION_MODALITY
 
   RetainedMonitoringProfile:
     class: SAFETY_AND_CONTINUITY_PROFILE

@@ -24,6 +24,10 @@ A related representation can silently become bound to the wrong entity when one 
 
 `SAME_SHAPE != SAME_INDEX_SPACE`
 
+`PARALLEL_ARRAY_POSITION != PROVEN_SAME_ENTITY`
+
+`SAME_LOCAL_POSITION != SAME_SOURCE_REFERENT`
+
 ## Required lineage
 
 Any consequential representation that uses positional addressing across transformations should retain enough information to reconstruct the binding between positions and stable referents.
@@ -51,7 +55,7 @@ Stable IDs need not be globally universal identifiers. They must be stable enoug
 
 ## Multi-view rule
 
-If two or more representations are supposed to describe the same entity set—such as low/high resolution views, modalities, memory projections, body maps, semantic views, or aligned graph layers—then filtering or reordering one view does not implicitly transform the others.
+If two or more representations are supposed to describe the same entity set—such as low/high resolution views, modalities, memory projections, body maps, semantic views, labels/features, predictions/targets, masks/data, or aligned graph layers—then filtering or reordering one view does not implicitly transform the others.
 
 Cross-view lookup should use either:
 
@@ -59,6 +63,24 @@ Cross-view lookup should use either:
 2. a verified shared index map tied to the exact transformation/version.
 
 `SHARED_PRETRANSFORM_ORDER != SHARED_POSTTRANSFORM_ORDER`
+
+## Parallel arrays and split datasets
+
+Arrays or tensors are not referentially aligned merely because they have compatible length, shape, or local index ranges.
+
+When features, labels, metadata, masks, memory-capacity targets, authority records, chronology records, or other related views are split or transformed separately, their shared entity binding must survive explicitly.
+
+`SAME_LENGTH != SAME_ENTITY_ORDER`
+
+`SAME_SHAPE_OR_INDEX_RANGE != VERIFIED_CORRESPONDENCE`
+
+`PARALLEL_VIEW_BINDING_REQUIRES_SHARED_REFERENTIAL_LINEAGE`
+
+A train/validation/test split, shuffle, crop, subset, deduplication, or batch operation applied to one view does not authorize reuse of the corresponding local positions from another independently transformed view.
+
+If binding cannot be established, the correspondence is `UNKNOWN`; matching local positions are not a safe fallback.
+
+This rule applies equally to machine-learning datasets and live HC state. A metric, correction, memory admission, actuation decision, or authority check bound to the wrong referent is a semantic failure even if tensor shapes and execution remain valid.
 
 ## Generated and merged entities
 
@@ -100,12 +122,15 @@ At minimum, consequential multi-view/indexed systems should be challengeable wit
 - merge/pool entities and verify ancestry survives;
 - insert generated entities and verify they do not inherit source identity automatically;
 - reorder batches/chunks and verify semantic references are unchanged;
+- split two parallel views with deliberately different source ranges but matching local lengths and require rejection;
+- shuffle only one of a feature/target pair and require referential mismatch detection before scoring;
 - swap embodiment enumeration order and verify stale motor/sensor mappings are rejected;
 - replay historical records in a different storage order and verify event identity/currentness is preserved.
 
 ## Failure modes
 
 - a filtered LR array selects an HR exemplar by unremapped local position;
+- a validation feature slice is paired with labels from a different source slice because both start at local index zero;
 - a sorted retrieval list is later interpreted using original database row order;
 - a batched graph node index becomes a durable identity key;
 - a generated high-resolution node receives the stable ID of the nearest source node without justified equivalence;
@@ -120,3 +145,5 @@ At minimum, consequential multi-view/indexed systems should be challengeable wit
 ## Provenance
 
 Promoted from existing HC representation/provenance requirements and reinforced by code-level study of BASIRA BGSR-PY, where filtered low-resolution positional indices and an unfiltered high-resolution feature array expose a concrete cross-view index-lineage hazard. See `docs/research/BASIRA_BGSR_EXEMPLAR_SYNTHESIS_AND_INDEX_LINEAGE_2026-09-09.md`.
+
+A second independent implementation fixture comes from BASIRA DynGNN `demo.py`, where validation subjects are sliced from the tail of one parent array while validation memory-capacity targets are sliced from the head of the related parent array and later paired by local position. The quantitative effect is not established here; the transferable lesson is that parallel local positions do not prove shared referent identity. See `docs/research/BASIRA_DYNGNN_VALIDATION_IDENTITY_AND_STATE_SCOPE_2026-09-09.md`.

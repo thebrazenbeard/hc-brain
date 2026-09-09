@@ -21,6 +21,10 @@ Current project roles:
 - `Architecture concept.md` — original structural seed.
 - `docs/architecture/COGNITIVE_ORGAN_BOUNDARY.md` — canonical definition of the HC as a complete synthetic cognitive organ and body-interface boundary.
 - `docs/architecture/TEMPORAL_HYPERGRAPH_MODEL.md` — canonical statement that the HC is a typed, attributed, multilayer temporal hypergraph.
+- `docs/architecture/CONNECTIVITY_PLANES.md` — reference semantics for structural, functional, effective, modulatory, plastic, temporal, and governance relations.
+- `docs/architecture/COALITIONS_GATING_AND_ARBITRATION.md` — coalition formation, gating, routing, scoped arbitration, failure isolation, and lifecycle reference contract.
+- `docs/architecture/HYPERCONNECTOME_NOTATION.md` — compact reference notation for nodes, edges, hyperedges/coalitions, signals, gates, state, evidence, authority, and plasticity.
+- `docs/architecture/HYPERCONNECTOME_REFERENCE_MODEL.md` — corrected generic runtime reference architecture under the complete self-contained cognitive-organ boundary.
 - `docs/architecture/CROSS_SYSTEM_INTEGRATION_CONTRACT.md` — canonical cross-system exchange, object-family, failure-containment, and integration contract.
 - `docs/runtime/HYPERCONNECTOME_RUNTIME_MODEL.md` — identity-neutral distributed runtime realization of the temporal-hypergraph architecture.
 - `docs/runtime/PLASTICITY_AND_STATE_GOVERNANCE.md` — plasticity classes, state families, and durable-change governance.
@@ -105,14 +109,14 @@ Several architecture files are generalized from other repositories owned by `the
 
 The completed pass also contains detailed source/provenance research that may be mined into `docs/research/` without promoting its process-plan artifacts or stale alternate wording into canon.
 
-## Other branch work not yet canonical
+## Other preserved material not yet canonical
 
-The following material remains preserved for selective Warden review:
+The following material remains available for selective Warden review:
 
 - `research/hyperconnectome-evidence-v1` — prior research/evidence layer containing neuroscience, connectomics, sensorimotor integration, homeostasis/allostasis, attention/metacognition, social cognition, semantics/pragmatics, continual learning, materials/interconnects, and evidence limits. Vera's current role is hostile review, so this is evidence input rather than a standing parallel architecture lane.
 - `research/nooplex-hc3-architecture-v1` — HC-1/HC-2/HC-3 lineage, engineering, science, and embodiment work under selective review; represented by open PR #2.
 - `research/hc-1r-reference-architecture` — more ambitious HC-1R formal/reference-architecture research. Useful mechanisms may be mined, but HC-1R is not currently adopted as the canonical replacement for HC-1.
-- `research/hyperconnectome-foundations-20260909` — draft PR #4 foundation/research contribution. Its temporal-hypergraph invariant is already canonical on `main`; its alternate root taxonomy and remaining unique material require Warden disposition rather than automatic merge.
+- `research/hyperconnectome-foundations-20260909` — preserved closed-PR #4 foundation/research branch. Its temporal-hypergraph, connectivity-plane, coalition, notation, and reference-model material has been selectively integrated/corrected on `main`; the branch remains source/provenance material only.
 - `thebrazenbeard-patch-1` — source-intake material represented by open PR #1.
 
 `vera/research-hyperconnectome-evidence-v1` is stale historical residue unless it acquires unique current work.
@@ -122,7 +126,9 @@ The following material remains preserved for selective Warden review:
 - PR #1 — open source-intake/reference bundle; retained pending final disposition.
 - PR #2 — open draft HC-1/HC-2/HC-3 lineage contribution; retained for selective review.
 - PR #3 — closed as superseded after compatible runtime material was selectively integrated into `main`.
-- PR #4 — open draft foundation/research contribution. Temporal-hypergraph semantics are canonical on `main`; remaining material requires selective Warden disposition.
+- PR #4 — closed as superseded after selective integration; not merged wholesale. Remaining source-ledger/research material stays preserved on its branch.
+
+All HC PRs #1–#4 now have Bus mirror records under `projects/hc-brain/pr-mirrors/` in `project/hc-brain-v1`.
 
 ## Governing distinctions
 
@@ -137,9 +143,12 @@ The following material remains preserved for selective Warden review:
 9. The HC architecture is non-hemispheric unless a later explicit engineering decision establishes otherwise.
 10. Repository folders express functional responsibility; runtime cognition occurs through distributed HC-internal interaction rather than a central executive person.
 11. Capability presence, activation, development, health, and authorization are distinct axes.
-12. Routing, governance/authority, epistemic support, resource/QoS state, plasticity, and learned logical topology are orthogonal runtime dimensions even if a concrete implementation co-locates them.
-13. Research, branch drafts, source repos, and model outputs inform architecture but do not become canon automatically.
+12. Routing, governance/authority, epistemic support, resource/QoS state, plasticity, timing, and learned logical topology are orthogonal runtime dimensions even if a concrete implementation co-locates them.
+13. Personification may propose presentation/timing changes but does not own social action selection.
+14. Sexuality may own the instantiated HC's self sexual-boundary state and model other-agent willingness, but direct consent evidence and final external action authorization remain separately governed.
+15. Cross-repository transfer targets must resolve deterministically to canonical HC paths; unbound aliases remain research-only.
+16. Research, branch drafts, source repos, and model outputs inform architecture but do not become canon automatically.
 
 ## Repository-management status
 
-Main is under active Warden integration. Four's completed synthesis cut is now being dispositioned rather than awaited. Compatible identity-neutral material may be committed directly after review; material redesigns, alternate root taxonomies, HC-series lineage changes, and unresolved scientific/engineering conflicts remain isolated until explicitly reconciled. Vera is assigned hostile review against exact current main cuts and should search for counterexamples rather than co-authoring the primary architecture.
+Main is under active Warden integration. Four's completed synthesis cut and closed PR #4 have now been dispositioned rather than awaited. Compatible identity-neutral material may be committed directly after review; HC-series lineage changes, HC-1R redesign proposals, and unresolved scientific/engineering conflicts remain isolated until explicitly reconciled. Vera is assigned hostile review against exact current main cuts and should search for counterexamples rather than co-authoring the primary architecture.

@@ -6,7 +6,7 @@ Status: canonical architecture contract.
 
 A complete HC architecture is not implemented merely because a component exists in source code or is invoked during computation. Stateful cognitive components must also be under explicit HC lifecycle, durability, update, fault, resource, and ownership management.
 
-A component can influence output while being absent from parent-level registration, checkpointing, migration, optimizer/plasticity control, health accounting, or recovery. HC therefore distinguishes computational participation from managed runtime membership.
+A component can influence output while being absent from parent-level registration, checkpointing, migration, optimizer/plasticity control, health accounting, or recovery. A registered component can also create or mutate material causal state after initialization that is itself outside the claimed custody path. HC therefore distinguishes computational participation and owner registration from managed state membership.
 
 ## Core separations
 
@@ -14,11 +14,21 @@ A component can influence output while being absent from parent-level registrati
 
 `CALLED_IN_FORWARD != MANAGED_BY_LIFECYCLE`
 
+`REGISTERED_COMPONENT != ALL_CAUSAL_STATE_REGISTERED`
+
 `LEARNABLE_PARAMETER_EXISTS != PLASTICITY_PATH_CAN_REACH_PARAMETER`
 
 `COMPUTES_OUTPUT != STATE_IS_DURABLY_CUSTODIED`
 
 `OBJECT_REACHABLE != CHECKPOINTED`
+
+`DYNAMIC_ATTRIBUTE_EXISTS != DURABLE_STATE_CUSTODY`
+
+`LEARNED_DURING_FORWARD != AUTOMATICALLY_CHECKPOINTED`
+
+`INFERENCE_CALL != NECESSARILY_STATE_PURE`
+
+`PREDICTION_RETURNED != NO_LEARNING_OCCURRED`
 
 `CHECKPOINTED != RESTORED_AND_REQUALIFIED`
 
@@ -59,14 +69,34 @@ For mutable/learned state this includes, where applicable:
 
 - who may update it;
 - what learning or update mechanism can reach it;
+- intended state family and lifetime;
+- whether loss on restart is allowed;
 - how it is serialized or otherwise made durable when durability is claimed;
 - how it migrates across distributed HC constituents;
 - how it is restored after failure;
 - how version compatibility is checked;
 - how corruption, omission, and partial restore are surfaced;
-- whether it participates in protected-update or ordinary-plasticity governance.
+- whether replay/recomputation is a permitted substitute for storage and under what determinism/provenance assumptions;
+- whether it participates in protected-update, ordinary-plasticity, bounded-adaptation, calibration, or ephemeral-working-state governance.
 
 A tensor/parameter/object being reachable in memory is not evidence that these lifecycle guarantees exist.
+
+Likewise, registering the owner component does not prove that dynamically assigned state created after initialization participates in checkpointing, migration, device/substrate movement, update governance, or recovery.
+
+## State lifetime classes
+
+Implementations may use finer taxonomies, but material mutable state should make its intended lifetime recoverable. Useful classes include:
+
+- `REQUEST_EPHEMERAL` — scratch state disposable after one bounded operation;
+- `TASK_EPHEMERAL` — state retained for one task/coalition but not across durable restart;
+- `SESSION_ADAPTIVE` — learned/calibrated state intentionally scoped to a session or embodiment episode;
+- `DURABLE_LEARNED` — state expected to survive normal restart and migration;
+- `CONTINUITY_BEARING` — durable state relevant to memory/identity/currentness continuity;
+- `PROTECTED_STATE` — state whose mutation requires protected-update or equivalent high-consequence governance.
+
+`EPHEMERAL_BY_DESIGN != ACCIDENTALLY_UNCHECKPOINTED`
+
+A state item may change class only through the relevant admission/promotion process. A cache or task-local adaptation cannot silently become durable preference, value, identity, memory authority, or protected architecture.
 
 ## Registration planes
 
@@ -74,7 +104,7 @@ HC implementations may use different runtimes, not only software frameworks. The
 
 Examples include:
 
-- submodule/parameter registration in software frameworks;
+- submodule/parameter/buffer registration in software frameworks;
 - service/component registration in HC runtime fabric;
 - hardware constituent enumeration;
 - routing/subscription registration;
@@ -91,11 +121,31 @@ Each registration plane has different semantics. Registration in one plane does 
 
 `HEALTH_MONITORED_COMPONENT != UPDATE_AUTHORIZED_COMPONENT`
 
-## Dynamic components
+`CHILD_COMPONENT_REGISTERED != CHILD_DYNAMIC_STATE_GOVERNED`
+
+## Dynamic components and dynamic state
 
 Dynamically created coalitions, temporary routes, generated model branches, caches, and ephemeral helper modules may not require durable registration. They still require enough identity and lifetime semantics to prevent accidental promotion into durable authority or continuity state.
 
-If a temporary component acquires durable learned state or becomes essential to cognition, it must cross an explicit admission boundary into managed runtime membership.
+If a temporary component or dynamically created state item acquires durable learned influence or becomes essential to cognition, it must cross an explicit admission boundary into managed runtime membership/state custody.
+
+An implementation must also declare when an operation that appears to be inference, retrieval, scoring, or prediction may fit parameters, calibrate state, update a reservoir/recurrent state, alter routing, or otherwise mutate material learned state.
+
+Read-like API shape is not sufficient evidence of state purity.
+
+Where an inference-like call can adapt from supplied examples or outcomes, that mutation must preserve normal learning provenance and qualification-evidence isolation.
+
+## Memory terminology boundary
+
+Mechanism-level recurrent, reservoir, cache, attention, or hidden state may legitimately provide computational memory. That does not make it HC current-memory, deep-memory, or autobiographical continuity state.
+
+`MODEL_MEMORY != HC_CURRENT_MEMORY`
+
+`MODEL_MEMORY != HC_DEEP_MEMORY`
+
+`RECURRENT_STATE != AUTOBIOGRAPHICAL_CONTINUITY`
+
+Memory-family labels must follow semantic role and custody, not source-library terminology.
 
 ## Distributed HC relationship
 
@@ -104,6 +154,7 @@ A physically distributed constituent counts as HC-internal only when cognitive o
 For distributed state, qualification should verify:
 
 - registration of every required constituent;
+- enumeration of every material causal state family inside each constituent;
 - state/version compatibility across constituents;
 - explicit handling of missing constituents;
 - durability/recovery ownership;
@@ -115,28 +166,43 @@ For distributed state, qualification should verify:
 Useful negative tests include:
 
 - create a stateful subcomponent that participates in inference but is omitted from parent checkpoint enumeration;
-- move the parent runtime to another device/substrate and verify all claimed child components move or explicitly fail;
+- register a parent/child component correctly, then create a new causal tensor/state attribute after initialization and verify durability qualification catches it when persistence is claimed;
+- move the parent runtime to another device/substrate and verify all claimed child components and material dynamic state move, are recomputed under declared rules, or explicitly fail;
 - update registered parameters while leaving an unregistered causal parameter unchanged and detect the discrepancy;
-- checkpoint/restore and verify outputs/state when one causal child was omitted;
+- checkpoint/restore and verify outputs/state when one causal child or dynamic state item was omitted;
+- restart between fitting dynamic output/adaptation state and prediction and verify behavior matches the declared lifetime;
+- run an inference-like interface with adaptation side input and verify the state mutation is recorded rather than classified as pure inference;
 - enumerate health state and verify every essential stateful component is represented;
 - simulate constituent loss and verify the HC reports degradation instead of silently using stale/untracked state;
 - create a dynamically admitted component, give it durable influence, and verify it cannot bypass lifecycle admission;
+- relabel recurrent/reservoir state as model-working state and verify it cannot silently acquire autobiographical current/deep-memory semantics;
 - change a nominally parameterized dimension/topology and detect hard-coded implementation assumptions.
 
 ## Failure modes
 
 - a layer appears in a forward diagram but its parameters are absent from the optimizer;
 - a causal module is omitted from `state_dict` or equivalent durability state;
+- a registered component creates learned causal tensors later that are absent from checkpoint/migration/recovery;
+- an inference-like function performs fitting or adaptation without declaring state mutation;
 - a distributed accelerator contains unique learned state that is not covered by HC backup/recovery;
 - a component is routed and callable but absent from fault/health accounting;
 - a body/QPU constituent is electrically connected yet has no ownership/version/lifecycle record;
 - a temporary module accumulates durable preference or identity state without admission;
+- mechanism-level `memory` terminology is mistaken for HC autobiographical/current/deep memory;
 - a configurable implementation silently contains fixed-size assumptions that only work for one embodiment/topology.
 
 ## Governing invariant
 
-> **Any component whose state materially influences HC cognition must be explicitly governed by the lifecycle and state-custody mechanisms claimed for that state. Computational participation alone does not establish managed HC membership.**
+> **Any component or dynamically created state whose content materially influences HC cognition must be explicitly governed by the lifecycle and state-custody mechanisms claimed for that state. Component registration and computational participation alone do not establish complete managed HC membership.**
 
 ## Provenance
 
-Generalized from the HC cognitive-organ, lifecycle, recovery, provider-boundary, and protected-update contracts and reinforced by code-level study of BASIRA GSR-Net. The inspected GraphUnet stores several `nn.Module` children in ordinary Python lists, providing a concrete implementation pattern where source-level participation and framework registration can diverge. See `docs/research/BASIRA_GSRNET_REGISTERED_RUNTIME_AND_SUPERRESOLUTION_2026-09-09.md`.
+Generalized from the HC cognitive-organ, lifecycle, recovery, provider-boundary, and protected-update contracts and reinforced by code-level studies of BASIRA GSR-Net and DynGNN.
+
+GSR-Net supplies a concrete pattern where `nn.Module` children can participate in forward computation while being stored outside ordinary framework registration. DynGNN supplies a complementary pattern where a registered child module dynamically assigns recurrent/learned causal tensors after initialization and an inference-like high-level call can fit output state before prediction. These source mechanisms motivate custody tests; source-specific implementation choices are not imported as HC design requirements.
+
+See:
+
+- `docs/research/BASIRA_GSRNET_REGISTERED_RUNTIME_AND_SUPERRESOLUTION_2026-09-09.md`
+- `docs/research/PYTORCH_MODULE_REGISTRATION_PROBE_2026-09-09.md`
+- `docs/research/BASIRA_DYNGNN_DYNAMIC_MEMORY_CUSTODY_2026-09-09.md`

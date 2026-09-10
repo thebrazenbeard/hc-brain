@@ -1,0 +1,355 @@
+schema_version: HC_FAULT_REPAIR_OBJECTS_V1
+status: TEMPLATE_FAULT_REPAIR_SUPPLEMENT
+
+scope:
+  purpose: >-
+    Define fault diagnosis, bounded degradation description, containment,
+    repair application/verification, recurrence, and distributed-partition
+    objects without redefining canonical bootstrap, recovery, protected-update,
+    authority, or lifecycle state machines.
+  canonical_dependencies:
+    bootstrap_and_safe_degradation: basic operating instructions/BOOTSTRAP_RECOVERY_AND_SAFE_DEGRADATION.md
+    bootstrap_machine_contract: specs/HC_BOOTSTRAP_RECOVERY_V1.yaml
+    protected_updates: specs/HC_PROTECTED_UPDATE_GOVERNANCE_V1.yaml
+    authority_and_effect: basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md
+    lifecycle: basic operating instructions/SUBSYSTEM_LIFECYCLE_CONTRACT.md
+    core_invariants: specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml
+  non_goals:
+    - REDEFINE_BOOTSTRAP_OR_RECOVERY_SEQUENCE
+    - REDEFINE_GENERIC_SAFE_DEGRADATION_POLICY
+    - REDEFINE_PROTECTED_UPDATE_ACTIVATION
+    - REDEFINE_AUTHORITY_OR_EFFECT_AUTHORIZATION
+
+invariants:
+  - FAULT_DETECTED_NE_ROOT_CAUSE_KNOWN
+  - FAULT_ACKNOWLEDGED_NE_FAULT_CORRECTED
+  - SERVICE_RESTORED_VIA_FALLBACK_NE_SUBJECT_REPAIRED
+  - CORRECTION_APPLIED_NE_CORRECTION_VERIFIED
+  - REPAIR_RECEIPT_NE_REPAIR_VERIFICATION
+  - ALARM_SUPPRESSED_NE_UNDERLYING_FAULT_RESOLVED
+  - DIAGNOSTIC_INFERENCE_NE_MEASUREMENT
+  - REPAIR_PLAN_NE_REPAIR_AUTHORIZATION
+  - REACHABLE_NE_HEALTHY
+  - PARTITIONED_HC_CONSTITUENT_NE_EXTERNAL_PERIPHERAL
+  - PHYSICALLY_UNREACHABLE_NE_NO_LONGER_HC_OWNED
+  - OBSERVABILITY_NE_WRITE_AUTHORITY
+  - UNDERLYING_STATE_NE_HEALTH_ESTIMATE
+  - VERIFICATION_EVIDENCE_NE_READBACK_ONLY
+  - RECOVERED_NE_REQUALIFIED
+
+object_families:
+  FaultRecord:
+    class: APPEND_ORIENTED_DIAGNOSTIC_RECORD
+    required_concepts:
+      - fault_id
+      - exact_subject_ref
+      - subject_revision
+      - first_observed_at
+      - observed_symptom
+      - evidence_refs
+      - current_status
+      - provenance
+    optional_concepts:
+      - reproduction_state
+      - cause_hypotheses
+      - blast_radius
+      - containment_state
+      - degraded_capability_ref
+      - fallback_or_workaround_refs
+      - repair_candidate_refs
+      - authorization_refs
+      - repair_receipt_refs
+      - repair_verification_refs
+      - regression_refs
+      - recovery_or_requalification_refs
+      - reopen_or_supersession_refs
+      - currentness
+    rules:
+      - NEW_SUBJECT_REVISION_REQUIRES_EXPLICIT_LINEAGE_AND_RETEST
+      - FAULT_HISTORY_IS_NOT_REWRITTEN_BY_REPAIR_OR_RECOVERY
+      - FAULT_STATUS_DOES_NOT_SELF_ASSERT_ROOT_CAUSE
+
+  CauseHypothesis:
+    class: DIAGNOSTIC_INFERENCE
+    required_concepts:
+      - fault_ref
+      - hypothesized_cause
+      - support_refs
+      - confidence
+      - provenance
+    optional_concepts:
+      - contradicting_refs
+      - competing_causes
+      - reproduction_refs
+      - reversal_or_ablation_refs
+      - mechanistic_basis
+      - currentness
+    rules:
+      - TEMPORAL_PROXIMITY_ALONE_DOES_NOT_PROVE_CAUSE
+      - DIAGNOSTIC_INFERENCE_RETAINS_EVIDENCE_LINEAGE
+
+  DegradedCapability:
+    class: BOUNDED_SERVICE_STATE
+    required_concepts:
+      - subject_ref
+      - retained_functions
+      - unavailable_functions
+      - currentness
+      - provenance
+    optional_concepts:
+      - lifecycle_health_ref
+      - confidence_penalties
+      - latency_or_throughput_penalties
+      - resource_penalties
+      - fallback_routes
+      - unavailable_effect_or_authority_scopes
+      - repair_prerequisites
+      - affected_dependents
+      - expected_duration
+    rules:
+      - DEGRADED_DOES_NOT_MEAN_ABSENT
+      - OBJECT_DESCRIBES_CAPABILITY_ENVELOPE_AND_DOES_NOT_REDEFINE_CANONICAL_LIFECYCLE_HEALTH_AXIS
+      - GENERIC_SAFE_DEGRADATION_BEHAVIOR_REMAINS_CANONICAL_BOOTSTRAP_RECOVERY_CONCERN
+
+  ContainmentAction:
+    class: CONTROL_ACTION
+    required_concepts:
+      - fault_or_risk_ref
+      - containment_scope
+      - action_class
+      - authority_ref
+      - provenance
+    action_classes:
+      - ROUTE_ISOLATION
+      - NODE_INHIBITION
+      - CAPABILITY_DOWNGRADE
+      - READ_ONLY_FALLBACK
+      - ROLLBACK_REQUEST
+      - REDUNDANT_PATH_SELECTION
+      - WORKLOAD_MIGRATION
+      - QUARANTINE
+      - RATE_LIMIT
+      - RESOURCE_THROTTLE
+      - PROTECTED_WRITER_BLOCK
+    optional_concepts:
+      - effect_authorization_ref
+      - retained_functions
+      - sacrificed_functions
+      - expiry_or_release_condition
+      - effect_receipt_ref
+    rules:
+      - CONTAINMENT_MUST_DECLARE_RETAINED_AND_SACRIFICED_FUNCTIONS_WHEN_MATERIAL
+      - AUTHORITY_REF_RESOLVES_TO_CANONICAL_SCOPE_AND_CURRENTNESS_RULES
+      - ROLLBACK_REQUEST_DOES_NOT_BYPASS_CANONICAL_UPDATE_OR_CONTINUITY_GOVERNANCE
+
+  RepairCandidate:
+    class: PROPOSED_REPAIR_CHANGE
+    required_concepts:
+      - subject_ref
+      - proposed_change
+      - expected_effect
+      - evidence_basis
+      - provenance
+    optional_concepts:
+      - repair_class
+      - isolation_or_simulation_refs
+      - qualification_refs
+      - required_authority_ref
+      - effect_authorization_ref
+      - protected_update_ref
+      - rollback_or_forward_repair_plan
+      - risk_scope
+      - continuity_impact
+    rules:
+      - PROPOSAL_DOES_NOT_SELF_AUTHORIZE
+      - PROTECTED_OR_CONTINUITY_RELEVANT_REPAIR_HANDS_OFF_TO_CANONICAL_PROTECTED_UPDATE_GOVERNANCE
+      - ORDINARY_CALIBRATION_OR_BOUNDED_REPAIR_MAY_USE_DECLARED_PREAUTHORIZED_ENVELOPE_WHERE_CANON_PERMITS
+
+  RepairReceipt:
+    class: EFFECT_RECEIPT
+    required_concepts:
+      - repair_candidate_ref
+      - exact_subject_ref
+      - applied_at
+      - authority_ref
+      - provenance
+    optional_concepts:
+      - effect_authorization_ref
+      - apply_effect_or_ack_ref
+      - applied_revision
+      - protected_update_or_activation_ref
+      - verification_refs
+      - regression_refs
+      - monitoring_window
+      - outcome_status
+      - failure_state
+    rules:
+      - RECEIPT_RECORDS_APPLY_STATE_AND_DOES_NOT_SELF_ASSERT_VERIFICATION
+      - APPLIED_DOES_NOT_MEAN_VERIFIED
+      - WORKAROUND_RECEIPT_DOES_NOT_IMPLY_SUBJECT_REPAIR
+      - RECEIPT_DOES_NOT_OVERRIDE_CANONICAL_UPDATE_ACTIVATION_OR_QUALIFICATION_STATE
+
+  RepairVerification:
+    class: EFFECT_OR_STATE_VERIFICATION
+    required_concepts:
+      - repair_receipt_ref
+      - exact_subject_ref
+      - verification_method
+      - verification_status
+      - evidence_refs
+      - provenance
+    optional_concepts:
+      - verified_revision
+      - verified_at
+      - readback_ref
+      - confidence
+      - contradictions
+      - regression_refs
+      - claim_ceiling
+      - requalification_ref
+    rules:
+      - VERIFICATION_MUST_BIND_EXACT_APPLIED_REPAIR_SUBJECT_WHEN_MATERIAL
+      - VERIFICATION_METHOD_MUST_MATCH_SUBJECT_AND_REPAIR_CLASS
+      - READBACK_IS_ONE_VERIFICATION_MODALITY_NOT_A_UNIVERSAL_REQUIREMENT
+      - VERIFICATION_STATUS_DOES_NOT_ESTABLISH_UNRELATED_SEMANTIC_OR_AUTHORITY_CLAIMS
+      - REPAIR_VERIFIED_DOES_NOT_AUTOMATICALLY_EQUAL_FULL_REQUALIFICATION
+
+  PartitionState:
+    class: DISTRIBUTED_ORGAN_CONNECTIVITY_AND_CONTINUITY_RISK_STATE
+    required_concepts:
+      - affected_constituents
+      - affected_internal_links
+      - partition_status
+      - detected_at
+      - continuity_policy_ref
+      - provenance
+    partition_statuses:
+      - FULLY_CONNECTED
+      - DEGRADED_LINK
+      - PARTITION_DETECTED
+      - CONTINUITY_WRITES_RESTRICTED
+      - ISLAND_MODE_BOUNDED
+      - REJOIN_PENDING
+      - RECONCILING
+      - REJOINED
+      - UNRESOLVED_SPLIT
+    optional_concepts:
+      - reachable_sets
+      - retained_local_functions
+      - prohibited_writes
+      - current_authoritative_writer_or_epoch
+      - reconciliation_refs
+      - bootstrap_or_recovery_refs
+      - currentness
+    rules:
+      - HC_MEMBERSHIP_PERSISTS_THROUGH_CONNECTIVITY_LOSS
+      - PARTITIONED_FRAGMENT_DOES_NOT_AUTOMATICALLY_BECOME_INDEPENDENT_SUCCESSOR_MIND
+      - PROTECTED_CONTINUITY_STATE_REQUIRES_DECLARED_PARTITION_SAFETY
+      - FORK_OR_REJOIN_CONTINUITY_SEMANTICS_HAND_OFF_TO_CANONICAL_RECOVERY_AND_MEMORY_RULES
+
+recommended_fault_statuses:
+  - DETECTED
+  - UNDER_INVESTIGATION
+  - CONTAINED
+  - DEGRADED_SERVICE
+  - SERVICE_RESTORED_VIA_FALLBACK
+  - REPAIR_PENDING
+  - CORRECTION_APPLIED_UNVERIFIED
+  - REPAIR_VERIFIED
+  - REGRESSION_VERIFIED
+  - REQUALIFICATION_PENDING
+  - MONITORING
+  - CLOSED
+  - REOPENED
+  - UNKNOWN
+
+partition_safety_strategies:
+  implementation_may_choose:
+    - UNIQUE_WRITER_LEASE_OR_EPOCH
+    - QUORUM_OR_CONSENSUS
+    - DESIGNATED_CONTINUITY_CORE
+    - FAIL_CLOSED_PROTECTED_WRITES
+    - MERGEABLE_STATE_ONLY_ISLAND_MODE
+  rule: >-
+    No one distributed-systems algorithm is mandated, but each protected
+    continuity-bearing state family must have a declared partition policy that
+    is compatible with canonical recovery/currentness rules.
+
+repair_path:
+  diagnostic_and_repair_sequence:
+    - DIAGNOSE
+    - PROPOSE
+    - ISOLATE_OR_SIMULATE_WHERE_MATERIAL
+    - QUALIFY_CANDIDATE
+    - OBTAIN_CANONICAL_AUTHORITY_OR_PROTECTED_UPDATE_DECISION_WHEN_REQUIRED
+    - APPLY
+    - RECORD_EFFECT_RECEIPT
+    - VERIFY_EFFECT_OR_STATE
+    - RECORD_VERIFICATION
+    - REGRESSION
+    - REQUEST_OR_RECORD_REQUALIFICATION_WHERE_REQUIRED
+    - MONITOR
+  rule: >-
+    This sequence describes fault/repair evidence states. Protected update
+    activation, rollback/forward-repair continuity semantics, startup/recovery,
+    and general requalification remain governed by canonical contracts.
+
+verification_modalities:
+  examples:
+    - DIRECT_STATE_READBACK
+    - SENSOR_OR_MEASUREMENT_EVIDENCE
+    - FUNCTIONAL_TEST
+    - CALIBRATION_TEST
+    - PHYSICAL_OR_VISUAL_INSPECTION
+    - REDUNDANT_PATH_COMPARISON
+    - REGRESSION_OR_CONTROL_CASE
+    - OTHER_DECLARED_METHOD
+  rule: >-
+    Verification must be appropriate to the repaired subject. Software or
+    addressable configuration may support direct readback; physical, thermal,
+    mechanical, optical, biological/biohybrid, calibration, or distributed
+    repair may require another evidence modality.
+
+observability:
+  minimum_access_principle: true
+  preferred_levels:
+    - HEALTH_SUMMARY
+    - RESOURCE_TELEMETRY
+    - TRACE_METADATA
+    - CONTENT_REDACTED_PROVENANCE
+    - FULL_PAYLOAD_ONLY_WHEN_AUTHORIZED_AND_NECESSARY
+  rules:
+    - OBSERVABILITY_DOES_NOT_CREATE_WRITE_AUTHORITY
+    - DIAGNOSTIC_ACCESS_DOES_NOT_CREATE_IDENTITY_MEMORY_VALUE_OR_CONSENT_AUTHORITY
+
+health_signal_firewall:
+  preserve_distinctions:
+    - UNDERLYING_RESOURCE_OR_BODY_STATE
+    - SENSOR_EVIDENCE
+    - HEALTH_ESTIMATE
+    - FAULT_ALERT
+    - ACTION_PRIORITY
+  prohibited_inference:
+    - MUTED_ALERT_IMPLIES_RECOVERY
+    - MISSING_SENSOR_IMPLIES_HEALTH
+    - ALTERNATE_ROUTE_SUCCESS_IMPLIES_ORIGINAL_FAULT_CLOSED
+
+canonical_handoffs:
+  bootstrap_recovery:
+    contract: specs/HC_BOOTSTRAP_RECOVERY_V1.yaml
+    rule: STARTUP_RECOVERY_SAFE_ENVELOPE_AND_RETURN_TO_SERVICE_REQUALIFICATION_REMAIN_CANONICAL
+  protected_updates:
+    contract: specs/HC_PROTECTED_UPDATE_GOVERNANCE_V1.yaml
+    rule: PROTECTED_OR_CONTINUITY_RELEVANT_REPAIR_DOES_NOT_BYPASS_UPDATE_GOVERNANCE
+  authority_effects:
+    contract: basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md
+    rule: REPAIR_OR_CONTAINMENT_CAPABILITY_DOES_NOT_CREATE_AUTHORITY
+  lifecycle:
+    contract: basic operating instructions/SUBSYSTEM_LIFECYCLE_CONTRACT.md
+    rule: DEGRADED_CAPABILITY_PROFILE_DOES_NOT_REDEFINE_HEALTH_AXIS
+
+regression:
+  preserve_representative_failure_evidence: true
+  recurrence_should_reopen_or_link_prior_fault: true
+  subject_revision_must_be_explicit: true
+  repair_verification_and_requalification_are_distinct: true

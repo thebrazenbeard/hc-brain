@@ -116,9 +116,41 @@ Outcome: `CONDITIONAL PASS` for target `2a42a46eafd1322334d82d661adb667534fe7cbb
 
 Primary conditions: Four independent review, Vera hostile review, and implementation-level interruption/partition/currentness/authority negative tests remain outstanding. The record does not establish that any specific rest schedule improves a concrete HC implementation.
 
+### `COGNITIVE_INTEGRITY_SECURITY_CONFORMANCE_2026-09-10.md`
+
+Focused Warden architecture qualification for information/instruction separation, scoped trust, external computational results, credential/capability isolation, threat hypotheses, containment, incident history, and least-privilege security observability.
+
+Outcome: `CONDITIONAL PASS` for target `c86f708467255bcb4f9349eeffaad3094c51e4d9` and its stated architecture scope.
+
+Primary conditions: executable adversarial security tests plus Four independent review and Vera hostile review remain outstanding.
+
+### `RESOURCE_STATE_CONTROL_CONFORMANCE_2026-09-10.md`
+
+Focused Warden architecture qualification for measured/estimated/target/forecast resource-state separation, passive versus governed active resource response, distributed constituent resource state, body-support boundaries, and resource-currentness semantics.
+
+Outcome: `CONDITIONAL PASS` for target `f4fe2305a84c0cbeec8e4ce36969ce5f12e2dd97` and its stated architecture scope.
+
+Primary conditions: physical/substrate measurements, resource failure-injection tests, Four independent review, and Vera hostile review remain outstanding.
+
+### `SPECIALIZED_ACCELERATOR_CONFORMANCE_2026-09-10.md`
+
+Focused Warden architecture qualification for specialized accelerator membership, suitability versus availability, end-to-end offload cost, bounded result evidence, verification, function-scoped degradation/fallback, privacy, resource coupling, and protected replacement.
+
+Outcome: `CONDITIONAL PASS` for target `9db3b309cc0c5a6cbd553b3ffffc26ad405b9515` and its stated architecture scope.
+
+Primary conditions: workload/physical/integration/ablation testing plus Four independent review and Vera hostile review remain outstanding.
+
+### `FAULT_REPAIR_PARTITION_CONFORMANCE_2026-09-10.md`
+
+Focused Warden architecture qualification for fault evidence, competing cause hypotheses, degraded-capability description, containment, repair receipt/verification/requalification separation, and distributed-organ partition/rejoin safety.
+
+Outcome: `CONDITIONAL PASS` for target `045d6ee59ea1cd81e6c466894da082611f05d8e8` and its stated architecture scope.
+
+Primary conditions: implementation fault injection, partition/rejoin and repair/regression testing plus Four independent review and Vera hostile review remain outstanding.
+
 ## Coverage note
 
-The canonical conformance layers now contain checks through `HC-ARCH-029`. A dedicated qualification record does not yet exist for every individual extension check. In particular, architecture-check existence must not be read as evidence that implementation behavior has been executed or qualified.
+The canonical conformance layers now contain checks through `HC-ARCH-033`. A dedicated qualification record does not yet exist for every individual extension check. Architecture-check existence must not be read as evidence that implementation behavior has been executed or qualified.
 
 ## Result preservation
 
@@ -137,15 +169,23 @@ Qualification history is evidence about what was tested at a particular cut.
 - `../architecture/EXECUTED_DATAFLOW_AND_BINDING_INTEGRITY.md`
 - `../architecture/SOURCE_INFORMATION_ANCESTRY_AND_DERIVED_STATE.md`
 - `../architecture/TEMPORAL_HYPERGRAPH_MODEL.md`
+- `../architecture/SPECIALIZED_ACCELERATOR_BOUNDARY.md`
 - `../../cognition/RELATIONAL_REASONING_PROVENANCE.md`
 - `../../cognition/TEMPORAL_FORECAST_LINEAGE.md`
 - `../../routing instructions with neuroplasticity/TYPED_ROUTING_AND_PLASTICITY.md`
 - `../../basic operating instructions/REST_OFFLINE_CONSOLIDATION_AND_MAINTENANCE.md`
+- `../../basic operating instructions/COGNITIVE_INTEGRITY_AND_SECURITY.md`
+- `../../basic operating instructions/FAULT_TOLERANCE_AND_SELF_REPAIR.md`
+- `../engineering/RESOURCE_STATE_AND_CONTROL_MODEL.md`
 - `../science/EVIDENCE_BOUNDARIES.md`
 - `../../specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml`
 - `../../specs/HC_CONFORMANCE_SUITE_V1.yaml`
 - `../../specs/HC_CONFORMANCE_EXTENSION_EVIDENCE_LINEAGE_CUSTODY_V1.yaml`
 - `../../specs/HC_CONFORMANCE_EXTENSION_REST_MAINTENANCE_V1.yaml`
+- `../../specs/HC_CONFORMANCE_EXTENSION_COGNITIVE_INTEGRITY_V1.yaml`
+- `../../specs/HC_CONFORMANCE_EXTENSION_RESOURCE_STATE_CONTROL_V1.yaml`
+- `../../specs/HC_CONFORMANCE_EXTENSION_SPECIALIZED_ACCELERATOR_V1.yaml`
+- `../../specs/HC_CONFORMANCE_EXTENSION_FAULT_REPAIR_PARTITION_V1.yaml`
 - `../../specs/HC_REPOSITORY_SURFACE_CONFORMANCE_V1.yaml`
 - `../../specs/HC_MEMORY_PROVIDER_BOUNDARY_V1.yaml`
 - `../../specs/HC_BOOTSTRAP_RECOVERY_V1.yaml`
@@ -161,3 +201,7 @@ Qualification history is evidence about what was tested at a particular cut.
 - `../../specs/HC_EFFECTIVE_TOPOLOGY_TRANSITIONS_V1.yaml`
 - `../../specs/HC_SOURCE_INFORMATION_ANCESTRY_V1.yaml`
 - `../../specs/HC_REST_OFFLINE_MAINTENANCE_OBJECTS_V1.yaml`
+- `../../specs/HC_COGNITIVE_INTEGRITY_OBJECTS_V1.yaml`
+- `../../specs/HC_POWER_THERMAL_RESOURCE_OBJECTS_V1.yaml`
+- `../../specs/HC_ACCELERATOR_SERVICE_OBJECTS_V1.yaml`
+- `../../specs/HC_FAULT_REPAIR_OBJECTS_V1.yaml`

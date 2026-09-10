@@ -108,9 +108,17 @@ Outcome: `CONDITIONAL PASS` for target `f0da54a301f17cd5b00d26e735aae8e54087d3e3
 
 Primary conditions: Four independent review, Vera hostile review, and implementation-level information-flow negative tests remain outstanding. The record is explicitly internal/self-evaluated architecture evidence rather than independent validation.
 
+### `REST_OFFLINE_MAINTENANCE_CONFORMANCE_2026-09-10.md`
+
+Focused Warden architecture qualification for reduced engagement, replay/consolidation orchestration, maintenance windows, retained monitoring, rhythmic scheduling, and safe resumption without transferring ownership from canonical memory, chronology/currentness, lifecycle/recovery, protected-update, plasticity, or effect-authority systems.
+
+Outcome: `CONDITIONAL PASS` for target `2a42a46eafd1322334d82d661adb667534fe7cbb` and its stated architecture scope.
+
+Primary conditions: Four independent review, Vera hostile review, and implementation-level interruption/partition/currentness/authority negative tests remain outstanding. The record does not establish that any specific rest schedule improves a concrete HC implementation.
+
 ## Coverage note
 
-The canonical conformance extension now contains checks through `HC-ARCH-028`. A dedicated qualification record does not yet exist for every individual extension check. In particular, architecture-check existence must not be read as evidence that implementation behavior has been executed or qualified.
+The canonical conformance layers now contain checks through `HC-ARCH-029`. A dedicated qualification record does not yet exist for every individual extension check. In particular, architecture-check existence must not be read as evidence that implementation behavior has been executed or qualified.
 
 ## Result preservation
 
@@ -132,10 +140,12 @@ Qualification history is evidence about what was tested at a particular cut.
 - `../../cognition/RELATIONAL_REASONING_PROVENANCE.md`
 - `../../cognition/TEMPORAL_FORECAST_LINEAGE.md`
 - `../../routing instructions with neuroplasticity/TYPED_ROUTING_AND_PLASTICITY.md`
+- `../../basic operating instructions/REST_OFFLINE_CONSOLIDATION_AND_MAINTENANCE.md`
 - `../science/EVIDENCE_BOUNDARIES.md`
 - `../../specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml`
 - `../../specs/HC_CONFORMANCE_SUITE_V1.yaml`
 - `../../specs/HC_CONFORMANCE_EXTENSION_EVIDENCE_LINEAGE_CUSTODY_V1.yaml`
+- `../../specs/HC_CONFORMANCE_EXTENSION_REST_MAINTENANCE_V1.yaml`
 - `../../specs/HC_REPOSITORY_SURFACE_CONFORMANCE_V1.yaml`
 - `../../specs/HC_MEMORY_PROVIDER_BOUNDARY_V1.yaml`
 - `../../specs/HC_BOOTSTRAP_RECOVERY_V1.yaml`
@@ -150,3 +160,4 @@ Qualification history is evidence about what was tested at a particular cut.
 - `../../specs/HC_EXECUTED_DATAFLOW_BINDING_V1.yaml`
 - `../../specs/HC_EFFECTIVE_TOPOLOGY_TRANSITIONS_V1.yaml`
 - `../../specs/HC_SOURCE_INFORMATION_ANCESTRY_V1.yaml`
+- `../../specs/HC_REST_OFFLINE_MAINTENANCE_OBJECTS_V1.yaml`

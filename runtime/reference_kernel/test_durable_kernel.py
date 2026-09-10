@@ -1,10 +1,18 @@
 from datetime import datetime, timedelta, timezone
+import hashlib
 import json
+import os
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 
-from durable_kernel import DurableReferenceKernel, JournalIntegrityError
+from durable_kernel import (
+    DurableReferenceKernel,
+    JournalIntegrityError,
+    ReadOnlyInspectionError,
+)
 from hc_kernel import EpistemicClass, EffectState, ProjectionStatus
 
 UTC = timezone.utc
@@ -30,6 +38,32 @@ class DurableReferenceKernelTests(unittest.TestCase):
             valid_from=self.now - timedelta(minutes=1),
             expires_at=self.now + timedelta(minutes=10),
         )
+
+    @staticmethod
+    def _rehash(envelope):
+        body = {key: value for key, value in envelope.items() if key != "entry_hash"}
+        envelope["entry_hash"] = hashlib.sha256(
+            json.dumps(
+                body,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+        return envelope
+
+    def _rewrite_line(self, index, mutator):
+        lines = self.journal.read_text(encoding="utf-8").splitlines()
+        envelope = json.loads(lines[index])
+        mutator(envelope)
+        self._rehash(envelope)
+        lines[index] = json.dumps(
+            envelope,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        self.journal.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     def test_memory_and_ambiguity_survive_reopen(self):
         first = DurableReferenceKernel(self.journal)
@@ -145,25 +179,88 @@ class DurableReferenceKernelTests(unittest.TestCase):
         self.journal.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
         with self.assertRaises(JournalIntegrityError):
-            DurableReferenceKernel(self.journal)
+            DurableReferenceKernel(self.journal, mode="inspect")
 
-    def test_sequence_discontinuity_fails_closed(self):
+    def test_sequence_discontinuity_fails_closed_even_if_entry_rehashed(self):
         kernel = DurableReferenceKernel(self.journal)
         kernel.observe(producer="optics", payload={"x": 1})
-        lines = self.journal.read_text(encoding="utf-8").splitlines()
-        envelope = json.loads(lines[-1])
-        envelope["seq"] = 9
-        body = {key: envelope[key] for key in envelope if key != "entry_hash"}
-        import hashlib
-        digest = hashlib.sha256(
-            json.dumps(body, sort_keys=True, separators=(",", ":")).encode("utf-8")
-        ).hexdigest()
-        envelope["entry_hash"] = digest
-        lines[-1] = json.dumps(envelope, sort_keys=True, separators=(",", ":"))
-        self.journal.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        self._rewrite_line(-1, lambda envelope: envelope.__setitem__("seq", 9))
 
         with self.assertRaises(JournalIntegrityError):
-            DurableReferenceKernel(self.journal)
+            DurableReferenceKernel(self.journal, mode="inspect")
+
+    def test_epoch_mismatch_fails_closed_even_if_entry_rehashed(self):
+        kernel = DurableReferenceKernel(self.journal)
+        kernel.observe(producer="optics", payload={"x": 1})
+        self._rewrite_line(-1, lambda envelope: envelope.__setitem__("epoch", 1))
+
+        with self.assertRaises(JournalIntegrityError):
+            DurableReferenceKernel(self.journal, mode="inspect")
+
+    def test_grant_without_basis_fails_replay_even_if_entry_rehashed(self):
+        kernel = DurableReferenceKernel(self.journal)
+        self._grant(kernel)
+        self._rewrite_line(
+            -1,
+            lambda envelope: envelope["data"].__setitem__("basis_refs", []),
+        )
+
+        with self.assertRaises(JournalIntegrityError):
+            DurableReferenceKernel(self.journal, mode="inspect")
+
+    def test_missing_derived_parent_fails_replay_even_if_entry_rehashed(self):
+        kernel = DurableReferenceKernel(self.journal)
+        obs = kernel.observe(producer="optics", payload={"x": 1})
+        kernel.derive(
+            producer="cognition",
+            epistemic_class=EpistemicClass.PREDICTION,
+            payload={"x": 2},
+            parent_ids=(obs.evidence_id,),
+        )
+        self._rewrite_line(
+            -1,
+            lambda envelope: envelope["data"].__setitem__(
+                "parent_ids", ["missing-parent"]
+            ),
+        )
+
+        with self.assertRaises(JournalIntegrityError):
+            DurableReferenceKernel(self.journal, mode="inspect")
+
+    def test_confirmed_receipt_rejects_wrong_bound_evidence_on_replay(self):
+        kernel = DurableReferenceKernel(self.journal)
+        grant = self._grant(kernel)
+        candidate = kernel.plan_effect(
+            origin="kinesis",
+            action_scope="MOTOR_EFFECT",
+            target_scope="arm",
+            payload={"command": "move"},
+            authority_grant_id=grant.grant_id,
+        )
+        kernel.request_effect(candidate, now=self.now)
+        unrelated = kernel.observe(
+            producer="somatics",
+            payload={"temperature": 37},
+        )
+        bound = kernel.observe(
+            producer="somatics",
+            payload={"arm_position": "moved"},
+            effect_action_id=candidate.action_id,
+        )
+        kernel.confirm_effect(
+            candidate.action_id,
+            succeeded=True,
+            confirmation_evidence_id=bound.evidence_id,
+        )
+        self._rewrite_line(
+            -1,
+            lambda envelope: envelope["data"].__setitem__(
+                "confirmation_evidence_id", unrelated.evidence_id
+            ),
+        )
+
+        with self.assertRaises(JournalIntegrityError):
+            DurableReferenceKernel(self.journal, mode="inspect")
 
     def test_unserializable_payload_rejected_before_state_mutation(self):
         kernel = DurableReferenceKernel(self.journal)
@@ -171,6 +268,18 @@ class DurableReferenceKernelTests(unittest.TestCase):
             kernel.observe(producer="optics", payload={1, 2, 3})
         self.assertEqual(kernel.evidence, {})
         self.assertFalse(self.journal.exists())
+
+    def test_inspection_mode_is_nonmutating_and_read_only(self):
+        kernel = DurableReferenceKernel(self.journal)
+        kernel.observe(producer="optics", payload={"x": 1})
+        before = self.journal.read_bytes()
+
+        inspection = DurableReferenceKernel(self.journal, mode="inspect")
+        self.assertEqual(inspection.epoch, kernel.epoch)
+        self.assertEqual(self.journal.read_bytes(), before)
+        with self.assertRaises(ReadOnlyInspectionError):
+            inspection.observe(producer="optics", payload={"x": 2})
+        self.assertEqual(self.journal.read_bytes(), before)
 
     def test_reconciled_outcome_is_durable(self):
         first = DurableReferenceKernel(self.journal)
@@ -197,9 +306,53 @@ class DurableReferenceKernelTests(unittest.TestCase):
             confirmation_evidence_id=observation.evidence_id,
         )
 
-        third = DurableReferenceKernel(self.journal)
+        third = DurableReferenceKernel(self.journal, mode="inspect")
         restored = third.effect_receipts[candidate.action_id]
         self.assertEqual(restored.state, EffectState.CONFIRMED)
+
+    def test_separate_process_reopen_marks_inflight_effect_unresolved(self):
+        kernel_dir = Path(__file__).resolve().parent
+        writer = """
+import sys
+from datetime import datetime, timedelta, timezone
+from durable_kernel import DurableReferenceKernel
+k = DurableReferenceKernel(sys.argv[1])
+now = datetime(2026, 9, 10, 19, 0, tzinfo=timezone.utc)
+g = k.register_grant(grantor='fixture', grantee='kinesis', action_scope='MOTOR_EFFECT', target_scope='arm', basis_refs=('basis',), valid_from=now-timedelta(minutes=1), expires_at=now+timedelta(minutes=10))
+c = k.plan_effect(origin='kinesis', action_scope='MOTOR_EFFECT', target_scope='arm', payload={'command':'move'}, authority_grant_id=g.grant_id)
+r = k.request_effect(c, now=now)
+print(c.action_id)
+"""
+        result = subprocess.run(
+            [sys.executable, "-c", writer, str(self.journal)],
+            cwd=kernel_dir,
+            text=True,
+            capture_output=True,
+            check=True,
+            env=os.environ.copy(),
+        )
+        action_id = result.stdout.strip()
+        self.assertTrue(action_id)
+
+        reader = """
+import sys
+from durable_kernel import DurableReferenceKernel
+k = DurableReferenceKernel(sys.argv[1])
+r = k.effect_receipts[sys.argv[2]]
+print(r.state.value, r.dispatch_attempts, k.epoch)
+"""
+        result = subprocess.run(
+            [sys.executable, "-c", reader, str(self.journal), action_id],
+            cwd=kernel_dir,
+            text=True,
+            capture_output=True,
+            check=True,
+            env=os.environ.copy(),
+        )
+        state, attempts, epoch = result.stdout.strip().split()
+        self.assertEqual(state, EffectState.UNRESOLVED_AFTER_RESTART.value)
+        self.assertEqual(int(attempts), 1)
+        self.assertEqual(int(epoch), 1)
 
 
 if __name__ == "__main__":

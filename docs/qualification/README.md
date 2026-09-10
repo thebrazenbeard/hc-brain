@@ -90,6 +90,20 @@ Outcome: `CONDITIONAL PASS` for target `2f21f111212a438c61e31214caf8aa5bc918a3a5
 
 Primary conditions: Four independent review, Vera hostile review, repository-wide contradiction reproduction against the exact cut, and implementation-level negative tests remain outstanding. Individual architecture checks passed within the Warden-inspected prose/spec scope; the combined qualification remains conditional rather than being promoted beyond the evidence.
 
+### `EFFECTIVE_TOPOLOGY_CONFORMANCE_2026-09-09.md`
+
+Focused Warden architecture qualification for effective-topology state separation and transition semantics introduced by the DeltaGNN transfer cut.
+
+Outcome: `CONDITIONAL PASS` for target `21a194908b8005103927af7706a50d769f4fedf5` and its stated architecture scope.
+
+The record tests separation among physical substrate reachability, durable logical eligibility, configured routing/policy, one-execution effective topology, transient hyperedges/coalitions, plasticity, and world-model relations. It also checks that task-local topology changes do not silently become durable wiring, truth, salience, authority, or protected state.
+
+Primary conditions: Four independent review, Vera hostile review, and implementation-level transition/negative testing remain outstanding.
+
+## Coverage note
+
+The canonical conformance extension now contains checks through `HC-ARCH-027`. A dedicated qualification record does not yet exist for every individual extension check. In particular, architecture-check existence must not be read as evidence that implementation behavior has been executed or qualified.
+
 ## Result preservation
 
 If a qualification later changes, preserve the old record and create a successor record or explicit supersession/disposition link. Do not rewrite an old FAIL or CONDITIONAL PASS into a historical PASS merely because the defect was later repaired.
@@ -104,8 +118,11 @@ Qualification history is evidence about what was tested at a particular cut.
 - `../architecture/RUNTIME_COMPONENT_REGISTRATION_AND_STATE_CUSTODY.md`
 - `../architecture/COMPOSITE_REPRESENTATION_AND_ELEMENT_PROVENANCE.md`
 - `../architecture/DISTRIBUTED_LEARNING_AND_UPDATE_ANCESTRY.md`
+- `../architecture/EXECUTED_DATAFLOW_AND_BINDING_INTEGRITY.md`
+- `../architecture/TEMPORAL_HYPERGRAPH_MODEL.md`
 - `../../cognition/RELATIONAL_REASONING_PROVENANCE.md`
 - `../../cognition/TEMPORAL_FORECAST_LINEAGE.md`
+- `../../routing instructions with neuroplasticity/TYPED_ROUTING_AND_PLASTICITY.md`
 - `../science/EVIDENCE_BOUNDARIES.md`
 - `../../specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml`
 - `../../specs/HC_CONFORMANCE_SUITE_V1.yaml`
@@ -121,3 +138,5 @@ Qualification history is evidence about what was tested at a particular cut.
 - `../../specs/HC_RELATIONAL_REASONING_PROVENANCE_V1.yaml`
 - `../../specs/HC_FORECAST_LINEAGE_V1.yaml`
 - `../../specs/HC_DISTRIBUTED_LEARNING_ANCESTRY_V1.yaml`
+- `../../specs/HC_EXECUTED_DATAFLOW_BINDING_V1.yaml`
+- `../../specs/HC_EFFECTIVE_TOPOLOGY_TRANSITIONS_V1.yaml`

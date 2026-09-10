@@ -12,6 +12,8 @@ This applies to ordinary learned components, developmental learning, self-models
 
 Qualification must also declare the evaluation regime when test-time information is allowed to shape inference state. Transductive or test-time-adaptive evaluation can be valid, but it supports that regime rather than silently proving inductive/frozen generalization.
 
+Evaluation isolation is ancestry-aware: preprocessing, topology construction, normalization, manifold fitting, calibration, clustering, template generation, indexing, feature selection, or another derived artifact can expose evaluation information before records are later split or named as train/validation/test. A later split does not retroactively remove earlier exposure.
+
 ## Core separations
 
 `TRAINING_EVIDENCE != VALIDATION_EVIDENCE`
@@ -36,6 +38,14 @@ Qualification must also declare the evaluation regime when test-time information
 
 `TEST_TIME_ADAPTATION != FROZEN_INFERENCE`
 
+`LATER_SPLIT != EARLIER_INFORMATION_ISOLATION`
+
+`DECLARED_SPLIT_STAGE != ACTUAL_INFORMATION_FLOW_BOUNDARY`
+
+`TRAIN_ONLY_FINAL_TENSOR != TRAIN_ONLY_DERIVATION_ANCESTRY`
+
+`UNLABELED_TEST_STRUCTURE_VISIBLE != TEST_LABEL_LEAKAGE`
+
 ## Evidence roles
 
 Qualification evidence should declare a role such as:
@@ -54,8 +64,8 @@ Evidence may move from independent holdout to diagnostic/regression after it is 
 
 Where material, a qualification should identify the operating/evaluation regime being tested. Useful values include:
 
-- `INDUCTIVE_FROZEN` — representation/model state is fit before evaluation and the current evaluation cohort does not alter that fitted state;
-- `TRANSDUCTIVE` — unlabeled evaluation inputs or the evaluation cohort may participate in representation/manifold construction or inference preparation;
+- `INDUCTIVE_FROZEN` — representation/model state is fit before evaluation and the current evaluation cohort does not alter that fitted state or any consequential preprocessing artifact used by that state;
+- `TRANSDUCTIVE` — unlabeled evaluation inputs or the evaluation cohort may participate in representation/manifold/topology construction or inference preparation;
 - `TEST_TIME_ADAPTIVE` — the current test input may alter temporary or durable model state before its output is scored;
 - `ONLINE_ADAPTIVE` — prior evaluation/production interactions may update state used for later cases;
 - `MIXED` — different components operate under different declared regimes;
@@ -65,6 +75,7 @@ The regime record should state which test-time information is visible, such as:
 
 - current input only;
 - unlabeled cohort inputs;
+- cohort graph structure or topology;
 - labels;
 - target outputs/ground truth;
 - prior evaluation outcomes;
@@ -72,7 +83,45 @@ The regime record should state which test-time information is visible, such as:
 - human/evaluator feedback;
 - production feedback after effect.
 
-Access to unlabeled test inputs can be legitimate in a transductive deployment. It must not be described as evidence for a deployment in which such access is absent.
+Access to unlabeled test inputs or cohort topology can be legitimate in a transductive deployment. It must not be described as evidence for a deployment in which such access is absent.
+
+## Preprocessing visibility ancestry
+
+The information boundary is established by the earliest consequential operation that can influence the target—not by the latest point where the resulting objects happen to be called `train`, `validation`, or `test`.
+
+A derived artifact can carry evaluation-cohort information into later training or inference even when labels remain hidden. Material examples include:
+
+- fitted normalization or calibration state;
+- graph topology, connectivity scores, communities, or condensed adjacency;
+- manifold/embedding construction;
+- population/common templates;
+- vocabulary or tokenizer statistics;
+- feature-selection masks;
+- nearest-neighbor or retrieval indexes;
+- generated/imputed representations;
+- route-selection or topology policies.
+
+For consequential qualification, provenance should record the visibility set and derivation ancestry for such artifacts.
+
+A useful representation is:
+
+```text
+PREPROCESSING_EXPOSURE {
+  artifact_id
+  derivation_operation
+  source_partition_ids[]
+  information_classes_visible[]
+  labels_visible
+  created_before_or_after_split
+  downstream_targets_influenced[]
+  evaluation_regime
+  provenance
+}
+```
+
+The implementation schema may differ. The required semantic question is whether evaluation-partition information influenced a state or artifact later used by training, selection, inference, or scoring.
+
+If a train-only final tensor depends on a topology/template/statistic created from train+evaluation inputs, the tensor's derivation ancestry is not train-only.
 
 ## Evidence object
 
@@ -86,6 +135,8 @@ QUALIFICATION_EVIDENCE {
   generation_method
   evaluation_regime
   test_time_information_visible[]
+  preprocessing_artifact_refs[]
+  derivation_visibility_ancestry[]
   target_snapshot_first_exposed
   exposure_history[]
   adaptations_influenced[]
@@ -144,6 +195,9 @@ A hostile reviewer should be able to ask:
 - Did the evaluator adapt prompts, routing, heuristics, or model state after seeing intermediate holdout results?
 - Was the evaluation transductive/test-time-adaptive while the reported claim sounds inductive/frozen?
 - Did aggregate holdout statistics or unlabeled cohort structure influence the target even if individual labels were hidden?
+- Was any topology, normalization, manifold, template, index, or calibration artifact fit before the declared split?
+- Can changing only evaluation-cohort structure alter a training-time artifact while training records remain fixed?
+- Does a source comment or variable name claim `inductive` while the executed preprocessing path crosses the evaluation boundary earlier?
 
 ## Failure modes
 
@@ -155,6 +209,7 @@ A hostile reviewer should be able to ask:
 - post-failure patching followed by a PASS based only on the original failed case;
 - using production outcomes to adapt a model while still calling those same outcomes independent external validation;
 - fitting a manifold/template to the unlabeled evaluation cohort and reporting the result as inductive generalization without declaring transductive access;
+- computing topology/communities/normalization from the full cohort, splitting afterward, and calling the resulting training artifact train-only;
 - test-time adaptation changing durable state while the record claims a frozen target snapshot;
 - evaluator/human feedback changing prompts or routes during the holdout without recording that exposure.
 
@@ -164,8 +219,8 @@ This contract does not require every test to be independent. Regression, tuning,
 
 ## Governing invariant
 
-> **Evidence that shaped the target cannot silently serve as untouched independent evidence for the same shaped target. Exposure, adaptation lineage, and evaluation regime are part of qualification provenance.**
+> **Evidence that shaped the target cannot silently serve as untouched independent evidence for the same shaped target. Exposure, preprocessing ancestry, adaptation lineage, and evaluation regime are part of qualification provenance; a later split cannot erase earlier information visibility.**
 
 ## Provenance
 
-Generalized from HC qualification/update-governance requirements and reinforced by code-level study of BASIRA DGN and HADA. The inspected DGN cross-validation implementation uses fold test error for early stopping/checkpoint restoration. The inspected HADA implementation fits part of its source-space manifold using combined train-plus-current-test source inputs, providing a concrete transductive evaluation pattern that is legitimate only under appropriately scoped evaluation claims. See the corresponding records under `docs/research/`.
+Generalized from HC qualification/update-governance requirements and reinforced by code-level study of BASIRA DGN, HADA, and DuoGNN. The inspected DGN cross-validation implementation uses fold test error for early stopping/checkpoint restoration. The inspected HADA implementation fits part of its source-space manifold using combined train-plus-current-test source inputs, providing a concrete transductive evaluation pattern. The inspected DuoGNN topology-aware path constructs topology and a conditional graph from a complete pre-split graph before deriving the train/validation/test conditional adjacencies, providing a concrete preprocessing-visibility example where a later split does not restore an earlier information boundary. See the corresponding records under `docs/research/`.

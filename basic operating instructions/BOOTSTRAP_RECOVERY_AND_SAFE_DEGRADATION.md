@@ -96,9 +96,13 @@ Reconstruct valid structural/logical routing eligibility, current subscriptions/
 
 Transient coalitions that existed before interruption do not automatically resume as if no time passed. Their prerequisites, currentness, authority, participants, and expiry must be re-evaluated.
 
+Pre-restart queued or in-flight material work is subject to the same rule. A restart/recovery epoch or equivalent causal-currentness identity should fence serialized work so that readability alone cannot make old work current again.
+
 `PRE_RESTART_COALITION != AUTOMATIC_POST_RESTART_COALITION`
 
 `PRE_RESTART_AUTHORIZATION != AUTOMATIC_POST_RESTART_AUTHORIZATION`
+
+`PRE_RESTART_QUEUED_WORK != AUTOMATIC_POST_RESTART_ELIGIBLE_WORK`
 
 ### 6. Establish body/peripheral interface state
 
@@ -164,7 +168,7 @@ External data does not become active continuity merely because it is newer, comp
 
 If all HC-owned copies of essential continuity are lost and only an external backup survives, the architecture must represent this as a recovery-from-boundary-failure condition. Import may be attempted, but the fact that the complete HC previously violated/ceased to satisfy self-contained residency must not be hidden.
 
-## Interrupted writes and crash consistency
+## Interrupted writes and effects / crash consistency
 
 Recovery must be able to distinguish at least:
 
@@ -173,15 +177,21 @@ Recovery must be able to distinguish at least:
 - write committed to HC-owned durable substrate;
 - internal readback verified;
 - projection updated;
+- effect requested/dispatched;
+- effect confirmed or otherwise reconciled;
 - external replication attempted/completed.
 
-Partially completed non-idempotent operations must not be blindly replayed. Use operation identifiers, expected versions, effect receipts, and causal provenance to determine whether to resume, compensate, reconcile, or abandon.
+Partially completed non-idempotent operations must not be blindly replayed. Use operation identifiers, recovery epochs or equivalent causal-currentness identity, expected versions, effect receipts, observed outcomes, and causal provenance to determine whether to resume, compensate, reconcile, or abandon.
 
 `REPLAY != SAFE_TO_REEXECUTE`
 
 `WRITE_REQUESTED != COMMITTED`
 
+`EFFECT_REQUESTED != EFFECT_CONFIRMED`
+
 `COMMAND_RECORDED != EFFECT_CONFIRMED`
+
+A missing confirmation after restart represents unresolved effect state, not proof of failure and not proof of success. Reconciliation precedes non-idempotent retry.
 
 ## Safe degradation
 
@@ -233,6 +243,8 @@ Technical successful restore is evidence about state succession, not metaphysica
 - newest external backup automatically overrides conflicting HC-internal lineage;
 - unknown consent/authority is treated as affirmative after restart;
 - pre-crash action authorization is replayed despite expiry or changed context;
+- pre-restart queued or in-flight material work resumes solely because serialized state survived;
+- a non-idempotent effect is retried merely because an effect-confirmation record is absent;
 - degraded HC-2 is relabeled HC-1 or degraded HC-3 relabeled HC-2;
 - body-local safety controller becomes general cognitive control while HC is recovering;
 - failed or quarantined subsystem is silently marked healthy because alternate routing exists;
@@ -252,6 +264,7 @@ Technical successful restore is evidence about state succession, not metaphysica
 - `../adaptable I-O handler/BODY_INTERFACE_BOUNDARY.md`
 - `../docs/architecture/PHYSICAL_ORGAN_MEMBERSHIP.md`
 - `../specs/HC_MEMORY_PROVIDER_BOUNDARY_V1.yaml`
+- `../specs/HC_FAULT_REPAIR_OBJECTS_V1.yaml`
 
 ## Evidence boundary
 

@@ -14,10 +14,15 @@ jobs:
   unittest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      - name: Clone current repository state
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          git clone --no-checkout "https://x-access-token:${GITHUB_TOKEN}@github.com/${REPOSITORY}.git" repo
+          cd repo
+          git checkout --detach "${COMMIT_SHA}"
       - name: Run reference-kernel tests
-        working-directory: runtime/reference_kernel
-        run: python -m unittest -v test_hc_kernel.py
+        working-directory: repo/runtime/reference_kernel
+        run: python3 -m unittest -v test_hc_kernel.py

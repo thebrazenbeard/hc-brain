@@ -45,6 +45,7 @@ All non-PR project coordination is routed through the `chat-communication-bus` H
 - `docs/architecture/RUNTIME_COMPONENT_REGISTRATION_AND_STATE_CUSTODY.md` — computational participation versus managed runtime membership, including post-initialization dynamic state, update/durability/recovery custody, state lifetimes, inference-time adaptation, and registration-plane separation.
 - `docs/architecture/DISTRIBUTED_LEARNING_AND_UPDATE_ANCESTRY.md` — observation/learning/parameter/evaluation/authority ancestry across aggregation, weight exchange, distillation, distributed adaptation, missingness, and protected-update boundaries.
 - `docs/architecture/EXECUTED_DATAFLOW_AND_BINDING_INTEGRITY.md` — declared inputs/configuration versus the actual referent, target, authority, memory, strategy, state, and weighting consumed at material computation/effect boundaries.
+- `docs/architecture/SOURCE_INFORMATION_ANCESTRY_AND_DERIVED_STATE.md` — source-information visibility, derived-state ancestry, declassification/narrowing rules, and the separation between destination permission and permission to use upstream information.
 - `docs/architecture/QUALIFICATION_EVIDENCE_ISOLATION.md` — training/tuning/diagnostic/regression/holdout separation, exposure lineage, and inductive/transductive/test-time-adaptive/online evaluation regimes.
 - `docs/architecture/CONFORMANCE_AND_QUALIFICATION.md` — architecture/implementation/behavior/science qualification separation and scoped PASS / CONDITIONAL PASS / FAIL semantics.
 
@@ -68,7 +69,7 @@ Primary baseline:
 
 - `specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml` — cognitive-organ, physical-membership, authority, lifecycle, developmental, recovery, protected-update, evidence, and temporal-hypergraph invariants.
 - `specs/HC_CONFORMANCE_SUITE_V1.yaml` — original monolithic baseline checks through `HC-ARCH-018`.
-- `specs/HC_CONFORMANCE_EXTENSION_EVIDENCE_LINEAGE_CUSTODY_V1.yaml` — canonical checks `HC-ARCH-019` through `HC-ARCH-027` for qualification-evidence isolation, index lineage, runtime/dynamic state custody, composite provenance, relational-reasoning provenance, temporal forecast lineage, distributed-learning/update ancestry, executed-dataflow/binding integrity, and effective-topology transitions.
+- `specs/HC_CONFORMANCE_EXTENSION_EVIDENCE_LINEAGE_CUSTODY_V1.yaml` — canonical checks `HC-ARCH-019` through `HC-ARCH-028` for qualification-evidence isolation, index lineage, runtime/dynamic state custody, composite provenance, relational-reasoning provenance, temporal forecast lineage, distributed-learning/update ancestry, executed-dataflow/binding integrity, effective-topology transitions, and source-information ancestry.
 
 Focused specs:
 
@@ -88,6 +89,7 @@ Focused specs:
 - `specs/HC_DISTRIBUTED_LEARNING_ANCESTRY_V1.yaml`
 - `specs/HC_EXECUTED_DATAFLOW_BINDING_V1.yaml`
 - `specs/HC_EFFECTIVE_TOPOLOGY_TRANSITIONS_V1.yaml`
+- `specs/HC_SOURCE_INFORMATION_ANCESTRY_V1.yaml`
 - `specs/CROSS_REPO_SOURCE_TRANSFER_V1.yaml`
 
 The conformance extension is canonical rather than an untracked addendum; the older baseline has not yet been mechanically consolidated into one monolithic file because preserving reviewable source history is preferable to rewriting a large baseline during active research.
@@ -102,6 +104,7 @@ The conformance extension is canonical rather than an untracked addendum; the ol
 - `docs/qualification/EVIDENCE_LINEAGE_CUSTODY_CONFORMANCE_2026-09-09.md` — historical first evidence-lineage/custody cut; `CONDITIONAL PASS` for its exact target.
 - `docs/qualification/EVIDENCE_LINEAGE_CUSTODY_CONFORMANCE_2026-09-09_R2.md` — expanded Warden check through `HC-ARCH-025`; `CONDITIONAL PASS` for `main@2f21f111212a438c61e31214caf8aa5bc918a3a5`. Later strategy-path refinements do not inherit this result.
 - `docs/qualification/EFFECTIVE_TOPOLOGY_CONFORMANCE_2026-09-09.md` — focused effective-topology state/transition architecture cut; `CONDITIONAL PASS` for `main@21a194908b8005103927af7706a50d769f4fedf5`, pending independent Four/Vera review and implementation-level negative tests.
+- `docs/qualification/SOURCE_INFORMATION_ANCESTRY_CONFORMANCE_2026-09-10.md` — focused source-information ancestry/derived-state architecture cut; `CONDITIONAL PASS` for its stated target and Warden-inspected scope, pending independent review and implementation-level negative tests.
 
 Qualification records are historical evidence bound to their explicit target commits. Later commits do not inherit or retroactively change a result.
 
@@ -192,7 +195,7 @@ Current `main` includes, among others:
 
 `docs/research/BASIRA_COORDINATED_SCOUR_WORKPLAN_2026-09-09.md` partitions the active graph/connectome deep scour between Noah and Four while preserving deliberate independent overlap for expensive conclusions.
 
-Noah's primary lane covers temporal forecasting, generated/aligned/registered representations, relational reasoning, evidence isolation, distributed-learning ancestry, executed-dataflow integrity, effective-topology semantics, and canonical transfer adjudication. Four's primary lane covers multigraph/hypergraph implementation semantics, flow-control/compression, federation/model-graph self-analysis, uncertainty/explainability, and independent falsification of selected Noah findings.
+Noah's primary lane covers temporal forecasting, generated/aligned/registered representations, relational reasoning, evidence isolation, distributed-learning ancestry, executed-dataflow integrity, effective-topology semantics, source-information ancestry, and canonical transfer adjudication. Four's primary lane covers multigraph/hypergraph implementation semantics, flow-control/compression, federation/model-graph self-analysis, uncertainty/explainability, and independent falsification of selected Noah findings.
 
 Recent source-specific research records include:
 
@@ -210,7 +213,10 @@ Recent source-specific research records include:
 - `BASIRA_TEMPORAL_FORECAST_LINEAGE_2026-09-09.md` — cascaded forecast ancestry and correction semantics;
 - `BASIRA_4D_FED_GNN_DISTRIBUTED_LEARNING_2026-09-09.md` — parameter/evidence ancestry, weight aggregation/exchange, missing-timepoint semantics, protected-update boundaries, evaluation-feedback contamination, and configured-versus-executed strategy-path verification;
 - `BASIRA_REPFL_REPLICA_ANCESTRY_AND_TARGET_DATAFLOW_2026-09-09.md` — correlated replica ancestry, target-binding/dataflow verification, and effective aggregation-weight evidence;
-- `BASIRA_DELTAGNN_EFFECTIVE_TOPOLOGY_AND_FLOW_CONTROL_2026-09-09.md` — task-local effective topology, topology-lifetime separation, and flow-control execution-path evidence.
+- `BASIRA_DELTAGNN_EFFECTIVE_TOPOLOGY_AND_FLOW_CONTROL_2026-09-09.md` — task-local effective topology, topology-lifetime separation, and flow-control execution-path evidence;
+- `BASIRA_DUOGNN_PREPROCESSING_VISIBILITY_AND_DUAL_TOPOLOGY_2026-09-10.md` — complete-cohort preprocessing visibility and later-split ancestry;
+- `BASIRA_FALCON_LABEL_CONSTRAINED_COLLAPSE_AND_REGIME_VARIATION_2026-09-10.md` — path-specific privileged source-information influence and contrasting split regimes;
+- `BASIRA_UGNN_MODEL_GRAPH_SHARING_AND_EXECUTION_PATH_2026-09-10.md` — heterogeneous model graphification, positional sharing keys, and claimed-transform/output-dependence verification.
 
 Source research does not become HC canon merely because it is recorded. The active cadence is:
 
@@ -273,9 +279,13 @@ All HC PRs #1–#4 have Bus mirror/history records under `projects/hc-brain/pr-m
 34. `DECLARED_INPUT != EXECUTED_INPUT_WITHOUT_PATH_VERIFICATION`; signatures, shapes, available authority/memory records, and plausible outputs do not prove correct target/referent/state consumption.
 35. `TASK_LOCAL_EFFECTIVE_TOPOLOGY != DURABLE_LOGICAL_TOPOLOGY`; one execution may filter, generate, inhibit, or recruit relations without rewriting learned structure.
 36. `EFFECTIVE_TOPOLOGY != WORLD_MODEL_RELATION`, `EFFECTIVE_TOPOLOGY != SALIENCE`, and `EFFECTIVE_TOPOLOGY != AUTHORITY`; computational use does not promote those semantics.
-37. Architecture conformance, implementation conformance, behavioral qualification, scientific validation, consciousness, personhood, and manufacturability remain separate claims.
-38. Qualification is target-, capability-, scope-, evidence-, and snapshot-bound.
-39. Repository-tree conformance does not guarantee repository-surface conformance.
+37. `AUTHORIZED_DESTINATION != AUTHORIZED_SOURCE_INFORMATION`; permission to place or use a derived result does not silently authorize every upstream information class that shaped it.
+38. `TRANSFORMATION != AUTOMATIC_DECLASSIFICATION`; derived state retains source-information ancestry until an explicit, qualified narrowing/declassification rule justifies otherwise.
+39. `COMPUTED_UPDATE != CONSUMED_UPDATE`; existence of a transform, parameter, helper, registered component, or intermediate update does not establish causal influence on the material output/state mutation.
+40. `POSITIONAL_PARAMETER_KEY != VERIFIED_SEMANTIC_ROLE`; common graph containers or sharing-group IDs do not establish parameter-role homology, identity fusion, or protected-update authority.
+41. Architecture conformance, implementation conformance, behavioral qualification, scientific validation, consciousness, personhood, and manufacturability remain separate claims.
+42. Qualification is target-, capability-, scope-, evidence-, variant-, path-, and snapshot-bound.
+43. Repository-tree conformance does not guarantee repository-surface conformance.
 
 ## Current debt and active work
 
@@ -283,6 +293,6 @@ The live GitHub About description remains recorded as `Vera's conceptual Noöple
 
 PR #1's binary PDF still requires content-complete classification before final disposition.
 
-Four's active branch is `four/lineage-and-conformance-v2`; it should be refreshed only after verifying it has no unique commits or after reconciling any unique work. Four has current coordinated BASIRA/falsification tasks through the HC Bus. Vera is the hostile-review lane and should attack current executed-dataflow, replica-ancestry, dynamic-state, effective-topology, and distributed-learning cuts as they become review targets.
+Four's active branch is `four/lineage-and-conformance-v2`; it should be refreshed only after verifying it has no unique commits or after reconciling any unique work. Four has current coordinated BASIRA/falsification tasks through the HC Bus. Vera is the hostile-review lane and should attack current executed-dataflow, replica-ancestry, dynamic-state, effective-topology, source-information ancestry, heterogeneous-sharing, and distributed-learning cuts as they become review targets.
 
 Main remains under active Warden integration. Compatible identity-neutral material may be committed directly after review; material redesigns, unsupported scientific claims, and alternate root taxonomies remain noncanonical until explicitly adjudicated.

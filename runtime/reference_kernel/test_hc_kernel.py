@@ -12,13 +12,28 @@ class ReferenceKernelTests(unittest.TestCase):
         self.now = datetime(2026, 9, 10, 18, 0, tzinfo=UTC)
 
     def _grant(self, action_scope="MOTOR_EFFECT", target_scope="arm"):
-        return self.kernel.issue_grant(
+        return self.kernel.register_grant(
+            grantor="authority-fixture",
             grantee="kinesis",
             action_scope=action_scope,
             target_scope=target_scope,
+            basis_refs=("fixture-basis",),
+            provenance=("unit-test",),
             valid_from=self.now - timedelta(minutes=1),
             expires_at=self.now + timedelta(minutes=10),
         )
+
+    def test_authority_registration_requires_explicit_basis(self):
+        with self.assertRaises(ValueError):
+            self.kernel.register_grant(
+                grantor="authority-fixture",
+                grantee="kinesis",
+                action_scope="MOTOR_EFFECT",
+                target_scope="arm",
+                basis_refs=(),
+                valid_from=self.now - timedelta(minutes=1),
+                expires_at=self.now + timedelta(minutes=10),
+            )
 
     def test_routed_high_priority_event_does_not_authorize_effect(self):
         routed = self.kernel.route(
@@ -107,6 +122,27 @@ class ReferenceKernelTests(unittest.TestCase):
                 supersedes=(first.record_id,),
             )
 
+    def test_expired_authority_blocks_effect_request(self):
+        grant = self.kernel.register_grant(
+            grantor="authority-fixture",
+            grantee="kinesis",
+            action_scope="MOTOR_EFFECT",
+            target_scope="arm",
+            basis_refs=("fixture-basis",),
+            valid_from=self.now - timedelta(minutes=10),
+            expires_at=self.now - timedelta(seconds=1),
+        )
+        candidate = self.kernel.plan_effect(
+            origin="kinesis",
+            action_scope="MOTOR_EFFECT",
+            target_scope="arm",
+            payload={"command": "move"},
+            authority_grant_id=grant.grant_id,
+        )
+        receipt = self.kernel.request_effect(candidate, now=self.now)
+        self.assertEqual(receipt.state, EffectState.BLOCKED)
+        self.assertEqual(receipt.reason, "EXPIRED_AUTHORITY")
+
     def test_revocation_after_planning_blocks_effect_request(self):
         grant = self._grant()
         candidate = self.kernel.plan_effect(
@@ -140,6 +176,7 @@ class ReferenceKernelTests(unittest.TestCase):
             producer="somatics",
             payload={"arm_position": "moved"},
             source_refs=("proprioception",),
+            effect_action_id=candidate.action_id,
         )
         confirmed = self.kernel.confirm_effect(
             candidate.action_id,
@@ -148,7 +185,43 @@ class ReferenceKernelTests(unittest.TestCase):
         )
         self.assertEqual(confirmed.state, EffectState.CONFIRMED)
 
-    def test_restart_marks_inflight_effect_unresolved(self):
+    def test_unrelated_observation_cannot_confirm_effect(self):
+        grant = self._grant()
+        candidate = self.kernel.plan_effect(
+            origin="kinesis",
+            action_scope="MOTOR_EFFECT",
+            target_scope="arm",
+            payload={"command": "move"},
+            authority_grant_id=grant.grant_id,
+        )
+        self.kernel.request_effect(candidate, now=self.now)
+        unrelated = self.kernel.observe(
+            producer="somatics",
+            payload={"temperature": 37},
+            source_refs=("thermistor",),
+        )
+        with self.assertRaises(ValueError):
+            self.kernel.confirm_effect(
+                candidate.action_id,
+                succeeded=True,
+                confirmation_evidence_id=unrelated.evidence_id,
+            )
+
+    def test_duplicate_request_does_not_redispatch(self):
+        grant = self._grant()
+        candidate = self.kernel.plan_effect(
+            origin="kinesis",
+            action_scope="MOTOR_EFFECT",
+            target_scope="arm",
+            payload={"command": "move"},
+            authority_grant_id=grant.grant_id,
+        )
+        first = self.kernel.request_effect(candidate, now=self.now)
+        second = self.kernel.request_effect(candidate, now=self.now)
+        self.assertIs(first, second)
+        self.assertEqual(first.dispatch_attempts, 1)
+
+    def test_restart_marks_inflight_effect_unresolved_and_blocks_replay(self):
         grant = self._grant()
         candidate = self.kernel.plan_effect(
             origin="kinesis",
@@ -161,16 +234,18 @@ class ReferenceKernelTests(unittest.TestCase):
         self.assertEqual(requested.state, EffectState.REQUESTED)
 
         self.kernel.restart()
-        self.assertEqual(
-            self.kernel.effect_receipts[candidate.action_id].state,
-            EffectState.UNRESOLVED_AFTER_RESTART,
-        )
+        unresolved = self.kernel.effect_receipts[candidate.action_id]
+        self.assertEqual(unresolved.state, EffectState.UNRESOLVED_AFTER_RESTART)
+
+        repeated = self.kernel.request_effect(candidate, now=self.now)
+        self.assertIs(repeated, unresolved)
+        self.assertEqual(repeated.dispatch_attempts, 1)
 
         old_grant_candidate = self.kernel.plan_effect(
             origin="kinesis",
             action_scope="MOTOR_EFFECT",
             target_scope="arm",
-            payload={"command": "retry"},
+            payload={"command": "new_action"},
             authority_grant_id=grant.grant_id,
         )
         retry_receipt = self.kernel.request_effect(

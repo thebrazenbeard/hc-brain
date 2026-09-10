@@ -70,9 +70,9 @@ Primary condition: independent hostile/secondary review and implementation recov
 
 Focused architecture qualification for protected-invariant mutation, update authority, identity/value/memory/consent firewalling, distributed activation consistency, interrupted-update recovery, continuity-safe rollback/forward repair, and post-update requalification.
 
-Outcome: `CONDITIONAL PASS` for its stated architecture snapshot. A later repository-map/index-only commit does not silently extend that snapshot or change the recorded result.
+Outcome: `CONDITIONAL PASS` for its stated architecture snapshot.
 
-Primary condition: independent hostile review, secondary implementation-readiness challenge, and actual protected-update negative/recovery testing remain outstanding.
+Four has now supplied `SECONDARY_ARCHITECTURE_PASS` for that exact historical target, but also documented that later meta-optimization/self-modification hardening materially superseded the frozen scope. A present-tense protected-update qualification therefore requires a successor target/review cut rather than inheriting this historical result. Vera hostile review and implementation testing remain separate.
 
 ### `EVIDENCE_LINEAGE_CUSTODY_CONFORMANCE_2026-09-09.md`
 
@@ -84,37 +84,43 @@ This record remains historical; later architecture additions do not inherit its 
 
 ### `EVIDENCE_LINEAGE_CUSTODY_CONFORMANCE_2026-09-09_R2.md`
 
-Current expanded Warden architecture qualification for checks `HC-ARCH-019` through `HC-ARCH-025`: qualification-evidence isolation, stable reference/index lineage, runtime and dynamic-state custody, composite element provenance, relational-reasoning provenance, temporal forecast lineage, and distributed-learning/update ancestry.
+Expanded Warden architecture qualification for checks `HC-ARCH-019` through `HC-ARCH-025`.
 
-Outcome: `CONDITIONAL PASS` for target `2f21f111212a438c61e31214caf8aa5bc918a3a5` and the explicitly stated repository-architecture scope.
+Outcome: `CONDITIONAL PASS` for target `2f21f111212a438c61e31214caf8aa5bc918a3a5`.
 
-Primary conditions: Four independent review, Vera hostile review, repository-wide contradiction reproduction against the exact cut, and implementation-level negative tests remain outstanding. Individual architecture checks passed within the Warden-inspected prose/spec scope; the combined qualification remains conditional rather than being promoted beyond the evidence.
+Four has now returned `SECONDARY_ARCHITECTURE_PASS` for that exact frozen target. Vera hostile review, exhaustive successor coverage, and implementation-level negative tests remain separate conditions; the frozen result does not propagate to current `main`.
 
 ### `EFFECTIVE_TOPOLOGY_CONFORMANCE_2026-09-09.md`
 
 Focused Warden architecture qualification for effective-topology state separation and transition semantics introduced by the DeltaGNN transfer cut.
 
-Outcome: `CONDITIONAL PASS` for target `21a194908b8005103927af7706a50d769f4fedf5` and its stated architecture scope.
+Outcome: `CONDITIONAL PASS` for target `21a194908b8005103927af7706a50d769f4fedf5`.
 
-The record tests separation among physical substrate reachability, durable logical eligibility, configured routing/policy, one-execution effective topology, transient hyperedges/coalitions, plasticity, and world-model relations. It also checks that task-local topology changes do not silently become durable wiring, truth, salience, authority, or protected state.
-
-Primary conditions: Four independent review, Vera hostile review, and implementation-level transition/negative testing remain outstanding.
+Four has now returned `SECONDARY_ARCHITECTURE_PASS` for that exact frozen target, with an implementation-readiness advisory for higher-order dynamic-hyperedge integrity testing. Vera hostile review and implementation-level transition/negative testing remain outstanding.
 
 ### `SOURCE_INFORMATION_ANCESTRY_CONFORMANCE_2026-09-10.md`
 
 Focused Warden architecture qualification for material source-information influence across preprocessing, derived-state selection, held-out evidence, protected/private inputs, destination restrictions, and explicit release/declassification boundaries.
 
-Outcome: `CONDITIONAL PASS` for target `f0da54a301f17cd5b00d26e735aae8e54087d3e3` and its stated architecture scope.
+Outcome: `CONDITIONAL PASS` for target `f0da54a301f17cd5b00d26e735aae8e54087d3e3`.
 
-Primary conditions: Four independent review, Vera hostile review, and implementation-level information-flow negative tests remain outstanding. The record is explicitly internal/self-evaluated architecture evidence rather than independent validation.
+Four has now returned `SECONDARY_ARCHITECTURE_PASS` for that frozen target with implementation-semantics advisories around `material influence` and formal privacy/noninference proof. Vera hostile review and executable information-flow tests remain outstanding.
 
 ### `REST_OFFLINE_MAINTENANCE_CONFORMANCE_2026-09-10.md`
 
-Focused Warden architecture qualification for reduced engagement, replay/consolidation orchestration, maintenance windows, retained monitoring, rhythmic scheduling, and safe resumption without transferring ownership from canonical memory, chronology/currentness, lifecycle/recovery, protected-update, plasticity, or effect-authority systems.
+Historical first Warden qualification for reduced engagement, replay/consolidation orchestration, maintenance windows, retained monitoring, rhythmic scheduling, and safe resumption.
 
-Outcome: `CONDITIONAL PASS` for target `2a42a46eafd1322334d82d661adb667534fe7cbb` and its stated architecture scope.
+Outcome: `CONDITIONAL PASS` for target `2a42a46eafd1322334d82d661adb667534fe7cbb`.
 
-Primary conditions: Four independent review, Vera hostile review, and implementation-level interruption/partition/currentness/authority negative tests remain outstanding. The record does not establish that any specific rest schedule improves a concrete HC implementation.
+Its architecture findings remain historical evidence, but its wording treated Four as a prospective independent secondary reviewer even though Four materially authored the central integrated artifacts. Use the R2 record below for the current interpretation of reviewer provenance and outstanding conditions.
+
+### `REST_OFFLINE_MAINTENANCE_CONFORMANCE_2026-09-10_R2.md`
+
+Reviewer-provenance correction for the same frozen architecture target.
+
+Outcome: `CONDITIONAL PASS`.
+
+Four's returned review is classified as `AUTHORIAL_SECONDARY_ARCHITECTURE_PASS`, not independent qualification evidence, because the canonical central artifacts are byte-identical to Four's source contribution. A materially independent secondary review, Vera hostile review, and implementation-level interruption/partition/currentness/concurrency tests remain outstanding.
 
 ### `COGNITIVE_INTEGRITY_SECURITY_CONFORMANCE_2026-09-10.md`
 
@@ -148,9 +154,21 @@ Outcome: `CONDITIONAL PASS` for target `045d6ee59ea1cd81e6c466894da082611f05d8e8
 
 Primary conditions: implementation fault injection, partition/rejoin and repair/regression testing plus Four independent review and Vera hostile review remain outstanding.
 
+## Independent review evidence preserved on main
+
+The following Four review artifacts are preserved with their original frozen-target ceilings:
+
+- `../research/FOUR_R2_EVIDENCE_LINEAGE_CUSTODY_INDEPENDENT_REVIEW_2026-09-09.md`
+- `../research/FOUR_EFFECTIVE_TOPOLOGY_INDEPENDENT_REVIEW_2026-09-10.md`
+- `../research/FOUR_SOURCE_INFORMATION_ANCESTRY_INDEPENDENT_REVIEW_2026-09-10.md`
+- `../research/FOUR_PROTECTED_UPDATE_GOVERNANCE_INDEPENDENT_REVIEW_2026-09-10.md`
+- `../research/FOUR_REST_OFFLINE_MAINTENANCE_AUTHORIAL_SECONDARY_REVIEW_2026-09-10.md`
+
+The final item is explicitly authorial rather than independent. Reviewer provenance is part of qualification evidence, not bookkeeping.
+
 ## Coverage note
 
-The canonical conformance layers now contain checks through `HC-ARCH-033`. A dedicated qualification record does not yet exist for every individual extension check. Architecture-check existence must not be read as evidence that implementation behavior has been executed or qualified.
+The canonical conformance layers now contain checks through `HC-ARCH-033`. A dedicated qualification record does not establish implementation behavior merely because the architecture/spec check exists, and a frozen-target secondary review does not silently qualify successor architecture.
 
 ## Result preservation
 

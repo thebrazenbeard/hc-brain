@@ -26,6 +26,7 @@ A later commit does not automatically inherit an earlier PASS. Material architec
 
 See each record for its exact target snapshot and evidence ceiling.
 
+- `AFFECT_HOMEOSTASIS_CONFORMANCE_2026-09-09.md` remains the historical first focused affect/homeostasis cut. `AFFECT_HOMEOSTASIS_CONFORMANCE_2026-09-10_R2.md` is the current successor architecture cut after indirect modulation provenance, evidence-selection/gain integrity, plasticity-scope firewalling, protective-interlock receipts, and coupled-loop failure boundaries were made explicit. R2 remains `CONDITIONAL PASS`: Four's implementation-readiness findings shaped the successor, Vera hostile review and independent successor review remain outstanding, and the negative tests are specifications rather than executed runtime evidence.
 - `BOOTSTRAP_RECOVERY_CONFORMANCE_2026-09-09_R2.md` remains historical frozen-target evidence. Four returned a secondary PASS for that target but identified a focused machine-spec completeness advisory. `BOOTSTRAP_RECOVERY_CONFORMANCE_2026-09-10_R3.md` is the current successor focused cut after effect-request/effect-confirm and recovery-epoch fencing were made explicit; it remains `CONDITIONAL PASS` because Four's finding shaped the repair, independent successor review and Vera hostile review are outstanding, and runtime tests are unexecuted.
 - `EVIDENCE_LINEAGE_CUSTODY_CONFORMANCE_2026-09-09_R2.md`, `EFFECTIVE_TOPOLOGY_CONFORMANCE_2026-09-09.md`, and `SOURCE_INFORMATION_ANCESTRY_CONFORMANCE_2026-09-10.md` remain `CONDITIONAL PASS` at their frozen targets; Four has returned `SECONDARY_ARCHITECTURE_PASS` for those exact targets, while hostile review, successor coverage where applicable, and implementation tests remain separate.
 - `PROTECTED_UPDATE_GOVERNANCE_2026-09-09.md` remains historical `CONDITIONAL PASS`. Four returned `SECONDARY_ARCHITECTURE_PASS` for that target but found later meta-optimization/self-modification hardening materially superseded its scope. A present-tense protected-update qualification requires a successor cut.
@@ -37,6 +38,7 @@ See each record for its exact target snapshot and evidence ceiling.
 
 Four review/audit artifacts currently preserved include:
 
+- `../research/FOUR_AFFECT_HOMEOSTASIS_IMPLEMENTATION_READINESS_REVIEW_2026-09-10.md`
 - `../research/FOUR_R2_EVIDENCE_LINEAGE_CUSTODY_INDEPENDENT_REVIEW_2026-09-09.md`
 - `../research/FOUR_EFFECTIVE_TOPOLOGY_INDEPENDENT_REVIEW_2026-09-10.md`
 - `../research/FOUR_SOURCE_INFORMATION_ANCESTRY_INDEPENDENT_REVIEW_2026-09-10.md`
@@ -50,7 +52,7 @@ Reviewer provenance is part of qualification evidence, not bookkeeping.
 
 ## Coverage note
 
-The canonical conformance layers contain checks through `HC-ARCH-034`. Architecture-check existence does not establish implementation behavior, and a frozen-target review does not silently qualify successor architecture.
+The canonical conformance layers contain checks through `HC-ARCH-034`. Additional focused machine contracts, including `HC_AFFECT_HOMEOSTASIS_INTEGRITY_V1`, may harden an existing architecture check without inventing a new numbered whole-suite check. Architecture-check or machine-contract existence does not establish implementation behavior, and a frozen-target review does not silently qualify successor architecture.
 
 ## Result preservation
 
@@ -66,6 +68,8 @@ Primary governing surfaces include:
 - `../architecture/QUALIFICATION_EVIDENCE_ISOLATION.md`
 - `../architecture/QUALIFICATION_REVIEWER_PROVENANCE.md`
 - `../architecture/TEMPORAL_HYPERGRAPH_MODEL.md`
+- `../../affect/MODULATION_PROVENANCE_AND_SCOPE_INTEGRITY.md`
+- `../../specs/HC_AFFECT_HOMEOSTASIS_INTEGRITY_V1.yaml`
 - `../../specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml`
 - `../../specs/HC_CONFORMANCE_SUITE_V1.yaml`
 - `../../specs/HC_QUALIFICATION_EVIDENCE_ISOLATION_V1.yaml`

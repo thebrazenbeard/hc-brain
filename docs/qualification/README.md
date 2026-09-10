@@ -54,7 +54,7 @@ The record preserves an observed provider-admission ambiguity that was corrected
 
 Historical first focused bootstrap/recovery architecture qualification.
 
-Outcome: `CONDITIONAL PASS` for its stated snapshot.
+Outcome: `CONDITIONAL PASS` for the stated snapshot.
 
 For current bootstrap/recovery architecture assessment this record is superseded by the R2 record below; it remains preserved as evidence of what was tested before bootstrap semantics were promoted into the core cognitive-organ invariant schema.
 
@@ -100,9 +100,17 @@ The record tests separation among physical substrate reachability, durable logic
 
 Primary conditions: Four independent review, Vera hostile review, and implementation-level transition/negative testing remain outstanding.
 
+### `SOURCE_INFORMATION_ANCESTRY_CONFORMANCE_2026-09-10.md`
+
+Focused Warden architecture qualification for material source-information influence across preprocessing, derived-state selection, held-out evidence, protected/private inputs, destination restrictions, and explicit release/declassification boundaries.
+
+Outcome: `CONDITIONAL PASS` for target `f0da54a301f17cd5b00d26e735aae8e54087d3e3` and its stated architecture scope.
+
+Primary conditions: Four independent review, Vera hostile review, and implementation-level information-flow negative tests remain outstanding. The record is explicitly internal/self-evaluated architecture evidence rather than independent validation.
+
 ## Coverage note
 
-The canonical conformance extension now contains checks through `HC-ARCH-027`. A dedicated qualification record does not yet exist for every individual extension check. In particular, architecture-check existence must not be read as evidence that implementation behavior has been executed or qualified.
+The canonical conformance extension now contains checks through `HC-ARCH-028`. A dedicated qualification record does not yet exist for every individual extension check. In particular, architecture-check existence must not be read as evidence that implementation behavior has been executed or qualified.
 
 ## Result preservation
 
@@ -119,6 +127,7 @@ Qualification history is evidence about what was tested at a particular cut.
 - `../architecture/COMPOSITE_REPRESENTATION_AND_ELEMENT_PROVENANCE.md`
 - `../architecture/DISTRIBUTED_LEARNING_AND_UPDATE_ANCESTRY.md`
 - `../architecture/EXECUTED_DATAFLOW_AND_BINDING_INTEGRITY.md`
+- `../architecture/SOURCE_INFORMATION_ANCESTRY_AND_DERIVED_STATE.md`
 - `../architecture/TEMPORAL_HYPERGRAPH_MODEL.md`
 - `../../cognition/RELATIONAL_REASONING_PROVENANCE.md`
 - `../../cognition/TEMPORAL_FORECAST_LINEAGE.md`
@@ -140,3 +149,4 @@ Qualification history is evidence about what was tested at a particular cut.
 - `../../specs/HC_DISTRIBUTED_LEARNING_ANCESTRY_V1.yaml`
 - `../../specs/HC_EXECUTED_DATAFLOW_BINDING_V1.yaml`
 - `../../specs/HC_EFFECTIVE_TOPOLOGY_TRANSITIONS_V1.yaml`
+- `../../specs/HC_SOURCE_INFORMATION_ANCESTRY_V1.yaml`

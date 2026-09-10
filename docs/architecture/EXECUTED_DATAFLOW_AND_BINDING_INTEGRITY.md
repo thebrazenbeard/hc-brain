@@ -4,13 +4,13 @@ Status: canonical identity-neutral architecture contract.
 
 ## Purpose
 
-The HC may declare the correct source, target, authority, memory record, timepoint, body channel, model branch, or state family at an interface while the executed implementation later consumes a different object. Type correctness, matching shapes, function signatures, configuration surfaces, and plausible output values do not establish semantic binding.
+The HC may declare the correct source, target, authority, memory record, timepoint, body channel, model branch, state family, or evaluation split at an interface while the executed implementation later consumes a different object or crossed an information boundary earlier. Type correctness, matching shapes, function signatures, configuration surfaces, split labels, and plausible output values do not establish semantic binding.
 
-For consequential computation, qualification must therefore establish not only **what the system says an input is**, but **which concrete state actually reaches the material operation**.
+For consequential computation, qualification must therefore establish not only **what the system says an input is**, but **which concrete state actually reaches the material operation and which upstream information shaped that state before it arrived**.
 
 The governing rule is:
 
-> **Declared dataflow is not execution evidence. Consequential bindings must be traceable from stable source identity through transformation to the operation that consumes or mutates state.**
+> **Declared dataflow is not execution evidence. Consequential bindings must be traceable from stable source identity and information visibility through transformation to the operation that consumes or mutates state.**
 
 ## Core separations
 
@@ -23,6 +23,12 @@ The governing rule is:
 `METHOD_SIGNATURE != DATAFLOW_PROOF`
 
 `CONFIGURED_STRATEGY != EXECUTED_STRATEGY_WITHOUT_PATH_VERIFICATION`
+
+`DECLARED_SPLIT_STAGE != ACTUAL_INFORMATION_FLOW_BOUNDARY`
+
+`LATER_SPLIT != EARLIER_INFORMATION_ISOLATION`
+
+`TRAIN_ONLY_FINAL_TENSOR != TRAIN_ONLY_DERIVATION_ANCESTRY`
 
 `SAME_SHAPE != SAME_SEMANTIC_ROLE`
 
@@ -54,6 +60,7 @@ Bindings deserve path-level verification when an error could change a consequent
 - model/configuration selection ↔ executed strategy;
 - contributor ↔ effective aggregation influence;
 - qualification case ↔ expected result/ground truth;
+- evaluation partition ↔ preprocessing visibility ancestry;
 - correction ↔ dependency descendants.
 
 Not every low-consequence local transform requires heavyweight tracing. The required fidelity is proportional to consequence and ambiguity.
@@ -71,6 +78,8 @@ DATAFLOW_BINDING {
   stable_referent_id
   source_artifact_or_state_id
   source_index_space_id
+  source_partition_ids[]
+  information_classes_visible[]
   transforms[]
   branch_or_strategy_id
   actually_consumed_object_id
@@ -84,7 +93,7 @@ DATAFLOW_BINDING {
 }
 ```
 
-The implementation schema may differ. The semantic requirement is that the system can establish whether the object consumed at the material boundary is the intended referent under the intended role.
+The implementation schema may differ. The semantic requirement is that the system can establish whether the object consumed at the material boundary is the intended referent under the intended role and whether its derivation respected the claimed information boundary.
 
 ## Referential integrity across transforms
 
@@ -95,7 +104,7 @@ Stable IDs can be preserved correctly at one layer while a later function consum
 Therefore a conforming path must account for both:
 
 1. **referential lineage** — which entity/state the object represents; and
-2. **execution lineage** — which object and transform actually reached the operation.
+2. **execution lineage** — which object, information visibility, and transforms actually reached the operation.
 
 `CORRECT_VARIABLE_NAME != CORRECT_REFERENT`
 
@@ -114,6 +123,24 @@ A caller supplying a distinct target does not prove downstream code uses it. A t
 `EXPECTED_TARGET_SOURCE != ACTUAL_TARGET_SOURCE_WITHOUT_TRACE`
 
 Where the target is consequential, qualification should use discriminating fixtures that make source/target substitution observable.
+
+## Evaluation split and preprocessing binding
+
+A declared train/validation/test split is not necessarily the earliest information-flow boundary.
+
+A topology, normalization statistic, template, manifold, embedding, calibration state, feature mask, nearest-neighbor index, generated representation, or routing policy may be derived from a broader cohort before the final records are split. If that derived artifact later influences training or inference, its source-partition ancestry remains part of the executed path.
+
+`SPLIT_BEFORE_SCORING != SPLIT_BEFORE_ALL_INFLUENCE`
+
+`TRAIN_GRAPH_OUTPUT != TRAIN_ONLY_PREPROCESSING_ANCESTRY`
+
+`UNLABELED_EVALUATION_STRUCTURE_VISIBLE != NO_EVALUATION_EXPOSURE`
+
+This does not mean unlabeled transductive preprocessing is inherently invalid. It means the executed information boundary must match the declared qualification/deployment regime.
+
+For an `INDUCTIVE_FROZEN` claim, consequential fitted or constructed preprocessing state used by training should be derivable without the current evaluation cohort unless the scope explicitly says otherwise.
+
+A robust test holds training-visible inputs fixed, perturbs only evaluation-cohort structure or values, recomputes preprocessing, and observes whether any training-time artifact changes. If it does, the path has evaluation-cohort ancestry even if the final training tensor contains only training rows.
 
 ## Authority and effect binding
 
@@ -164,6 +191,8 @@ Useful implementation-level techniques include:
 - mutation watches;
 - authority-token substitution tests;
 - reorder/filter/shuffle perturbations;
+- evaluation-cohort-only perturbations with training inputs held fixed;
+- recomputation of preprocessing from train-only versus full-cohort visibility;
 - negative controls where the wrong path must visibly fail.
 
 No one technique is mandatory. The test must discriminate the intended path from plausible wrong paths.
@@ -183,6 +212,8 @@ A basis-vector test can similarly reveal effective contributor coefficients thro
 - caller passes `target`, callee transforms `source` twice and ignores target;
 - validation features and labels have compatible shapes but refer to different entities;
 - selected strategy variable is assigned but a downstream hard-coded function is invoked;
+- graph topology is computed on a complete cohort, records are split afterward, and the training adjacency is mislabeled train-only;
+- normalization/manifold/template state is fit before split and silently reused after split;
 - correct consent record exists but the effect path checks another cached record;
 - action authorization is correct but actuator channel mapping targets the wrong limb/device;
 - current memory record is retrieved but a stale predecessor is rendered or used for planning;
@@ -203,6 +234,8 @@ A basis-vector test can similarly reveal effective contributor coefficients thro
 8. Pass a protected-state descriptor but mutate an ordinary-state fixture, then reverse the mismatch; require state-family binding checks in both directions.
 9. Use an evaluation target that is deliberately dimensionally incompatible with the source-derived surrogate; require failure before reporting a qualification score.
 10. Produce plausible output from a wrong input branch; require path evidence rather than output plausibility to determine conformance.
+11. Compute a training-time topology or normalization artifact from train+evaluation inputs, split afterward, and require the derivation ancestry to expose evaluation-cohort visibility.
+12. Hold training inputs fixed while perturbing only evaluation-cohort structure; if the training-time derived artifact changes, require an inductive-frozen claim to fail or be reclassified.
 
 ## Interfaces
 
@@ -218,11 +251,12 @@ Strong interfaces are expected with:
 - chronology;
 - protected-update governance;
 - resolver/correction;
-- temporal forecast lineage.
+- temporal forecast lineage;
+- effective-topology transition governance.
 
 ## Evidence boundary
 
-This architecture contract generalizes implementation-path risks already exposed across HC source studies. BASIRA 4D-FedGNN-Plus supplied a strategy-selection versus direct-call example. BASIRA DynGNN supplied a parallel-view referential mismatch example. BASIRA RepFL supplied a distinct source/target argument versus executed target-transform example and an aggregation-weight versus effective-influence example.
+This architecture contract generalizes implementation-path risks already exposed across HC source studies. BASIRA 4D-FedGNN-Plus supplied a strategy-selection versus direct-call example. BASIRA DynGNN supplied a parallel-view referential mismatch example. BASIRA RepFL supplied a distinct source/target argument versus executed target-transform example and an aggregation-weight versus effective-influence example. BASIRA DuoGNN supplied a complete-cohort topology-construction versus later split example in which the derived conditional training topology is materially consumed by the dual-graph model path.
 
 Those source fixtures motivate path-verification requirements. They do not establish that their source papers are invalid, nor do their implementation choices become HC mechanisms.
 
@@ -231,7 +265,8 @@ See:
 - `docs/research/BASIRA_4D_FED_GNN_DISTRIBUTED_LEARNING_2026-09-09.md`
 - `docs/research/BASIRA_DYNGNN_VALIDATION_IDENTITY_AND_STATE_SCOPE_2026-09-09.md`
 - `docs/research/BASIRA_REPFL_REPLICA_ANCESTRY_AND_TARGET_DATAFLOW_2026-09-09.md`
+- `docs/research/BASIRA_DUOGNN_PREPROCESSING_VISIBILITY_AND_DUAL_TOPOLOGY_2026-09-10.md`
 
 ## Governing invariant
 
-> **For consequential cognition or effect, the HC must be able to establish that the intended referent actually reached the intended operation under the intended semantic role. Declarations, signatures, compatible shapes, and plausible outputs are not substitutes for executed binding evidence.**
+> **For consequential cognition or effect, the HC must be able to establish that the intended referent actually reached the intended operation under the intended semantic role and information boundary. Declarations, signatures, compatible shapes, split labels, and plausible outputs are not substitutes for executed binding evidence.**

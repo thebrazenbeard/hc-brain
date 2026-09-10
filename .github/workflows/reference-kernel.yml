@@ -25,4 +25,4 @@ jobs:
           git checkout --detach "${COMMIT_SHA}"
       - name: Run reference-kernel tests
         working-directory: repo/runtime/reference_kernel
-        run: python3 -m unittest -v test_hc_kernel.py
+        run: python3 -m unittest -v test_hc_kernel.py test_durable_kernel.py

@@ -1,0 +1,363 @@
+schema_version: HC_COGNITIVE_INTEGRITY_OBJECTS_V1
+status: TEMPLATE_SECURITY_SUPPLEMENT
+
+scope:
+  purpose: >-
+    Define machine-readable cognitive-integrity and security objects that are
+    not already owned by canonical authority, protected-update, recovery,
+    memory-provider, fault, or effect-governance contracts.
+  canonical_dependencies:
+    authority_and_effect: basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md
+    protected_updates: specs/HC_PROTECTED_UPDATE_GOVERNANCE_V1.yaml
+    bootstrap_recovery: specs/HC_BOOTSTRAP_RECOVERY_V1.yaml
+    memory_provider_boundary: specs/HC_MEMORY_PROVIDER_BOUNDARY_V1.yaml
+    core_invariants: specs/HC_COGNITIVE_ORGAN_INVARIANTS_V1.yaml
+    conformance: specs/HC_CONFORMANCE_SUITE_V1.yaml
+  non_goals:
+    - REDEFINE_AUTHORITY_GRANT
+    - REDEFINE_EFFECT_AUTHORIZATION
+    - REDEFINE_PROTECTED_UPDATE_LIFECYCLE
+    - REDEFINE_BOOTSTRAP_OR_CONTINUITY_RECOVERY
+    - REDEFINE_FAULT_OR_REPAIR_LIFECYCLE
+
+invariants:
+  - INPUT_NE_INSTRUCTION_AUTHORITY
+  - AUTHENTICATED_SOURCE_NE_TRUE_CONTENT
+  - ROUTED_NE_TRUSTED
+  - TRUSTED_IN_ONE_SCOPE_NE_TRUSTED_GLOBALLY
+  - SALIENT_NE_SAFE
+  - ANOMALOUS_NE_COMPROMISED
+  - COMPROMISE_SUSPECTED_NE_COMPROMISE_PROVEN
+  - CAPABILITY_DISCOVERED_NE_CAPABILITY_AUTHORIZED
+  - CREDENTIAL_PRESENT_NE_CREDENTIAL_DISCLOSABLE
+  - EXTERNAL_SERVICE_RESULT_NE_HC_BELIEF
+  - MODEL_OUTPUT_NE_OPERATING_INSTRUCTION
+  - SIGNED_OR_HASHED_NE_SEMANTICALLY_CORRECT
+  - INTERNAL_MEMBERSHIP_NE_UNLIMITED_TRUST
+  - SECURITY_ALERT_NE_ROOT_CAUSE
+  - SECURITY_OBSERVABILITY_NE_UNIVERSAL_CONTENT_ACCESS
+  - COPYING_NE_PROVENANCE_UPGRADE
+  - REPETITION_NE_DIRECT_MEASUREMENT
+  - TECHNICAL_ACCESS_NE_COGNITIVE_AUTHORITY
+
+information_classes:
+  - OBSERVATION_OR_DATA
+  - INSTRUCTION_CANDIDATE
+  - CONFIGURATION_OR_UPDATE_CANDIDATE
+  - AUTHORITY_OR_GRANT_REFERENCE
+  - EFFECT_AUTHORIZATION_REFERENCE
+  - EXTERNAL_SERVICE_RESULT
+  - PROVENANCE_OR_RECEIPT
+  - SECURITY_EVIDENCE
+  - UNTRUSTED_OR_UNCLASSIFIED
+
+object_families:
+  InformationClassification:
+    class: SECURITY_AND_SEMANTIC_ROLE_CLASSIFICATION
+    required_concepts:
+      - subject_or_payload_ref
+      - information_class
+      - classification_basis
+      - provenance
+    optional_concepts:
+      - source_ref
+      - currentness_or_expiry
+      - integrity_ref
+      - trust_scope_ref
+      - contradictions
+      - unresolved_role
+    rules:
+      - IMPERATIVE_CONTENT_DOES_NOT_CREATE_INSTRUCTION_AUTHORITY
+      - CLASSIFICATION_DOES_NOT_CREATE_TRUTH_OR_EFFECT_AUTHORITY
+      - UNCLASSIFIED_MATERIAL_MAY_REMAIN_DATA_WITHOUT_BEING_EXECUTABLE
+
+  TrustScope:
+    class: GOVERNED_TRUST_STATE
+    required_concepts:
+      - subject_or_source
+      - operation_scope
+      - target_scope
+      - validity_state
+      - provenance
+    optional_concepts:
+      - state_family_scope
+      - valid_from
+      - valid_until
+      - evidence_basis
+      - revocation_or_supersession_ref
+      - required_corroboration
+      - currentness
+    rules:
+      - TRUST_IS_SCOPE_BOUND
+      - TRUST_DOES_NOT_TRANSITIVELY_EXPAND_BY_DEFAULT
+      - AUTHENTICATION_DOES_NOT_ESTABLISH_TRUTH
+      - TRUST_STATE_DOES_NOT_SELF_CREATE_CANONICAL_AUTHORITY_GRANT
+      - TRUST_STATE_DOES_NOT_SELF_CREATE_EFFECT_AUTHORIZATION
+
+  ExternalServiceResult:
+    class: BOUNDED_COMPUTATIONAL_RESULT
+    required_concepts:
+      - service_or_substrate_ref
+      - request_ref
+      - result_payload_or_ref
+      - evidence_class
+      - provenance
+    optional_concepts:
+      - model_or_service_revision
+      - confidence_or_uncertainty
+      - latency
+      - integrity_status
+      - currentness_or_expiry
+      - declared_capability
+      - input_transformation_refs
+      - verification_refs
+    rules:
+      - RESULT_DOES_NOT_SELF_PROMOTE_TO_BELIEF
+      - RESULT_DOES_NOT_SELF_PROMOTE_TO_AUTHORITY
+      - RESULT_DOES_NOT_SELF_PROMOTE_TO_OPERATING_INSTRUCTION
+      - ROUTING_OR_WRAPPING_DOES_NOT_UPGRADE_EVIDENCE_CLASS
+      - ESSENTIAL_EXTERNAL_SERVICE_IS_RECLASSIFIED_UNDER_CANONICAL_COGNITIVE_ORGAN_RULES
+
+  SecureCapabilityHandle:
+    class: NONCONTENT_CAPABILITY_REFERENCE
+    required_concepts:
+      - handle_id
+      - capability_class
+      - broker_or_owner_ref
+      - allowed_operation_scope
+      - target_scope
+      - validity_state
+      - provenance
+    optional_concepts:
+      - authority_grant_ref
+      - valid_from
+      - expires_at
+      - revocation_ref
+      - disclosure_policy
+      - rotation_or_successor_ref
+      - currentness
+    rules:
+      - HANDLE_REFERENCE_NE_RAW_SECRET
+      - HANDLE_EXISTENCE_NE_AUTHORITY
+      - HANDLE_EXISTENCE_NE_DISCLOSURE_PERMISSION
+      - AUTHORITY_REF_RESOLVES_TO_CANONICAL_AUTHORITY_GOVERNANCE_WHEN_REQUIRED
+
+  CapabilityBrokerRequest:
+    class: BOUNDED_TECHNICAL_EFFECT_REQUEST
+    required_concepts:
+      - request_id
+      - requester_ref
+      - capability_handle_ref
+      - requested_operation
+      - target_scope
+      - provenance
+    optional_concepts:
+      - authority_grant_ref
+      - effect_authorization_ref
+      - privacy_constraints
+      - expected_result_or_receipt_class
+      - expiry
+      - idempotency_ref
+    rules:
+      - REQUEST_DOES_NOT_SELF_AUTHORIZE
+      - BROKER_MUST_APPLY_CANONICAL_SCOPE_AND_CURRENTNESS_RULES
+      - RAW_SECRET_SHOULD_NOT_RETURN_TO_GENERAL_COGNITIVE_CONTEXT
+
+  CapabilityBrokerReceipt:
+    class: TECHNICAL_EFFECT_OR_DENIAL_RECEIPT
+    required_concepts:
+      - request_ref
+      - broker_ref
+      - decision_or_execution_status
+      - provenance
+    optional_concepts:
+      - effect_receipt_ref
+      - denial_reason
+      - scope_check_ref
+      - authority_check_ref
+      - result_payload_or_ref
+      - integrity_ref
+      - observed_at
+      - currentness_or_expiry
+    rules:
+      - BROKER_SUCCESS_NE_SEMANTIC_CORRECTNESS
+      - TECHNICAL_EFFECT_ACK_NE_VERIFIED_HIGHER_LEVEL_OUTCOME
+      - DENIAL_DOES_NOT_REQUIRE_GLOBAL_COGNITIVE_HALT
+
+  IntegrityAssertion:
+    class: INTEGRITY_EVIDENCE
+    required_concepts:
+      - subject_ref
+      - assertion_class
+      - evidence_refs
+      - status
+      - provenance
+    optional_concepts:
+      - artifact_digest
+      - signer_or_source
+      - observed_at
+      - verification_method
+      - expiry
+      - contradictions
+      - claim_ceiling
+    assertion_classes:
+      - SOURCE_AUTHENTICITY
+      - ARTIFACT_INTEGRITY
+      - TRANSPORT_INTEGRITY
+      - CONFIGURATION_MATCH
+      - CURRENTNESS_CHECK
+      - FUNCTIONAL_OR_EFFECT_VERIFICATION
+      - SENSOR_OR_MEASUREMENT_VERIFICATION
+      - OTHER_DECLARED_VERIFICATION
+    rules:
+      - INTEGRITY_ASSERTION_DOES_NOT_ESTABLISH_SEMANTIC_CORRECTNESS
+      - VERIFICATION_CLAIM_CEILING_MATCHES_METHOD
+      - AUTHENTICITY_DOES_NOT_ESTABLISH_CURRENT_AUTHORITY
+
+  ThreatHypothesis:
+    class: SECURITY_INFERENCE
+    required_concepts:
+      - subject_ref
+      - hypothesized_threat_or_compromise
+      - supporting_evidence
+      - confidence
+      - provenance
+    optional_concepts:
+      - contradicting_evidence
+      - alternative_hypotheses
+      - affected_scopes
+      - suspected_entry_path
+      - currentness
+      - uncertainty
+    rules:
+      - ANOMALY_DOES_NOT_PROVE_COMPROMISE
+      - SECURITY_DETECTION_RETAINS_EVIDENCE_CLASS
+      - THREAT_HYPOTHESIS_NE_MALICIOUS_INTENT_PROVEN
+
+  SecurityContainmentAction:
+    class: BOUNDED_CONTROL_ACTION
+    required_concepts:
+      - threat_or_incident_ref
+      - containment_scope
+      - action_class
+      - authority_ref
+      - provenance
+    action_classes:
+      - REDUCE_TRUST_SCOPE
+      - REVOKE_OR_DISABLE_CAPABILITY_HANDLE
+      - ROUTE_ISOLATION
+      - FORCE_READ_ONLY
+      - QUARANTINE_OUTPUTS
+      - REQUIRE_CORROBORATION
+      - MIGRATE_WORKLOAD
+      - BLOCK_PROTECTED_TRANSITIONS
+      - INHIBIT_NODE
+      - ROTATE_OR_REPLACE_CAPABILITY_HANDLE
+    optional_concepts:
+      - effect_authorization_ref
+      - expiry
+      - retained_functions
+      - sacrificed_functions
+      - restoration_prerequisites
+      - fault_or_degradation_ref
+    rules:
+      - CONTAINMENT_SHOULD_MINIMIZE_BLAST_RADIUS
+      - AUTHORITY_REF_IS_CANONICAL_SCOPE_BOUND_AND_CURRENTNESS_SENSITIVE
+      - INTERNAL_COMPONENT_REMAINS_HC_MEMBER_UNLESS_ARCHITECTURE_CHANGES
+      - LOCAL_SECURITY_CONTAINMENT_NE_GLOBAL_COGNITIVE_HALT
+
+  SecurityIncident:
+    class: APPEND_ORIENTED_INCIDENT_RECORD
+    required_concepts:
+      - incident_id
+      - exact_affected_subject_or_scope
+      - detection_evidence
+      - current_status
+      - provenance
+    optional_concepts:
+      - threat_hypotheses
+      - affected_authority_or_state_scopes
+      - containment_refs
+      - capability_handle_changes
+      - protected_update_or_effect_refs
+      - evidence_preservation_refs
+      - repair_or_requalification_refs
+      - recurrence_or_regression_refs
+      - supersession_or_reopen_refs
+      - currentness
+    rules:
+      - INCIDENT_HISTORY_IS_NOT_REWRITTEN_BY_RECOVERY
+      - DETECTION_DOES_NOT_PROVE_MALICIOUS_INTENT
+      - CLOSURE_DOES_NOT_ERASE_FORENSIC_LINEAGE
+
+canonical_handoffs:
+  authority_and_effect:
+    contract: basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md
+    rule: SECURITY_OBJECTS_REFERENCE_CANONICAL_AUTHORITY_AND_EFFECT_DECISIONS
+  protected_updates:
+    contract: specs/HC_PROTECTED_UPDATE_GOVERNANCE_V1.yaml
+    rule: SECURITY_MAY_BLOCK_OR_QUARANTINE_BUT_DOES_NOT_REDEFINE_UPDATE_LIFECYCLE
+  bootstrap_recovery:
+    contract: specs/HC_BOOTSTRAP_RECOVERY_V1.yaml
+    rule: RESTART_RECOVERY_AND_CONTINUITY_REVALIDATION_REMAIN_CANONICAL_RECOVERY_CONCERNS
+  memory_provider:
+    contract: specs/HC_MEMORY_PROVIDER_BOUNDARY_V1.yaml
+    rule: RETRIEVAL_OR_REPLICA_SUCCESS_DOES_NOT_CREATE_MEMORY_CURRENTNESS_OR_AUTHORITY
+  fault_and_repair:
+    rule: SECURITY_INCIDENTS_MAY_REFERENCE_FAULT_REPAIR_AND_REQUALIFICATION_WITHOUT_REDEFINING_THEIR_LIFECYCLE
+
+credential_handling:
+  preferred_pattern:
+    - COGNITIVE_REQUEST
+    - CAPABILITY_BROKER
+    - SCOPE_AND_CURRENTNESS_CHECK
+    - CANONICAL_AUTHORITY_OR_EFFECT_CHECK_WHEN_REQUIRED
+    - TECHNICAL_EFFECT
+    - RECEIPT
+  prohibited_defaults:
+    - RAW_SECRET_IN_GENERAL_MEMORY
+    - RAW_SECRET_IN_UNTRUSTED_MODEL_CONTEXT
+    - RAW_SECRET_IN_SOCIAL_OR_SEMANTIC_STATE
+    - RAW_SECRET_IN_ORDINARY_LOGS
+    - SECRET_DISCLOSURE_BECAUSE_CAPABILITY_EXISTS
+
+provenance_integrity:
+  preserve_classes:
+    - OBSERVED
+    - DERIVED
+    - INFERRED
+    - EXTERNAL_SERVICE_RESULT
+    - AUTHORITY_REFERENCE
+    - EFFECT_AUTHORIZATION_REFERENCE
+    - RECEIPT
+  rules:
+    - COPYING_DOES_NOT_UPGRADE_PROVENANCE_CLASS
+    - REPETITION_DOES_NOT_CREATE_DIRECT_MEASUREMENT
+    - DERIVED_OR_INFERRED_STATE_RETAINS_LINEAGE
+    - AUTHENTIC_SOURCE_NE_TRUE_OR_CURRENT_CONTENT
+
+security_observability:
+  least_privilege_default: true
+  preferred_surfaces:
+    - HEALTH_OR_SECURITY_SUMMARY
+    - PROVENANCE_METADATA
+    - CAPABILITY_STATUS
+    - CONTENT_REDACTED_TRACE
+    - FULL_CONTENT_ONLY_WHEN_AUTHORIZED_AND_NECESSARY
+  rule: SECURITY_OBSERVABILITY_DOES_NOT_CREATE_UNIVERSAL_MEMORY_OR_PERSON_MODEL_ACCESS
+
+hostile_test_classes:
+  - INSTRUCTION_IN_DATA
+  - AUTHENTICATED_FALSEHOOD
+  - TRUST_SCOPE_EXPANSION
+  - CAPABILITY_MASQUERADING_AS_AUTHORITY
+  - ROUTING_PERMISSION_MASQUERADING_AS_EFFECT_PERMISSION
+  - STALE_GRANT_OR_AUTHORIZATION_REPLAY
+  - CREDENTIAL_EXFILTRATION
+  - EXTERNAL_MODEL_RULE_INJECTION
+  - EXTERNAL_RESULT_EVIDENCE_LAUNDERING
+  - PROVENANCE_LAUNDERING
+  - COMPROMISED_INTERNAL_NODE
+  - CONTAINMENT_SCOPE_OVERREACH
+  - SECURITY_INCIDENT_HISTORY_ERASURE
+  - SECURITY_PARALYSIS_NEGATIVE_CONTROL

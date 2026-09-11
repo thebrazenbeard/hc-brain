@@ -1,14 +1,46 @@
 from __future__ import annotations
 
+import copy
+import hashlib
+import json
+import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, Iterable, Optional, Tuple
-import uuid
+from typing import Any, Callable, Dict, Iterable, Optional, Tuple
 
 
 def _id(prefix: str) -> str:
     return f"{prefix}-{uuid.uuid4().hex}"
+
+
+def _require_aware(value: datetime, label: str) -> datetime:
+    if value.tzinfo is None or value.utcoffset() is None:
+        raise ValueError(f"{label} must be timezone-aware")
+    return value
+
+
+def _candidate_fingerprint(candidate: "EffectCandidate") -> str:
+    body = {
+        "origin": candidate.origin,
+        "action_scope": candidate.action_scope,
+        "target_scope": candidate.target_scope,
+        "payload": candidate.payload,
+        "authority_grant_id": candidate.authority_grant_id,
+        "planned_epoch": candidate.planned_epoch,
+        "parent_ids": list(candidate.parent_ids),
+    }
+    try:
+        encoded = json.dumps(
+            body,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    except (TypeError, ValueError) as exc:
+        raise ValueError("effect candidate must be canonically JSON-serializable") from exc
+    return hashlib.sha256(encoded).hexdigest()
 
 
 class EpistemicClass(str, Enum):
@@ -73,6 +105,8 @@ class CurrentProjection:
     logical_key: Tuple[str, str, str, str]
     head_ids: Tuple[str, ...]
     payload: Any = None
+    epistemic_class: Optional[EpistemicClass] = None
+    source_refs: Tuple[str, ...] = ()
 
 
 @dataclass
@@ -134,6 +168,7 @@ class EffectReceipt:
     reason: str
     epoch: int
     authority_grant_id: Optional[str]
+    candidate_fingerprint: Optional[str] = None
     dispatch_attempts: int = 0
     confirmation_evidence_id: Optional[str] = None
 
@@ -168,7 +203,7 @@ class CurrentMemory:
         record = MemoryRecord(
             record_id=_id("mem"),
             logical_key=logical_key,
-            payload=payload,
+            payload=copy.deepcopy(payload),
             epistemic_class=epistemic_class,
             supersedes=supersedes_tuple,
             source_refs=tuple(source_refs),
@@ -198,18 +233,25 @@ class CurrentMemory:
                 logical_key=logical_key,
                 head_ids=head_ids,
             )
+        head = heads[0]
         return CurrentProjection(
             status=ProjectionStatus.CURRENT,
             logical_key=logical_key,
             head_ids=head_ids,
-            payload=heads[0].payload,
+            payload=copy.deepcopy(head.payload),
+            epistemic_class=head.epistemic_class,
+            source_refs=head.source_refs,
         )
 
 
 class ReferenceKernel:
     """Minimal executable invariant kernel, not a cognition engine."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        *,
+        clock: Optional[Callable[[], datetime]] = None,
+    ) -> None:
         self.epoch = 0
         self.evidence: Dict[str, EvidenceRecord] = {}
         self.routed_events: Dict[str, RoutedEvent] = {}
@@ -217,10 +259,10 @@ class ReferenceKernel:
         self.memory = CurrentMemory()
         self.authority_grants: Dict[str, AuthorityGrant] = {}
         self.effect_receipts: Dict[str, EffectReceipt] = {}
+        self._clock = clock or (lambda: datetime.now(timezone.utc))
 
-    @staticmethod
-    def now() -> datetime:
-        return datetime.now(timezone.utc)
+    def now(self) -> datetime:
+        return _require_aware(self._clock(), "kernel clock")
 
     def observe(
         self,
@@ -231,17 +273,16 @@ class ReferenceKernel:
         source_refs: Iterable[str] = (),
         effect_action_id: Optional[str] = None,
     ) -> EvidenceRecord:
-        if (
-            effect_action_id is not None
-            and effect_action_id not in self.effect_receipts
-        ):
+        if effect_action_id is not None and effect_action_id not in self.effect_receipts:
             raise ValueError("effect-linked observation references unknown action")
         now = self.now()
+        if event_time is not None:
+            _require_aware(event_time, "event_time")
         record = EvidenceRecord(
             evidence_id=_id("ev"),
             producer=producer,
             epistemic_class=EpistemicClass.OBSERVATION,
-            payload=payload,
+            payload=copy.deepcopy(payload),
             event_time=event_time or now,
             record_time=now,
             source_refs=tuple(source_refs),
@@ -262,14 +303,12 @@ class ReferenceKernel:
     ) -> EvidenceRecord:
         if epistemic_class == EpistemicClass.OBSERVATION:
             raise ValueError("derived state cannot be relabeled as raw observation")
-
         parents = tuple(parent_ids)
         if not parents:
             raise ValueError("derived state requires at least one causal parent")
         missing = [parent for parent in parents if parent not in self.evidence]
         if missing:
             raise ValueError(f"unknown causal parents: {missing}")
-
         inherited_sources = []
         for parent in parents:
             inherited_sources.extend(self.evidence[parent].source_refs)
@@ -279,7 +318,7 @@ class ReferenceKernel:
             evidence_id=_id("ev"),
             producer=producer,
             epistemic_class=epistemic_class,
-            payload=payload,
+            payload=copy.deepcopy(payload),
             event_time=now,
             record_time=now,
             parent_ids=parents,
@@ -303,7 +342,7 @@ class ReferenceKernel:
             event_id=_id("route"),
             source=source,
             audience=audience,
-            payload=payload,
+            payload=copy.deepcopy(payload),
             priority=priority,
             parent_ids=tuple(parent_ids),
             authority_ref=authority_ref,
@@ -331,6 +370,8 @@ class ReferenceKernel:
         basis = tuple(basis_refs)
         if not basis:
             raise ValueError("authority registration requires an explicit basis reference")
+        _require_aware(valid_from, "valid_from")
+        _require_aware(expires_at, "expires_at")
         if expires_at <= valid_from:
             raise ValueError("grant expiry must follow valid_from")
         grant = AuthorityGrant(
@@ -355,7 +396,9 @@ class ReferenceKernel:
         revoked_at: Optional[datetime] = None,
     ) -> None:
         grant = self.authority_grants[grant_id]
-        grant.revoked_at = revoked_at or self.now()
+        when = revoked_at or self.now()
+        _require_aware(when, "revoked_at")
+        grant.revoked_at = when
 
     def plan_effect(
         self,
@@ -372,24 +415,21 @@ class ReferenceKernel:
             origin=origin,
             action_scope=action_scope,
             target_scope=target_scope,
-            payload=payload,
+            payload=copy.deepcopy(payload),
             authority_grant_id=authority_grant_id,
             planned_epoch=self.epoch,
             parent_ids=tuple(parent_ids),
         )
 
-    def request_effect(
-        self,
-        candidate: EffectCandidate,
-        *,
-        now: Optional[datetime] = None,
-    ) -> EffectReceipt:
+    def request_effect(self, candidate: EffectCandidate) -> EffectReceipt:
+        fingerprint = _candidate_fingerprint(candidate)
         existing = self.effect_receipts.get(candidate.action_id)
         if existing is not None:
+            if existing.candidate_fingerprint != fingerprint:
+                raise ValueError("action_id collision with different candidate semantics")
             return existing
 
-        current_time = now or self.now()
-
+        current_time = self.now()
         if candidate.planned_epoch != self.epoch:
             receipt = EffectReceipt(
                 action_id=candidate.action_id,
@@ -397,10 +437,10 @@ class ReferenceKernel:
                 reason="STALE_PLAN_EPOCH",
                 epoch=self.epoch,
                 authority_grant_id=candidate.authority_grant_id,
+                candidate_fingerprint=fingerprint,
             )
             self.effect_receipts[candidate.action_id] = receipt
             return receipt
-
         if candidate.authority_grant_id is None:
             receipt = EffectReceipt(
                 action_id=candidate.action_id,
@@ -408,10 +448,10 @@ class ReferenceKernel:
                 reason="MISSING_AUTHORITY",
                 epoch=self.epoch,
                 authority_grant_id=None,
+                candidate_fingerprint=fingerprint,
             )
             self.effect_receipts[candidate.action_id] = receipt
             return receipt
-
         grant = self.authority_grants.get(candidate.authority_grant_id)
         if grant is None:
             receipt = EffectReceipt(
@@ -420,10 +460,10 @@ class ReferenceKernel:
                 reason="UNKNOWN_AUTHORITY",
                 epoch=self.epoch,
                 authority_grant_id=candidate.authority_grant_id,
+                candidate_fingerprint=fingerprint,
             )
             self.effect_receipts[candidate.action_id] = receipt
             return receipt
-
         allowed, reason = grant.allows(
             grantee=candidate.origin,
             action_scope=candidate.action_scope,
@@ -437,6 +477,7 @@ class ReferenceKernel:
             reason=reason,
             epoch=self.epoch,
             authority_grant_id=candidate.authority_grant_id,
+            candidate_fingerprint=fingerprint,
             dispatch_attempts=1 if allowed else 0,
         )
         self.effect_receipts[candidate.action_id] = receipt
@@ -467,12 +508,8 @@ class ReferenceKernel:
         if receipt.state != EffectState.REQUESTED:
             raise ValueError("only a requested effect can be confirmed")
         self._confirmation_observation(action_id, confirmation_evidence_id)
-        receipt.state = (
-            EffectState.CONFIRMED if succeeded else EffectState.FAILED_CONFIRMED
-        )
-        receipt.reason = (
-            "EFFECT_CONFIRMED" if succeeded else "EFFECT_FAILURE_CONFIRMED"
-        )
+        receipt.state = EffectState.CONFIRMED if succeeded else EffectState.FAILED_CONFIRMED
+        receipt.reason = "EFFECT_CONFIRMED" if succeeded else "EFFECT_FAILURE_CONFIRMED"
         receipt.confirmation_evidence_id = confirmation_evidence_id
         return receipt
 
@@ -499,11 +536,7 @@ class ReferenceKernel:
         if confirmation_evidence_id is None:
             raise ValueError("confirmed reconciliation requires outcome evidence")
         self._confirmation_observation(action_id, confirmation_evidence_id)
-        receipt.state = (
-            EffectState.CONFIRMED
-            if confirmed_outcome
-            else EffectState.FAILED_CONFIRMED
-        )
+        receipt.state = EffectState.CONFIRMED if confirmed_outcome else EffectState.FAILED_CONFIRMED
         receipt.reason = (
             "EFFECT_CONFIRMED_AFTER_RECONCILIATION"
             if confirmed_outcome

@@ -125,7 +125,11 @@ class DurableReferenceKernel(ReferenceKernel):
     @staticmethod
     def _ensure_jsonable(payload: Any) -> None:
         try:
-            json.dumps(payload, ensure_ascii=False, sort_keys=True)
+            json.dumps(
+                _jsonable_payload(payload),
+                ensure_ascii=False,
+                sort_keys=True,
+            )
         except (TypeError, ValueError) as exc:
             raise ValueError(
                 "durable reference-kernel payload must be JSON-serializable"

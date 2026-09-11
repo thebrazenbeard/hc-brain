@@ -18,6 +18,8 @@ from hc_kernel import (
     MemoryRecord,
     ReferenceKernel,
     RoutedEvent,
+    _freeze_payload,
+    _jsonable_payload,
 )
 
 
@@ -288,7 +290,7 @@ class DurableReferenceKernel(ReferenceKernel):
                 evidence_id=evidence_id,
                 producer=data["producer"],
                 epistemic_class=epistemic_class,
-                payload=data["payload"],
+                payload=_freeze_payload(data["payload"]),
                 event_time=_parse_dt(data["event_time"]),
                 record_time=_parse_dt(data["record_time"]),
                 parent_ids=parent_ids,
@@ -307,7 +309,7 @@ class DurableReferenceKernel(ReferenceKernel):
                 event_id=event_id,
                 source=data["source"],
                 audience=data["audience"],
-                payload=data["payload"],
+                payload=_freeze_payload(data["payload"]),
                 priority=int(data["priority"]),
                 parent_ids=tuple(data["parent_ids"]),
                 authority_ref=data.get("authority_ref"),
@@ -331,7 +333,7 @@ class DurableReferenceKernel(ReferenceKernel):
             record = MemoryRecord(
                 record_id=record_id,
                 logical_key=tuple(data["logical_key"]),
-                payload=data["payload"],
+                payload=_freeze_payload(data["payload"]),
                 epistemic_class=EpistemicClass(data["epistemic_class"]),
                 supersedes=tuple(data["supersedes"]),
                 source_refs=tuple(data["source_refs"]),
@@ -501,7 +503,7 @@ class DurableReferenceKernel(ReferenceKernel):
             "evidence_id": record.evidence_id,
             "producer": record.producer,
             "epistemic_class": record.epistemic_class.value,
-            "payload": record.payload,
+            "payload": _jsonable_payload(record.payload),
             "event_time": _iso(record.event_time),
             "record_time": _iso(record.record_time),
             "parent_ids": list(record.parent_ids),
@@ -516,7 +518,7 @@ class DurableReferenceKernel(ReferenceKernel):
             "event_id": event.event_id,
             "source": event.source,
             "audience": event.audience,
-            "payload": event.payload,
+            "payload": _jsonable_payload(event.payload),
             "priority": event.priority,
             "parent_ids": list(event.parent_ids),
             "authority_ref": event.authority_ref,
@@ -527,7 +529,7 @@ class DurableReferenceKernel(ReferenceKernel):
         return {
             "record_id": record.record_id,
             "logical_key": list(record.logical_key),
-            "payload": record.payload,
+            "payload": _jsonable_payload(record.payload),
             "epistemic_class": record.epistemic_class.value,
             "supersedes": list(record.supersedes),
             "source_refs": list(record.source_refs),

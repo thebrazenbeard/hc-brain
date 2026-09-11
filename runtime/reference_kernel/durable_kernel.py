@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from datetime import datetime
 import hashlib
 import json
@@ -151,7 +152,7 @@ class DurableReferenceKernel(ReferenceKernel):
             "schema_version": JOURNAL_SCHEMA_VERSION,
             "seq": self._next_seq,
             "event_type": event_type,
-            "epoch": self.epoch,
+            "epoch": self._epoch,
             "data": data,
             "prev_hash": self._last_hash,
         }
@@ -254,19 +255,19 @@ class DurableReferenceKernel(ReferenceKernel):
                 raise JournalIntegrityError("epoch transition is not an integer")
             if new_epoch != event_epoch:
                 raise JournalIntegrityError("epoch envelope/data mismatch")
-            if new_epoch != self.epoch + 1:
+            if new_epoch != self._epoch + 1:
                 raise JournalIntegrityError("epoch transition is not contiguous")
-            self.epoch = new_epoch
+            self._epoch = new_epoch
             return
 
-        if event_epoch != self.epoch:
+        if event_epoch != self._epoch:
             raise JournalIntegrityError(
                 "non-transition journal event does not match current replay epoch"
             )
 
         if event_type == "EVIDENCE_RECORD_UPSERT":
             evidence_id = data["evidence_id"]
-            if evidence_id in self.evidence:
+            if evidence_id in self._evidence:
                 raise JournalIntegrityError("evidence identity rewritten in append journal")
             epistemic_class = EpistemicClass(data["epistemic_class"])
             parent_ids = tuple(data["parent_ids"])
@@ -280,13 +281,13 @@ class DurableReferenceKernel(ReferenceKernel):
                     raise JournalIntegrityError(
                         "derived/inferred/predicted evidence has no causal parent"
                     )
-                missing = [parent for parent in parent_ids if parent not in self.evidence]
+                missing = [parent for parent in parent_ids if parent not in self._evidence]
                 if missing:
                     raise JournalIntegrityError(
                         f"evidence replay references unknown parents: {missing}"
                     )
             effect_action_id = data.get("effect_action_id")
-            if effect_action_id is not None and effect_action_id not in self.effect_receipts:
+            if effect_action_id is not None and effect_action_id not in self._effect_receipts:
                 raise JournalIntegrityError(
                     "effect-linked observation references unknown requested effect"
                 )
@@ -302,12 +303,12 @@ class DurableReferenceKernel(ReferenceKernel):
                 influence_roles=tuple(data["influence_roles"]),
                 effect_action_id=effect_action_id,
             )
-            self.evidence[record.evidence_id] = record
+            self._evidence[record.evidence_id] = record
             return
 
         if event_type == "ROUTED_EVENT_UPSERT":
             event_id = data["event_id"]
-            if event_id in self.routed_events:
+            if event_id in self._routed_events:
                 raise JournalIntegrityError("routed event identity rewritten in append journal")
             event = RoutedEvent(
                 event_id=event_id,
@@ -318,16 +319,16 @@ class DurableReferenceKernel(ReferenceKernel):
                 parent_ids=tuple(data["parent_ids"]),
                 authority_ref=data.get("authority_ref"),
             )
-            self.routed_events[event.event_id] = event
+            self._routed_events[event.event_id] = event
             return
 
         if event_type == "ROUTED_EVENT_INCORPORATED":
             event_id = data["event_id"]
-            if event_id not in self.routed_events:
+            if event_id not in self._routed_events:
                 raise JournalIntegrityError(
                     "incorporation references unknown routed event"
                 )
-            self.incorporated_event_ids.add(event_id)
+            self._incorporated_event_ids.add(event_id)
             return
 
         if event_type == "MEMORY_RECORD_UPSERT":
@@ -384,7 +385,7 @@ class DurableReferenceKernel(ReferenceKernel):
                 expires_at=expires_at,
                 revoked_at=revoked_at,
             )
-            prior = self.authority_grants.get(grant.grant_id)
+            prior = self._authority_grants.get(grant.grant_id)
             if prior is not None:
                 immutable_prior = (
                     prior.grantor,
@@ -416,7 +417,7 @@ class DurableReferenceKernel(ReferenceKernel):
                     raise JournalIntegrityError("revocation history was rewritten")
                 if prior.revoked_at is None and grant.revoked_at is None:
                     raise JournalIntegrityError("authority upsert makes no valid state transition")
-            self.authority_grants[grant.grant_id] = grant
+            self._authority_grants[grant.grant_id] = grant
             return
 
         if event_type == "EFFECT_RECEIPT_UPSERT":
@@ -432,7 +433,7 @@ class DurableReferenceKernel(ReferenceKernel):
             )
             if receipt.epoch < 0 or receipt.epoch > event_epoch:
                 raise JournalIntegrityError("effect receipt has impossible originating epoch")
-            prior = self.effect_receipts.get(receipt.action_id)
+            prior = self._effect_receipts.get(receipt.action_id)
             if prior is None:
                 if receipt.state not in {EffectState.BLOCKED, EffectState.REQUESTED}:
                     raise JournalIntegrityError("effect receipt begins in impossible state")
@@ -447,7 +448,7 @@ class DurableReferenceKernel(ReferenceKernel):
                         )
                     if receipt.authority_grant_id is None:
                         raise JournalIntegrityError("requested effect has no authority reference")
-                    if receipt.authority_grant_id not in self.authority_grants:
+                    if receipt.authority_grant_id not in self._authority_grants:
                         raise JournalIntegrityError("requested effect references unknown grant")
                 elif receipt.dispatch_attempts != 0:
                     raise JournalIntegrityError("blocked effect cannot claim dispatch attempt")
@@ -482,7 +483,7 @@ class DurableReferenceKernel(ReferenceKernel):
                 evidence_id = receipt.confirmation_evidence_id
                 if evidence_id is None:
                     raise JournalIntegrityError("confirmed effect has no outcome evidence")
-                evidence = self.evidence.get(evidence_id)
+                evidence = self._evidence.get(evidence_id)
                 if evidence is None:
                     raise JournalIntegrityError("confirmed effect references unknown evidence")
                 if evidence.epistemic_class != EpistemicClass.OBSERVATION:
@@ -496,7 +497,7 @@ class DurableReferenceKernel(ReferenceKernel):
                     "non-confirmed effect unexpectedly carries confirmation evidence"
                 )
 
-            self.effect_receipts[receipt.action_id] = receipt
+            self._effect_receipts[receipt.action_id] = receipt
             return
 
         raise JournalIntegrityError(f"unknown journal event type: {event_type}")
@@ -575,7 +576,7 @@ class DurableReferenceKernel(ReferenceKernel):
         try:
             self._record("EVIDENCE_RECORD_UPSERT", self._evidence_data(record))
         except Exception:
-            self.evidence.pop(record.evidence_id, None)
+            self._evidence.pop(record.evidence_id, None)
             raise
         return record
 
@@ -586,7 +587,7 @@ class DurableReferenceKernel(ReferenceKernel):
         try:
             self._record("EVIDENCE_RECORD_UPSERT", self._evidence_data(record))
         except Exception:
-            self.evidence.pop(record.evidence_id, None)
+            self._evidence.pop(record.evidence_id, None)
             raise
         return record
 
@@ -597,20 +598,20 @@ class DurableReferenceKernel(ReferenceKernel):
         try:
             self._record("ROUTED_EVENT_UPSERT", self._route_data(event))
         except Exception:
-            self.routed_events.pop(event.event_id, None)
+            self._routed_events.pop(event.event_id, None)
             raise
         return event
 
     def incorporate_routed_event(self, event_id: str) -> None:
         self._ensure_writable()
-        already = event_id in self.incorporated_event_ids
+        already = event_id in self._incorporated_event_ids
         super().incorporate_routed_event(event_id)
         if already:
             return
         try:
             self._record("ROUTED_EVENT_INCORPORATED", {"event_id": event_id})
         except Exception:
-            self.incorporated_event_ids.discard(event_id)
+            self._incorporated_event_ids.discard(event_id)
             raise
 
     def register_grant(self, **kwargs) -> AuthorityGrant:
@@ -619,95 +620,82 @@ class DurableReferenceKernel(ReferenceKernel):
         try:
             self._record("AUTHORITY_GRANT_UPSERT", self._grant_data(grant))
         except Exception:
-            self.authority_grants.pop(grant.grant_id, None)
+            self._authority_grants.pop(grant.grant_id, None)
             raise
         return grant
 
     def revoke_grant(self, grant_id: str, **kwargs) -> None:
         self._ensure_writable()
-        grant = self.authority_grants[grant_id]
-        previous = grant.revoked_at
+        previous = self._authority_grants[grant_id]
         super().revoke_grant(grant_id, **kwargs)
+        updated = self._authority_grants[grant_id]
         try:
-            self._record("AUTHORITY_GRANT_UPSERT", self._grant_data(grant))
+            self._record("AUTHORITY_GRANT_UPSERT", self._grant_data(updated))
         except Exception:
-            grant.revoked_at = previous
+            self._authority_grants[grant_id] = previous
             raise
 
     def request_effect(self, candidate: EffectCandidate) -> EffectReceipt:
         self._ensure_writable()
-        existed = candidate.action_id in self.effect_receipts
+        existed = candidate.action_id in self._effect_receipts
         receipt = super().request_effect(candidate)
         if existed:
             return receipt
         try:
             self._record("EFFECT_RECEIPT_UPSERT", self._receipt_data(receipt))
         except Exception:
-            self.effect_receipts.pop(candidate.action_id, None)
+            self._effect_receipts.pop(candidate.action_id, None)
             raise
         return receipt
 
     def confirm_effect(self, action_id: str, **kwargs) -> EffectReceipt:
         self._ensure_writable()
-        receipt = self.effect_receipts[action_id]
-        previous = (
-            receipt.state,
-            receipt.reason,
-            receipt.confirmation_evidence_id,
-        )
+        previous = self._effect_receipts[action_id]
         result = super().confirm_effect(action_id, **kwargs)
         try:
             self._record("EFFECT_RECEIPT_UPSERT", self._receipt_data(result))
         except Exception:
-            receipt.state, receipt.reason, receipt.confirmation_evidence_id = previous
+            self._effect_receipts[action_id] = previous
             raise
         return result
 
     def reconcile_after_restart(self, action_id: str, **kwargs) -> EffectReceipt:
         self._ensure_writable()
-        receipt = self.effect_receipts[action_id]
-        previous = (
-            receipt.state,
-            receipt.reason,
-            receipt.confirmation_evidence_id,
-        )
+        previous = self._effect_receipts[action_id]
         result = super().reconcile_after_restart(action_id, **kwargs)
-        if previous == (
-            result.state,
-            result.reason,
-            result.confirmation_evidence_id,
-        ):
+        if previous == result:
             return result
         try:
             self._record("EFFECT_RECEIPT_UPSERT", self._receipt_data(result))
         except Exception:
-            receipt.state, receipt.reason, receipt.confirmation_evidence_id = previous
+            self._effect_receipts[action_id] = previous
             raise
         return result
 
     def _advance_recovery_epoch(self) -> int:
         self._ensure_writable()
-        prior_epoch = self.epoch
-        self.epoch += 1
+        prior_epoch = self._epoch
+        self._epoch += 1
         try:
-            self._record("EPOCH_SET", {"epoch": self.epoch})
+            self._record("EPOCH_SET", {"epoch": self._epoch})
         except Exception:
-            self.epoch = prior_epoch
+            self._epoch = prior_epoch
             raise
 
-        for receipt in list(self.effect_receipts.values()):
+        for action_id, receipt in list(self._effect_receipts.items()):
             if receipt.state == EffectState.REQUESTED:
-                prior_state = receipt.state
-                prior_reason = receipt.reason
-                receipt.state = EffectState.UNRESOLVED_AFTER_RESTART
-                receipt.reason = "OUTCOME_REQUIRES_RECONCILIATION"
+                updated = replace(
+                    receipt,
+                    state=EffectState.UNRESOLVED_AFTER_RESTART,
+                    reason="OUTCOME_REQUIRES_RECONCILIATION",
+                )
+                self._effect_receipts[action_id] = updated
                 try:
-                    self._record("EFFECT_RECEIPT_UPSERT", self._receipt_data(receipt))
+                    self._record("EFFECT_RECEIPT_UPSERT", self._receipt_data(updated))
                 except Exception:
-                    receipt.state = prior_state
-                    receipt.reason = prior_reason
+                    self._effect_receipts[action_id] = receipt
                     raise
-        return self.epoch
+        return self._epoch
 
     def restart(self) -> int:
         return self._advance_recovery_epoch()

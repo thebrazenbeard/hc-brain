@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import copy
 import hashlib
 import json
 import uuid
@@ -8,10 +7,37 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Callable, Dict, Iterable, Optional, Tuple
+from types import MappingProxyType
 
 
 def _id(prefix: str) -> str:
     return f"{prefix}-{uuid.uuid4().hex}"
+
+
+def _freeze_payload(value: Any) -> Any:
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    if isinstance(value, MappingProxyType):
+        return value
+    if isinstance(value, dict):
+        return MappingProxyType(
+            {key: _freeze_payload(item) for key, item in value.items()}
+        )
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze_payload(item) for item in value)
+    raise ValueError("reference-kernel payload must be JSON-like immutable data")
+
+
+def _jsonable_payload(value: Any) -> Any:
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    if isinstance(value, MappingProxyType):
+        return {key: _jsonable_payload(item) for key, item in value.items()}
+    if isinstance(value, dict):
+        return {key: _jsonable_payload(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_jsonable_payload(item) for item in value]
+    raise ValueError("reference-kernel payload must be JSON-like immutable data")
 
 
 def _require_aware(value: datetime, label: str) -> datetime:
@@ -25,7 +51,7 @@ def _candidate_fingerprint(candidate: "EffectCandidate") -> str:
         "origin": candidate.origin,
         "action_scope": candidate.action_scope,
         "target_scope": candidate.target_scope,
-        "payload": candidate.payload,
+        "payload": _jsonable_payload(candidate.payload),
         "authority_grant_id": candidate.authority_grant_id,
         "planned_epoch": candidate.planned_epoch,
         "parent_ids": list(candidate.parent_ids),
@@ -203,7 +229,7 @@ class CurrentMemory:
         record = MemoryRecord(
             record_id=_id("mem"),
             logical_key=logical_key,
-            payload=copy.deepcopy(payload),
+            payload=_freeze_payload(payload),
             epistemic_class=epistemic_class,
             supersedes=supersedes_tuple,
             source_refs=tuple(source_refs),
@@ -238,7 +264,7 @@ class CurrentMemory:
             status=ProjectionStatus.CURRENT,
             logical_key=logical_key,
             head_ids=head_ids,
-            payload=copy.deepcopy(head.payload),
+            payload=head.payload,
             epistemic_class=head.epistemic_class,
             source_refs=head.source_refs,
         )
@@ -282,7 +308,7 @@ class ReferenceKernel:
             evidence_id=_id("ev"),
             producer=producer,
             epistemic_class=EpistemicClass.OBSERVATION,
-            payload=copy.deepcopy(payload),
+            payload=_freeze_payload(payload),
             event_time=event_time or now,
             record_time=now,
             source_refs=tuple(source_refs),
@@ -318,7 +344,7 @@ class ReferenceKernel:
             evidence_id=_id("ev"),
             producer=producer,
             epistemic_class=epistemic_class,
-            payload=copy.deepcopy(payload),
+            payload=_freeze_payload(payload),
             event_time=now,
             record_time=now,
             parent_ids=parents,
@@ -342,7 +368,7 @@ class ReferenceKernel:
             event_id=_id("route"),
             source=source,
             audience=audience,
-            payload=copy.deepcopy(payload),
+            payload=_freeze_payload(payload),
             priority=priority,
             parent_ids=tuple(parent_ids),
             authority_ref=authority_ref,
@@ -415,7 +441,7 @@ class ReferenceKernel:
             origin=origin,
             action_scope=action_scope,
             target_scope=target_scope,
-            payload=copy.deepcopy(payload),
+            payload=_freeze_payload(payload),
             authority_grant_id=authority_grant_id,
             planned_epoch=self.epoch,
             parent_ids=tuple(parent_ids),

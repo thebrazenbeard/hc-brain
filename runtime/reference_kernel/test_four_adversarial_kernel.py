@@ -1,3 +1,4 @@
+from dataclasses import FrozenInstanceError
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import tempfile
@@ -10,10 +11,10 @@ UTC = timezone.utc
 
 
 class FourAdversarialReferenceKernelTests(unittest.TestCase):
-    """Regression gates adapted from Four's HC 0058 counterexamples.
+    """Regression gates grown from Four's HC 0058 counterexamples.
 
-    The invariant targets are unchanged. The harness uses a constructor-injected
-    trusted clock because per-request caller time is intentionally unavailable.
+    These gates preserve Four's original invariants and add Noah-side attacks
+    found while repairing the same authority/admission boundary.
     """
 
     def setUp(self):
@@ -162,6 +163,63 @@ class FourAdversarialReferenceKernelTests(unittest.TestCase):
             "original",
         )
 
+    def test_authority_grant_cannot_be_rewritten_after_registration(self):
+        kernel = self._kernel()
+        grant = self._register(
+            kernel,
+            self.t0 - timedelta(minutes=1),
+            self.t0 + timedelta(minutes=10),
+        )
+
+        with self.assertRaises(FrozenInstanceError):
+            grant.action_scope = "UNBOUNDED_EFFECT"
+        with self.assertRaises(FrozenInstanceError):
+            grant.expires_at = self.t0 + timedelta(days=365)
+
+        stored = kernel.authority_grants[grant.grant_id]
+        self.assertEqual(stored.action_scope, "MOTOR_EFFECT")
+        self.assertEqual(stored.expires_at, self.t0 + timedelta(minutes=10))
+
+    def test_effect_receipt_cannot_be_rewritten_by_caller(self):
+        kernel = self._kernel()
+        grant = self._register(
+            kernel,
+            self.t0 - timedelta(minutes=1),
+            self.t0 + timedelta(minutes=10),
+        )
+        candidate = self._candidate(kernel, grant.grant_id)
+        receipt = kernel.request_effect(candidate)
+        self.assertEqual(receipt.state, EffectState.REQUESTED)
+
+        with self.assertRaises(FrozenInstanceError):
+            receipt.state = EffectState.CONFIRMED
+        with self.assertRaises(FrozenInstanceError):
+            receipt.dispatch_attempts = 999
+
+        stored = kernel.effect_receipts[candidate.action_id]
+        self.assertEqual(stored.state, EffectState.REQUESTED)
+        self.assertEqual(stored.dispatch_attempts, 1)
+
+    def test_public_authority_effect_and_evidence_maps_are_read_only(self):
+        kernel = self._kernel()
+        grant = self._register(
+            kernel,
+            self.t0 - timedelta(minutes=1),
+            self.t0 + timedelta(minutes=10),
+        )
+        candidate = self._candidate(kernel, grant.grant_id)
+        kernel.request_effect(candidate)
+        observation = kernel.observe(producer="sensor", payload={"value": 1})
+
+        with self.assertRaises(TypeError):
+            kernel.authority_grants[grant.grant_id] = grant
+        with self.assertRaises(TypeError):
+            kernel.effect_receipts[candidate.action_id] = kernel.effect_receipts[
+                candidate.action_id
+            ]
+        with self.assertRaises(TypeError):
+            kernel.evidence[observation.evidence_id] = observation
+
     def test_current_projection_preserves_epistemic_and_source_classification(self):
         kernel = self._kernel()
         key = ("world", "weather", "next", "shared")
@@ -214,6 +272,23 @@ class FourAdversarialReferenceKernelTests(unittest.TestCase):
             self.assertEqual(live_payload["nested"]["value"], "original")
             with self.assertRaises(TypeError):
                 replayed_payload["nested"]["value"] = "mutated-after-replay"
+
+    def test_durable_kernel_accepts_its_own_frozen_payload_for_memory_admission(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            journal = Path(tempdir) / "kernel.jsonl"
+            kernel = DurableReferenceKernel(journal, clock=lambda: self.t0)
+            record = kernel.observe(
+                producer="sensor",
+                payload={"value": 1},
+                source_refs=("sensor-1",),
+            )
+            memory = kernel.memory.append(
+                logical_key=("world", "sensor", "state", "shared"),
+                payload=record.payload,
+                epistemic_class=record.epistemic_class,
+                source_refs=record.source_refs,
+            )
+            self.assertEqual(memory.payload["value"], 1)
 
     def test_timezone_naive_grant_boundaries_fail_closed(self):
         kernel = self._kernel()

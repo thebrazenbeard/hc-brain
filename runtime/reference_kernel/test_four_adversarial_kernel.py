@@ -220,6 +220,30 @@ class FourAdversarialReferenceKernelTests(unittest.TestCase):
         with self.assertRaises(TypeError):
             kernel.evidence[observation.evidence_id] = observation
 
+    def test_epoch_cannot_be_rewound_through_public_api(self):
+        kernel = self._kernel()
+        grant = self._register(
+            kernel,
+            self.t0 - timedelta(minutes=1),
+            self.t0 + timedelta(minutes=10),
+        )
+        kernel.restart()
+        self.assertEqual(kernel.epoch, 1)
+
+        with self.assertRaises(AttributeError):
+            kernel.epoch = grant.issued_epoch
+
+        candidate = kernel.plan_effect(
+            origin="kinesis",
+            action_scope="MOTOR_EFFECT",
+            target_scope="arm",
+            payload={"command": "move"},
+            authority_grant_id=grant.grant_id,
+        )
+        receipt = kernel.request_effect(candidate)
+        self.assertEqual(receipt.state, EffectState.BLOCKED)
+        self.assertEqual(receipt.reason, "STALE_AUTHORITY_EPOCH")
+
     def test_current_projection_preserves_epistemic_and_source_classification(self):
         kernel = self._kernel()
         key = ("world", "weather", "next", "shared")

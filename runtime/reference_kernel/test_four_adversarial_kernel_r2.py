@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta, timezone
+import hashlib
+import json
 from pathlib import Path
 from types import MappingProxyType
 import tempfile
 import unittest
 
-from durable_kernel import DurableReferenceKernel
+from durable_kernel import DurableReferenceKernel, JournalIntegrityError
 from hc_kernel import EffectCandidate, EffectState, ReferenceKernel
 
 UTC = timezone.utc
@@ -192,6 +194,66 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
             confirmation_evidence_id=outcome.evidence_id,
         )
         self.assertEqual(receipt.state, EffectState.CONFIRMED)
+
+    def test_durable_replay_revalidates_effect_outcome_source_policy(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            journal = Path(tempdir) / "kernel.jsonl"
+            validator = lambda producer, authority: (
+                producer == "actuator-sensor"
+                and authority.action_scope == "MOTOR_EFFECT"
+                and authority.target_scope == "arm"
+            )
+            kernel = DurableReferenceKernel(
+                journal,
+                clock=lambda: self.t0,
+                outcome_source_validator=validator,
+            )
+            grant = self._register(kernel)
+            candidate = self._candidate(kernel, grant.grant_id)
+            kernel.request_effect(candidate)
+            kernel.observe_effect_outcome(
+                producer="actuator-sensor",
+                payload={"arm_position": "moved"},
+                effect_action_id=candidate.action_id,
+            )
+
+            lines = journal.read_text(encoding="utf-8").splitlines()
+            envelope = json.loads(lines[-1])
+            self.assertEqual(
+                envelope["event_type"],
+                "EFFECT_OUTCOME_RECORD_UPSERT",
+            )
+            envelope["data"]["producer"] = "attacker"
+            body = {
+                key: value
+                for key, value in envelope.items()
+                if key != "entry_hash"
+            }
+            envelope["entry_hash"] = hashlib.sha256(
+                json.dumps(
+                    body,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    allow_nan=False,
+                ).encode("utf-8")
+            ).hexdigest()
+            lines[-1] = json.dumps(
+                envelope,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            )
+            journal.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+            with self.assertRaises(JournalIntegrityError):
+                DurableReferenceKernel(
+                    journal,
+                    mode="inspect",
+                    clock=lambda: self.t0,
+                    outcome_source_validator=validator,
+                )
 
 
 if __name__ == "__main__":

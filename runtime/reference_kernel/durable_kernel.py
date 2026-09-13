@@ -291,10 +291,38 @@ class DurableReferenceKernel(ReferenceKernel):
                         f"evidence replay references unknown parents: {missing}"
                     )
             effect_action_id = data.get("effect_action_id")
-            if effect_action_id is not None and effect_action_id not in self._effect_receipts:
-                raise JournalIntegrityError(
-                    "effect-linked observation references unknown requested effect"
-                )
+            if effect_action_id is not None:
+                if epistemic_class != EpistemicClass.OBSERVATION:
+                    raise JournalIntegrityError(
+                        "effect outcome evidence must be an observation"
+                    )
+                receipt = self._effect_receipts.get(effect_action_id)
+                if receipt is None:
+                    raise JournalIntegrityError(
+                        "effect-linked observation references unknown requested effect"
+                    )
+                if receipt.state not in {
+                    EffectState.REQUESTED,
+                    EffectState.UNRESOLVED_AFTER_RESTART,
+                }:
+                    raise JournalIntegrityError(
+                        "effect outcome replay is invalid for current effect state"
+                    )
+                authority_grant_id = receipt.authority_grant_id
+                if authority_grant_id is None:
+                    raise JournalIntegrityError(
+                        "effect outcome has no authority context"
+                    )
+                grant = self._authority_grants.get(authority_grant_id)
+                if grant is None:
+                    raise JournalIntegrityError(
+                        "effect outcome references unavailable authority grant"
+                    )
+                validator = self._outcome_source_validator
+                if validator is None or not validator(data["producer"], grant):
+                    raise JournalIntegrityError(
+                        "effect outcome producer fails replay trust policy"
+                    )
             record = EvidenceRecord(
                 evidence_id=evidence_id,
                 producer=data["producer"],

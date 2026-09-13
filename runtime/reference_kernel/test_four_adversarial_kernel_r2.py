@@ -383,6 +383,23 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
         )
         self.assertEqual(receipt.state, EffectState.CONFIRMED)
 
+    def test_live_outcome_source_label_cannot_impersonate_registered_source(self):
+        kernel = self._kernel(
+            outcome_source_validator=lambda producer, authority: (
+                producer == "actuator-sensor"
+            )
+        )
+        grant = self._register(kernel)
+        candidate = self._candidate(kernel, grant.grant_id)
+        kernel.request_effect(candidate)
+
+        with self.assertRaises(ValueError):
+            kernel.observe_effect_outcome(
+                producer="actuator-sensor",
+                payload={"claimed": "done"},
+                effect_action_id=candidate.action_id,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

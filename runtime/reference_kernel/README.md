@@ -19,7 +19,8 @@ The prototype currently exercises:
 - immutable admitted payload snapshots, authority grants, and effect receipts;
 - deterministic candidate-semantic binding for duplicate action IDs;
 - `COMMAND_SENT/REQUESTED != EFFECT_CONFIRMED`;
-- action-bound observed confirmation evidence rather than arbitrary confirmation IDs;
+- trusted action-bound observed confirmation evidence rather than arbitrary confirmation IDs;
+- generic observations cannot bind effect outcomes without the explicit trusted-source gate;
 - duplicate action-request suppression inside the current process model;
 - restart fencing of stale plans and pre-restart authority;
 - unresolved in-flight effects after restart, requiring reconciliation rather than blind replay;
@@ -33,7 +34,8 @@ Run the complete current regression surface from this directory with:
 python3 -m unittest -v \
   test_hc_kernel.py \
   test_durable_kernel.py \
-  test_four_adversarial_kernel.py
+  test_four_adversarial_kernel.py \
+  test_four_adversarial_kernel_r2.py
 ```
 
 The prototype uses only the Python standard library.

@@ -100,10 +100,14 @@ class DurableReferenceKernel(ReferenceKernel):
         *,
         mode: str = "recover",
         clock=None,
+        outcome_source_validator=None,
     ) -> None:
         if mode not in VALID_OPEN_MODES:
             raise ValueError(f"mode must be one of {sorted(VALID_OPEN_MODES)}")
-        super().__init__(clock=clock)
+        super().__init__(
+            clock=clock,
+            outcome_source_validator=outcome_source_validator,
+        )
         self.journal_path = Path(journal_path)
         self.open_mode = mode
         self.memory = JournaledCurrentMemory(self)
@@ -415,6 +419,8 @@ class DurableReferenceKernel(ReferenceKernel):
                     )
                 if prior.revoked_at is not None and grant.revoked_at != prior.revoked_at:
                     raise JournalIntegrityError("revocation history was rewritten")
+                if prior.revoked_at is not None and grant.revoked_at == prior.revoked_at:
+                    raise JournalIntegrityError("authority upsert makes no valid state transition")
                 if prior.revoked_at is None and grant.revoked_at is None:
                     raise JournalIntegrityError("authority upsert makes no valid state transition")
             self._authority_grants[grant.grant_id] = grant
@@ -580,6 +586,17 @@ class DurableReferenceKernel(ReferenceKernel):
             raise
         return record
 
+    def observe_effect_outcome(self, **kwargs) -> EvidenceRecord:
+        self._ensure_writable()
+        self._ensure_jsonable(kwargs.get("payload"))
+        record = super().observe_effect_outcome(**kwargs)
+        try:
+            self._record("EVIDENCE_RECORD_UPSERT", self._evidence_data(record))
+        except Exception:
+            self._evidence.pop(record.evidence_id, None)
+            raise
+        return record
+
     def derive(self, **kwargs) -> EvidenceRecord:
         self._ensure_writable()
         self._ensure_jsonable(kwargs.get("payload"))
@@ -629,6 +646,8 @@ class DurableReferenceKernel(ReferenceKernel):
         previous = self._authority_grants[grant_id]
         super().revoke_grant(grant_id, **kwargs)
         updated = self._authority_grants[grant_id]
+        if updated == previous:
+            return
         try:
             self._record("AUTHORITY_GRANT_UPSERT", self._grant_data(updated))
         except Exception:

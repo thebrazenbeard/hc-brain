@@ -32,6 +32,9 @@ class DurableReferenceKernelTests(unittest.TestCase):
             self.journal,
             mode=mode,
             clock=lambda: self.now,
+            outcome_source_validator=lambda producer, authority: (
+                producer == "somatics"
+            ),
         )
 
     def _grant(self, kernel):
@@ -159,7 +162,7 @@ class DurableReferenceKernelTests(unittest.TestCase):
             authority_grant_id=grant.grant_id,
         )
         first.request_effect(candidate)
-        observation = first.observe(
+        observation = first.observe_effect_outcome(
             producer="somatics",
             payload={"arm_position": "moved"},
             source_refs=("proprioception",),
@@ -249,7 +252,7 @@ class DurableReferenceKernelTests(unittest.TestCase):
             producer="somatics",
             payload={"temperature": 37},
         )
-        bound = kernel.observe(
+        bound = kernel.observe_effect_outcome(
             producer="somatics",
             payload={"arm_position": "moved"},
             effect_action_id=candidate.action_id,
@@ -301,7 +304,7 @@ class DurableReferenceKernelTests(unittest.TestCase):
         first.request_effect(candidate)
 
         second = self._kernel()
-        observation = second.observe(
+        observation = second.observe_effect_outcome(
             producer="somatics",
             payload={"arm_position": "moved"},
             source_refs=("proprioception",),

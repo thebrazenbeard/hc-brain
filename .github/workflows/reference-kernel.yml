@@ -30,3 +30,4 @@ jobs:
           test_hc_kernel.py
           test_durable_kernel.py
           test_four_adversarial_kernel.py
+          test_four_adversarial_kernel_r2.py

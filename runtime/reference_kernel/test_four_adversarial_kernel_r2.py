@@ -103,6 +103,68 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
                 first_revocation,
             )
 
+    def test_durable_idempotent_revocation_does_not_append_a_noop(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            journal = Path(tempdir) / "kernel.jsonl"
+            kernel = DurableReferenceKernel(journal, clock=lambda: self.t0)
+            grant = self._register(kernel)
+            first_revocation = self.t0 - timedelta(seconds=1)
+            kernel.revoke_grant(grant.grant_id, revoked_at=first_revocation)
+            before = journal.read_bytes()
+
+            kernel.revoke_grant(grant.grant_id, revoked_at=first_revocation)
+
+            self.assertEqual(journal.read_bytes(), before)
+
+    def test_durable_effect_outcome_admission_is_trusted_and_replayable(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            journal = Path(tempdir) / "kernel.jsonl"
+            validator = lambda producer, authority: producer == "actuator-sensor"
+            kernel = DurableReferenceKernel(
+                journal,
+                clock=lambda: self.t0,
+                outcome_source_validator=validator,
+            )
+            grant = self._register(kernel)
+            candidate = self._candidate(kernel, grant.grant_id)
+            kernel.request_effect(candidate)
+
+            with self.assertRaises(ValueError):
+                kernel.observe(
+                    producer="attacker",
+                    payload={"claimed": "done"},
+                    effect_action_id=candidate.action_id,
+                )
+            with self.assertRaises(ValueError):
+                kernel.observe_effect_outcome(
+                    producer="attacker",
+                    payload={"claimed": "done"},
+                    effect_action_id=candidate.action_id,
+                )
+
+            outcome = kernel.observe_effect_outcome(
+                producer="actuator-sensor",
+                payload={"position": "moved"},
+                effect_action_id=candidate.action_id,
+            )
+            confirmed = kernel.confirm_effect(
+                candidate.action_id,
+                succeeded=True,
+                confirmation_evidence_id=outcome.evidence_id,
+            )
+            self.assertEqual(confirmed.state, EffectState.CONFIRMED)
+
+            inspection = DurableReferenceKernel(
+                journal,
+                mode="inspect",
+                clock=lambda: self.t0,
+                outcome_source_validator=validator,
+            )
+            self.assertEqual(
+                inspection.effect_receipts[candidate.action_id].state,
+                EffectState.CONFIRMED,
+            )
+
     def test_payload_admission_rejects_non_string_mapping_keys(self):
         kernel = self._kernel()
         with self.assertRaises(ValueError):

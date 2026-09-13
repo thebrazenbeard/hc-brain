@@ -303,6 +303,10 @@ class DurableReferenceKernel(ReferenceKernel):
                     "effect-linked observation references unknown requested effect"
                 )
             if effect_action_id is not None:
+                if epistemic_class != EpistemicClass.OBSERVATION:
+                    raise JournalIntegrityError(
+                        "effect-linked evidence must be an observation"
+                    )
                 receipt = self._effect_receipts[effect_action_id]
                 if receipt.state not in {
                     EffectState.REQUESTED,

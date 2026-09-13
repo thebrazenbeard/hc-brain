@@ -255,6 +255,44 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
                     clock=lambda: self.t0,
                 )
 
+    def test_bound_effect_replay_rejects_non_observation_evidence(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            journal = Path(tempdir) / "kernel.jsonl"
+            validator = lambda producer, authority: producer == "actuator-sensor"
+            kernel = DurableReferenceKernel(
+                journal,
+                clock=lambda: self.t0,
+                outcome_source_validator=validator,
+            )
+            parent = kernel.observe(producer="sensor", payload={"x": 1})
+            grant = self._register(kernel)
+            candidate = self._candidate(kernel, grant.grant_id)
+            kernel.request_effect(candidate)
+
+            kernel._record(
+                "EVIDENCE_RECORD_UPSERT",
+                {
+                    "evidence_id": "forged-derived-outcome",
+                    "producer": "actuator-sensor",
+                    "epistemic_class": "DERIVED",
+                    "payload": {"claimed": "done"},
+                    "event_time": self.t0.isoformat(),
+                    "record_time": self.t0.isoformat(),
+                    "parent_ids": [parent.evidence_id],
+                    "source_refs": [],
+                    "influence_roles": ["FORGED"],
+                    "effect_action_id": candidate.action_id,
+                },
+            )
+
+            with self.assertRaises(JournalIntegrityError):
+                DurableReferenceKernel(
+                    journal,
+                    mode="inspect",
+                    clock=lambda: self.t0,
+                    outcome_source_validator=validator,
+                )
+
     def test_payload_admission_rejects_non_string_mapping_keys(self):
         kernel = self._kernel()
         with self.assertRaises(ValueError):

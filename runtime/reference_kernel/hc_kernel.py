@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import uuid
 from dataclasses import dataclass, replace
 from datetime import datetime, timezone
@@ -15,26 +16,42 @@ def _id(prefix: str) -> str:
 
 
 def _freeze_payload(value: Any) -> Any:
-    if value is None or isinstance(value, (bool, int, float, str)):
+    if value is None or isinstance(value, (bool, int, str)):
         return value
-    if isinstance(value, MappingProxyType):
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError("reference-kernel payload numbers must be finite")
         return value
-    if isinstance(value, dict):
-        return MappingProxyType(
-            {key: _freeze_payload(item) for key, item in value.items()}
-        )
+    if isinstance(value, (MappingProxyType, dict)):
+        frozen = {}
+        for key, item in value.items():
+            if not isinstance(key, str):
+                raise ValueError(
+                    "reference-kernel payload mapping keys must be strings"
+                )
+            frozen[key] = _freeze_payload(item)
+        return MappingProxyType(frozen)
     if isinstance(value, (list, tuple)):
         return tuple(_freeze_payload(item) for item in value)
     raise ValueError("reference-kernel payload must be JSON-like immutable data")
 
 
 def _jsonable_payload(value: Any) -> Any:
-    if value is None or isinstance(value, (bool, int, float, str)):
+    if value is None or isinstance(value, (bool, int, str)):
         return value
-    if isinstance(value, MappingProxyType):
-        return {key: _jsonable_payload(item) for key, item in value.items()}
-    if isinstance(value, dict):
-        return {key: _jsonable_payload(item) for key, item in value.items()}
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError("reference-kernel payload numbers must be finite")
+        return value
+    if isinstance(value, (MappingProxyType, dict)):
+        jsonable = {}
+        for key, item in value.items():
+            if not isinstance(key, str):
+                raise ValueError(
+                    "reference-kernel payload mapping keys must be strings"
+                )
+            jsonable[key] = _jsonable_payload(item)
+        return jsonable
     if isinstance(value, (list, tuple)):
         return [_jsonable_payload(item) for item in value]
     raise ValueError("reference-kernel payload must be JSON-like immutable data")
@@ -277,6 +294,9 @@ class ReferenceKernel:
         self,
         *,
         clock: Optional[Callable[[], datetime]] = None,
+        outcome_source_validator: Optional[
+            Callable[[str, AuthorityGrant], bool]
+        ] = None,
     ) -> None:
         self._epoch = 0
         self._evidence: Dict[str, EvidenceRecord] = {}
@@ -285,6 +305,8 @@ class ReferenceKernel:
         self.memory = CurrentMemory()
         self._authority_grants: Dict[str, AuthorityGrant] = {}
         self._effect_receipts: Dict[str, EffectReceipt] = {}
+        self._effect_outcome_evidence_ids: set[str] = set()
+        self._outcome_source_validator = outcome_source_validator
         self._clock = clock or (lambda: datetime.now(timezone.utc))
 
     @property
@@ -323,8 +345,52 @@ class ReferenceKernel:
         source_refs: Iterable[str] = (),
         effect_action_id: Optional[str] = None,
     ) -> EvidenceRecord:
-        if effect_action_id is not None and effect_action_id not in self._effect_receipts:
-            raise ValueError("effect-linked observation references unknown action")
+        if effect_action_id is not None:
+            raise ValueError(
+                "generic observation cannot bind effect confirmation; "
+                "use observe_effect_outcome"
+            )
+        now = self.now()
+        if event_time is not None:
+            _require_aware(event_time, "event_time")
+        record = EvidenceRecord(
+            evidence_id=_id("ev"),
+            producer=producer,
+            epistemic_class=EpistemicClass.OBSERVATION,
+            payload=_freeze_payload(payload),
+            event_time=event_time or now,
+            record_time=now,
+            source_refs=tuple(source_refs),
+        )
+        self._evidence[record.evidence_id] = record
+        return record
+
+    def observe_effect_outcome(
+        self,
+        *,
+        producer: str,
+        payload: Any,
+        effect_action_id: str,
+        event_time: Optional[datetime] = None,
+        source_refs: Iterable[str] = (),
+    ) -> EvidenceRecord:
+        receipt = self._effect_receipts.get(effect_action_id)
+        if receipt is None:
+            raise ValueError("effect outcome references unknown action")
+        if receipt.state not in {
+            EffectState.REQUESTED,
+            EffectState.UNRESOLVED_AFTER_RESTART,
+        }:
+            raise ValueError("effect outcome is not admissible for current effect state")
+        if receipt.authority_grant_id is None:
+            raise ValueError("effect outcome has no authority context")
+        grant = self._authority_grants.get(receipt.authority_grant_id)
+        if grant is None:
+            raise ValueError("effect outcome authority grant is unavailable")
+        validator = self._outcome_source_validator
+        if validator is None or not validator(producer, grant):
+            raise ValueError("effect outcome source is not trusted for this authority")
+
         now = self.now()
         if event_time is not None:
             _require_aware(event_time, "event_time")
@@ -339,6 +405,7 @@ class ReferenceKernel:
             effect_action_id=effect_action_id,
         )
         self._evidence[record.evidence_id] = record
+        self._effect_outcome_evidence_ids.add(record.evidence_id)
         return record
 
     def derive(
@@ -448,6 +515,10 @@ class ReferenceKernel:
         grant = self._authority_grants[grant_id]
         when = revoked_at or self.now()
         _require_aware(when, "revoked_at")
+        if grant.revoked_at is not None:
+            if grant.revoked_at == when:
+                return
+            raise ValueError("grant revocation is immutable once recorded")
         self._authority_grants[grant_id] = replace(grant, revoked_at=when)
 
     def plan_effect(
@@ -541,6 +612,8 @@ class ReferenceKernel:
         evidence = self._evidence.get(confirmation_evidence_id)
         if evidence is None:
             raise ValueError("unknown confirmation evidence")
+        if confirmation_evidence_id not in self._effect_outcome_evidence_ids:
+            raise ValueError("confirmation evidence was not admitted as an effect outcome")
         if evidence.epistemic_class != EpistemicClass.OBSERVATION:
             raise ValueError("reference kernel requires observed outcome evidence")
         if evidence.effect_action_id != action_id:

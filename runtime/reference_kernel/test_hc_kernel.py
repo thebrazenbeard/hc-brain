@@ -9,11 +9,13 @@ UTC = timezone.utc
 class ReferenceKernelTests(unittest.TestCase):
     def setUp(self) -> None:
         self.now = datetime(2026, 9, 10, 18, 0, tzinfo=UTC)
+        self.somatics_capability = object()
         self.kernel = ReferenceKernel(
             clock=lambda: self.now,
             outcome_source_validator=lambda producer, authority: (
                 producer == "somatics"
             ),
+            outcome_source_capabilities=((self.somatics_capability, "somatics"),),
         )
 
     def _grant(self, action_scope="MOTOR_EFFECT", target_scope="arm"):
@@ -179,7 +181,7 @@ class ReferenceKernelTests(unittest.TestCase):
         self.assertEqual(requested.state, EffectState.REQUESTED)
 
         confirmation = self.kernel.observe_effect_outcome(
-            producer="somatics",
+            source_capability=self.somatics_capability,
             payload={"arm_position": "moved"},
             source_refs=("proprioception",),
             effect_action_id=candidate.action_id,

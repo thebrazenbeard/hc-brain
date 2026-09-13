@@ -17,8 +17,13 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
 
     def setUp(self):
         self.t0 = datetime(2026, 9, 11, 8, 0, tzinfo=UTC)
+        self.actuator_capability = object()
 
     def _kernel(self, **kwargs):
+        kwargs.setdefault(
+            "outcome_source_capabilities",
+            ((self.actuator_capability, "actuator-sensor"),),
+        )
         return ReferenceKernel(clock=lambda: self.t0, **kwargs)
 
     @staticmethod
@@ -126,6 +131,9 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
                 journal,
                 clock=lambda: self.t0,
                 outcome_source_validator=validator,
+                outcome_source_capabilities=(
+                    (self.actuator_capability, "actuator-sensor"),
+                ),
             )
             grant = self._register(kernel)
             candidate = self._candidate(kernel, grant.grant_id)
@@ -139,13 +147,13 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
                 )
             with self.assertRaises(ValueError):
                 kernel.observe_effect_outcome(
-                    producer="attacker",
+                    source_capability=object(),
                     payload={"claimed": "done"},
                     effect_action_id=candidate.action_id,
                 )
 
             outcome = kernel.observe_effect_outcome(
-                producer="actuator-sensor",
+                source_capability=self.actuator_capability,
                 payload={"position": "moved"},
                 effect_action_id=candidate.action_id,
             )
@@ -161,6 +169,9 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
                 mode="inspect",
                 clock=lambda: self.t0,
                 outcome_source_validator=validator,
+                outcome_source_capabilities=(
+                    (self.actuator_capability, "actuator-sensor"),
+                ),
             )
             self.assertEqual(
                 inspection.effect_receipts[candidate.action_id].state,
@@ -175,6 +186,9 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
                 journal,
                 clock=lambda: self.t0,
                 outcome_source_validator=validator,
+                outcome_source_capabilities=(
+                    (self.actuator_capability, "actuator-sensor"),
+                ),
             )
             grant = self._register(kernel)
             candidate = self._candidate(kernel, grant.grant_id)
@@ -233,12 +247,15 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
                 journal,
                 clock=lambda: self.t0,
                 outcome_source_validator=validator,
+                outcome_source_capabilities=(
+                    (self.actuator_capability, "actuator-sensor"),
+                ),
             )
             grant = self._register(kernel)
             candidate = self._candidate(kernel, grant.grant_id)
             kernel.request_effect(candidate)
             outcome = kernel.observe_effect_outcome(
-                producer="actuator-sensor",
+                source_capability=self.actuator_capability,
                 payload={"position": "moved"},
                 effect_action_id=candidate.action_id,
             )
@@ -348,7 +365,7 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
         self.assertIsNotNone(admit)
         with self.assertRaises(ValueError):
             admit(
-                producer="actuator-sensor",
+                source_capability=self.actuator_capability,
                 payload={"arm_position": "moved"},
                 effect_action_id=candidate.action_id,
             )
@@ -366,13 +383,13 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             trusted_kernel.observe_effect_outcome(
-                producer="attacker",
+                source_capability=object(),
                 payload={"claimed": "done"},
                 effect_action_id=trusted_candidate.action_id,
             )
 
         outcome = trusted_kernel.observe_effect_outcome(
-            producer="actuator-sensor",
+            source_capability=self.actuator_capability,
             payload={"arm_position": "moved"},
             effect_action_id=trusted_candidate.action_id,
         )
@@ -383,11 +400,16 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
         )
         self.assertEqual(receipt.state, EffectState.CONFIRMED)
 
-    def test_live_outcome_source_label_cannot_impersonate_registered_source(self):
+    def test_live_outcome_source_capability_is_required_and_producer_is_derived(self):
+        registered_capability = object()
+        spoofed_capability = object()
         kernel = self._kernel(
             outcome_source_validator=lambda producer, authority: (
                 producer == "actuator-sensor"
-            )
+            ),
+            outcome_source_capabilities=(
+                (registered_capability, "actuator-sensor"),
+            ),
         )
         grant = self._register(kernel)
         candidate = self._candidate(kernel, grant.grant_id)
@@ -395,10 +417,44 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             kernel.observe_effect_outcome(
+                source_capability=spoofed_capability,
+                payload={"claimed": "done"},
+                effect_action_id=candidate.action_id,
+            )
+
+        with self.assertRaises(TypeError):
+            kernel.observe_effect_outcome(
                 producer="actuator-sensor",
                 payload={"claimed": "done"},
                 effect_action_id=candidate.action_id,
             )
+
+        outcome = kernel.observe_effect_outcome(
+            source_capability=registered_capability,
+            payload={"position": "moved"},
+            effect_action_id=candidate.action_id,
+        )
+        self.assertEqual(outcome.producer, "actuator-sensor")
+
+    def test_live_outcome_source_capability_does_not_bypass_source_policy(self):
+        registered_capability = object()
+        kernel = self._kernel(
+            outcome_source_validator=lambda producer, authority: False,
+            outcome_source_capabilities=(
+                (registered_capability, "actuator-sensor"),
+            ),
+        )
+        grant = self._register(kernel)
+        candidate = self._candidate(kernel, grant.grant_id)
+        kernel.request_effect(candidate)
+
+        with self.assertRaises(ValueError):
+            kernel.observe_effect_outcome(
+                source_capability=registered_capability,
+                payload={"claimed": "done"},
+                effect_action_id=candidate.action_id,
+            )
+        self.assertEqual(kernel.evidence, {})
 
 
 if __name__ == "__main__":

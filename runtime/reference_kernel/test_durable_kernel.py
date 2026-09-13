@@ -23,6 +23,7 @@ class DurableReferenceKernelTests(unittest.TestCase):
         self.tempdir = tempfile.TemporaryDirectory()
         self.journal = Path(self.tempdir.name) / "hc.jsonl"
         self.now = datetime(2026, 9, 10, 19, 0, tzinfo=UTC)
+        self.somatics_capability = object()
 
     def tearDown(self) -> None:
         self.tempdir.cleanup()
@@ -35,6 +36,7 @@ class DurableReferenceKernelTests(unittest.TestCase):
             outcome_source_validator=lambda producer, authority: (
                 producer == "somatics"
             ),
+            outcome_source_capabilities=((self.somatics_capability, "somatics"),),
         )
 
     def _grant(self, kernel):
@@ -163,7 +165,7 @@ class DurableReferenceKernelTests(unittest.TestCase):
         )
         first.request_effect(candidate)
         observation = first.observe_effect_outcome(
-            producer="somatics",
+            source_capability=self.somatics_capability,
             payload={"arm_position": "moved"},
             source_refs=("proprioception",),
             effect_action_id=candidate.action_id,
@@ -266,7 +268,7 @@ class DurableReferenceKernelTests(unittest.TestCase):
             payload={"temperature": 37},
         )
         bound = kernel.observe_effect_outcome(
-            producer="somatics",
+            source_capability=self.somatics_capability,
             payload={"arm_position": "moved"},
             effect_action_id=candidate.action_id,
         )
@@ -318,7 +320,7 @@ class DurableReferenceKernelTests(unittest.TestCase):
 
         second = self._kernel()
         observation = second.observe_effect_outcome(
-            producer="somatics",
+            source_capability=self.somatics_capability,
             payload={"arm_position": "moved"},
             source_refs=("proprioception",),
             effect_action_id=candidate.action_id,

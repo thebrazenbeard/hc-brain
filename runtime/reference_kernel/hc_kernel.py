@@ -58,6 +58,41 @@ def _require_aware(value: datetime, label: str) -> datetime:
     return value
 
 
+def _normalize_outcome_source_capabilities(
+    registrations: Any,
+) -> Tuple[Tuple[object, str], ...]:
+    if registrations is None:
+        return ()
+    entries = (
+        registrations.items()
+        if isinstance(registrations, ABCMapping)
+        else registrations
+    )
+    normalized = []
+    try:
+        for entry in entries:
+            capability, producer = entry
+            if capability is None or isinstance(
+                capability,
+                (bool, int, float, complex, str, bytes, tuple, frozenset),
+            ):
+                raise ValueError(
+                    "outcome source capabilities must be opaque object handles"
+                )
+            if not isinstance(producer, str) or not producer:
+                raise ValueError("outcome source producer IDs must be non-empty strings")
+            if any(capability is prior_capability for prior_capability, _ in normalized):
+                raise ValueError("outcome source capability is registered more than once")
+            normalized.append((capability, producer))
+    except (TypeError, ValueError) as exc:
+        if isinstance(exc, ValueError):
+            raise
+        raise ValueError(
+            "outcome source capabilities must be iterable capability/producer pairs"
+        ) from exc
+    return tuple(normalized)
+
+
 def _candidate_fingerprint(candidate: "EffectCandidate") -> str:
     body = {
         "origin": candidate.origin,
@@ -290,6 +325,7 @@ class ReferenceKernel:
         *,
         clock: Optional[Callable[[], datetime]] = None,
         outcome_source_validator: Optional[Callable[[str, AuthorityGrant], bool]] = None,
+        outcome_source_capabilities: Any = None,
     ) -> None:
         self._epoch = 0
         self._evidence: Dict[str, EvidenceRecord] = {}
@@ -300,6 +336,9 @@ class ReferenceKernel:
         self._effect_receipts: Dict[str, EffectReceipt] = {}
         self._clock = clock or (lambda: datetime.now(timezone.utc))
         self._outcome_source_validator = outcome_source_validator
+        self._outcome_source_capabilities = _normalize_outcome_source_capabilities(
+            outcome_source_capabilities
+        )
 
     @property
     def epoch(self) -> int:
@@ -327,6 +366,12 @@ class ReferenceKernel:
 
     def now(self) -> datetime:
         return _require_aware(self._clock(), "kernel clock")
+
+    def _producer_for_source_capability(self, source_capability: object) -> Optional[str]:
+        for capability, producer in self._outcome_source_capabilities:
+            if source_capability is capability:
+                return producer
+        return None
 
     def observe(
         self,
@@ -379,12 +424,15 @@ class ReferenceKernel:
     def observe_effect_outcome(
         self,
         *,
-        producer: str,
+        source_capability: object,
         payload: Any,
         effect_action_id: str,
         event_time: Optional[datetime] = None,
         source_refs: Iterable[str] = (),
     ) -> EvidenceRecord:
+        producer = self._producer_for_source_capability(source_capability)
+        if producer is None:
+            raise ValueError("effect outcome source capability is not registered")
         receipt = self._effect_receipts.get(effect_action_id)
         if receipt is None:
             raise ValueError("effect-linked observation references unknown action")

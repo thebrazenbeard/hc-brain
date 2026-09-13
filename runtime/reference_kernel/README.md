@@ -20,6 +20,8 @@ The prototype currently exercises:
 - deterministic candidate-semantic binding for duplicate action IDs;
 - `COMMAND_SENT/REQUESTED != EFFECT_CONFIRMED`;
 - trusted action-bound observed confirmation evidence rather than arbitrary confirmation IDs;
+- live effect outcomes admitted through host-registered opaque source capabilities, with
+  producer IDs derived by object identity rather than caller-supplied labels;
 - generic observations cannot bind effect outcomes without the explicit trusted-source gate, which durable replay rechecks;
 - duplicate action-request suppression inside the current process model;
 - restart fencing of stale plans and pre-restart authority;
@@ -61,3 +63,8 @@ The governing reality boundary is:
 `MODELED_RESTART_EPOCH != DURABLE_CRASH_RECOVERY`
 
 `BASIS_BEARING_GRANT_FIXTURE != QUALIFIED_AUTHORITY_ISSUANCE`
+
+Live outcome admission is intentionally scoped to an in-process capability boundary:
+the trusted host registers opaque handle/producer pairs, and callers must possess the
+registered handle object. This is not a claim of cryptographic or process isolation;
+private in-process state or a copied handle remains outside this reference slice.

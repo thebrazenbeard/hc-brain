@@ -101,12 +101,14 @@ class DurableReferenceKernel(ReferenceKernel):
         mode: str = "recover",
         clock=None,
         outcome_source_validator=None,
+        outcome_source_capabilities=None,
     ) -> None:
         if mode not in VALID_OPEN_MODES:
             raise ValueError(f"mode must be one of {sorted(VALID_OPEN_MODES)}")
         super().__init__(
             clock=clock,
             outcome_source_validator=outcome_source_validator,
+            outcome_source_capabilities=outcome_source_capabilities,
         )
         self.journal_path = Path(journal_path)
         self.open_mode = mode

@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta, timezone
+import hashlib
+import json
 from pathlib import Path
 from types import MappingProxyType
 import tempfile
 import unittest
 
-from durable_kernel import DurableReferenceKernel
+from durable_kernel import DurableReferenceKernel, JournalIntegrityError
 from hc_kernel import EffectCandidate, EffectState, ReferenceKernel
 
 UTC = timezone.utc
@@ -41,6 +43,19 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
             payload={"command": "move"} if payload is None else payload,
             authority_grant_id=grant_id,
         )
+
+    @staticmethod
+    def _rehash(envelope):
+        body = {key: value for key, value in envelope.items() if key != "entry_hash"}
+        envelope["entry_hash"] = hashlib.sha256(
+            json.dumps(
+                body,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+        return envelope
 
     def test_prewrapped_mappingproxy_is_recursively_detached(self):
         nested = {"value": 1}
@@ -164,6 +179,69 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
                 inspection.effect_receipts[candidate.action_id].state,
                 EffectState.CONFIRMED,
             )
+
+    def test_durable_replay_revalidates_effect_outcome_source_policy(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            journal = Path(tempdir) / "kernel.jsonl"
+            validator = lambda producer, authority: producer == "actuator-sensor"
+            kernel = DurableReferenceKernel(
+                journal,
+                clock=lambda: self.t0,
+                outcome_source_validator=validator,
+            )
+            grant = self._register(kernel)
+            candidate = self._candidate(kernel, grant.grant_id)
+            kernel.request_effect(candidate)
+            kernel.observe_effect_outcome(
+                producer="actuator-sensor",
+                payload={"position": "moved"},
+                effect_action_id=candidate.action_id,
+            )
+
+            lines = journal.read_text(encoding="utf-8").splitlines()
+            envelope = json.loads(lines[-1])
+            envelope["data"]["producer"] = "attacker"
+            self._rehash(envelope)
+            lines[-1] = json.dumps(
+                envelope,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            journal.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+            with self.assertRaises(JournalIntegrityError):
+                DurableReferenceKernel(
+                    journal,
+                    mode="inspect",
+                    clock=lambda: self.t0,
+                    outcome_source_validator=validator,
+                )
+
+    def test_durable_outcome_replay_requires_trust_policy(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            journal = Path(tempdir) / "kernel.jsonl"
+            validator = lambda producer, authority: producer == "actuator-sensor"
+            kernel = DurableReferenceKernel(
+                journal,
+                clock=lambda: self.t0,
+                outcome_source_validator=validator,
+            )
+            grant = self._register(kernel)
+            candidate = self._candidate(kernel, grant.grant_id)
+            kernel.request_effect(candidate)
+            kernel.observe_effect_outcome(
+                producer="actuator-sensor",
+                payload={"position": "moved"},
+                effect_action_id=candidate.action_id,
+            )
+
+            with self.assertRaises(JournalIntegrityError):
+                DurableReferenceKernel(
+                    journal,
+                    mode="inspect",
+                    clock=lambda: self.t0,
+                )
 
     def test_payload_admission_rejects_non_string_mapping_keys(self):
         kernel = self._kernel()

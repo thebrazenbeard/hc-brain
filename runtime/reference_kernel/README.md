@@ -20,7 +20,7 @@ The prototype currently exercises:
 - deterministic candidate-semantic binding for duplicate action IDs;
 - `COMMAND_SENT/REQUESTED != EFFECT_CONFIRMED`;
 - trusted action-bound observed confirmation evidence rather than arbitrary confirmation IDs;
-- generic observations cannot bind effect outcomes without the explicit trusted-source gate;
+- generic observations cannot bind effect outcomes without the explicit trusted-source gate, which durable replay rechecks;
 - duplicate action-request suppression inside the current process model;
 - restart fencing of stale plans and pre-restart authority;
 - unresolved in-flight effects after restart, requiring reconciliation rather than blind replay;

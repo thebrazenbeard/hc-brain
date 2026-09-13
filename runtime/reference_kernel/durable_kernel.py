@@ -234,11 +234,18 @@ class DurableReferenceKernel(ReferenceKernel):
                     f"journal entry hash mismatch at line {line_number}"
                 )
 
-            self._apply_event(
-                event_type=envelope["event_type"],
-                data=envelope["data"],
-                event_epoch=envelope["epoch"],
-            )
+            try:
+                self._apply_event(
+                    event_type=envelope["event_type"],
+                    data=envelope["data"],
+                    event_epoch=envelope["epoch"],
+                )
+            except JournalIntegrityError:
+                raise
+            except (KeyError, TypeError, ValueError) as exc:
+                raise JournalIntegrityError(
+                    f"invalid journal event at line {line_number}"
+                ) from exc
             expected_prev = digest
             expected_seq += 1
 
@@ -295,6 +302,25 @@ class DurableReferenceKernel(ReferenceKernel):
                 raise JournalIntegrityError(
                     "effect-linked observation references unknown requested effect"
                 )
+            if effect_action_id is not None:
+                receipt = self._effect_receipts[effect_action_id]
+                if receipt.state not in {
+                    EffectState.REQUESTED,
+                    EffectState.UNRESOLVED_AFTER_RESTART,
+                }:
+                    raise JournalIntegrityError(
+                        "effect-linked observation does not follow an open effect"
+                    )
+                grant = self._authority_grants.get(receipt.authority_grant_id)
+                if grant is None:
+                    raise JournalIntegrityError(
+                        "effect-linked observation references unknown authority"
+                    )
+                validator = self._outcome_source_validator
+                if validator is None or not validator(data["producer"], grant):
+                    raise JournalIntegrityError(
+                        "effect-linked observation source is not trusted"
+                    )
             record = EvidenceRecord(
                 evidence_id=evidence_id,
                 producer=data["producer"],

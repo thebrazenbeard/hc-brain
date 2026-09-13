@@ -191,6 +191,19 @@ class DurableReferenceKernelTests(unittest.TestCase):
         with self.assertRaises(JournalIntegrityError):
             self._kernel(mode="inspect")
 
+    def test_rehashed_nonfinite_payload_fails_as_journal_integrity_error(self):
+        kernel = self._kernel()
+        kernel.observe(producer="optics", payload={"x": 1})
+        self._rewrite_line(
+            -1,
+            lambda envelope: envelope["data"]["payload"].__setitem__(
+                "x", float("nan")
+            ),
+        )
+
+        with self.assertRaises(JournalIntegrityError):
+            self._kernel(mode="inspect")
+
     def test_sequence_discontinuity_fails_closed_even_if_entry_rehashed(self):
         kernel = self._kernel()
         kernel.observe(producer="optics", payload={"x": 1})

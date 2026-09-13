@@ -24,7 +24,7 @@ from hc_kernel import (
 )
 
 
-JOURNAL_SCHEMA_VERSION = 3
+JOURNAL_SCHEMA_VERSION = 4
 GENESIS_HASH = "0" * 64
 VALID_OPEN_MODES = {"recover", "inspect"}
 
@@ -100,10 +100,14 @@ class DurableReferenceKernel(ReferenceKernel):
         *,
         mode: str = "recover",
         clock=None,
+        outcome_source_validator=None,
     ) -> None:
         if mode not in VALID_OPEN_MODES:
             raise ValueError(f"mode must be one of {sorted(VALID_OPEN_MODES)}")
-        super().__init__(clock=clock)
+        super().__init__(
+            clock=clock,
+            outcome_source_validator=outcome_source_validator,
+        )
         self.journal_path = Path(journal_path)
         self.open_mode = mode
         self.memory = JournaledCurrentMemory(self)
@@ -130,6 +134,7 @@ class DurableReferenceKernel(ReferenceKernel):
                 _jsonable_payload(payload),
                 ensure_ascii=False,
                 sort_keys=True,
+                allow_nan=False,
             )
         except (TypeError, ValueError) as exc:
             raise ValueError(
@@ -143,6 +148,7 @@ class DurableReferenceKernel(ReferenceKernel):
             ensure_ascii=False,
             sort_keys=True,
             separators=(",", ":"),
+            allow_nan=False,
         ).encode("utf-8")
 
     def _record(self, event_type: str, data: dict[str, Any]) -> None:
@@ -166,6 +172,7 @@ class DurableReferenceKernel(ReferenceKernel):
             ensure_ascii=False,
             sort_keys=True,
             separators=(",", ":"),
+            allow_nan=False,
         )
         with self.journal_path.open("a", encoding="utf-8", newline="\n") as handle:
             handle.write(line + "\n")
@@ -224,7 +231,12 @@ class DurableReferenceKernel(ReferenceKernel):
                 )
 
             body = {key: envelope[key] for key in required if key != "entry_hash"}
-            digest = hashlib.sha256(self._canonical_bytes(body)).hexdigest()
+            try:
+                digest = hashlib.sha256(self._canonical_bytes(body)).hexdigest()
+            except (TypeError, ValueError) as exc:
+                raise JournalIntegrityError(
+                    f"journal line {line_number} is not canonically JSON-safe"
+                ) from exc
             if digest != envelope["entry_hash"]:
                 raise JournalIntegrityError(
                     f"journal entry hash mismatch at line {line_number}"
@@ -265,7 +277,10 @@ class DurableReferenceKernel(ReferenceKernel):
                 "non-transition journal event does not match current replay epoch"
             )
 
-        if event_type == "EVIDENCE_RECORD_UPSERT":
+        if event_type in {
+            "EVIDENCE_RECORD_UPSERT",
+            "EFFECT_OUTCOME_RECORD_UPSERT",
+        }:
             evidence_id = data["evidence_id"]
             if evidence_id in self._evidence:
                 raise JournalIntegrityError("evidence identity rewritten in append journal")
@@ -277,6 +292,10 @@ class DurableReferenceKernel(ReferenceKernel):
                         "raw observation cannot replay with causal evidence parents"
                     )
             else:
+                if event_type == "EFFECT_OUTCOME_RECORD_UPSERT":
+                    raise JournalIntegrityError(
+                        "effect outcome must replay as raw observation"
+                    )
                 if not parent_ids:
                     raise JournalIntegrityError(
                         "derived/inferred/predicted evidence has no causal parent"
@@ -286,11 +305,46 @@ class DurableReferenceKernel(ReferenceKernel):
                     raise JournalIntegrityError(
                         f"evidence replay references unknown parents: {missing}"
                     )
+
             effect_action_id = data.get("effect_action_id")
-            if effect_action_id is not None and effect_action_id not in self._effect_receipts:
-                raise JournalIntegrityError(
-                    "effect-linked observation references unknown requested effect"
-                )
+            if event_type == "EVIDENCE_RECORD_UPSERT":
+                if effect_action_id is not None:
+                    raise JournalIntegrityError(
+                        "generic evidence record cannot bind effect confirmation"
+                    )
+            else:
+                if effect_action_id is None:
+                    raise JournalIntegrityError(
+                        "effect outcome record has no bound action"
+                    )
+                receipt = self._effect_receipts.get(effect_action_id)
+                if receipt is None:
+                    raise JournalIntegrityError(
+                        "effect outcome references unknown requested effect"
+                    )
+                if receipt.state not in {
+                    EffectState.REQUESTED,
+                    EffectState.UNRESOLVED_AFTER_RESTART,
+                }:
+                    raise JournalIntegrityError(
+                        "effect outcome replay is invalid for current effect state"
+                    )
+                authority_grant_id = receipt.authority_grant_id
+                if authority_grant_id is None:
+                    raise JournalIntegrityError(
+                        "effect outcome has no authority context"
+                    )
+                grant = self._authority_grants.get(authority_grant_id)
+                if grant is None:
+                    raise JournalIntegrityError(
+                        "effect outcome references unavailable authority grant"
+                    )
+                validator = self._outcome_source_validator
+                if validator is None or not validator(data["producer"], grant):
+                    raise JournalIntegrityError(
+                        "effect outcome producer fails replay trust policy"
+                    )
+
             record = EvidenceRecord(
                 evidence_id=evidence_id,
                 producer=data["producer"],
@@ -304,6 +358,8 @@ class DurableReferenceKernel(ReferenceKernel):
                 effect_action_id=effect_action_id,
             )
             self._evidence[record.evidence_id] = record
+            if event_type == "EFFECT_OUTCOME_RECORD_UPSERT":
+                self._effect_outcome_evidence_ids.add(record.evidence_id)
             return
 
         if event_type == "ROUTED_EVENT_UPSERT":
@@ -486,6 +542,10 @@ class DurableReferenceKernel(ReferenceKernel):
                 evidence = self._evidence.get(evidence_id)
                 if evidence is None:
                     raise JournalIntegrityError("confirmed effect references unknown evidence")
+                if evidence_id not in self._effect_outcome_evidence_ids:
+                    raise JournalIntegrityError(
+                        "confirmed effect evidence was not admitted as an effect outcome"
+                    )
                 if evidence.epistemic_class != EpistemicClass.OBSERVATION:
                     raise JournalIntegrityError("confirmed effect is not based on observation")
                 if evidence.effect_action_id != receipt.action_id:
@@ -580,6 +640,21 @@ class DurableReferenceKernel(ReferenceKernel):
             raise
         return record
 
+    def observe_effect_outcome(self, **kwargs) -> EvidenceRecord:
+        self._ensure_writable()
+        self._ensure_jsonable(kwargs.get("payload"))
+        record = super().observe_effect_outcome(**kwargs)
+        try:
+            self._record(
+                "EFFECT_OUTCOME_RECORD_UPSERT",
+                self._evidence_data(record),
+            )
+        except Exception:
+            self._evidence.pop(record.evidence_id, None)
+            self._effect_outcome_evidence_ids.discard(record.evidence_id)
+            raise
+        return record
+
     def derive(self, **kwargs) -> EvidenceRecord:
         self._ensure_writable()
         self._ensure_jsonable(kwargs.get("payload"))
@@ -629,6 +704,8 @@ class DurableReferenceKernel(ReferenceKernel):
         previous = self._authority_grants[grant_id]
         super().revoke_grant(grant_id, **kwargs)
         updated = self._authority_grants[grant_id]
+        if updated == previous:
+            return
         try:
             self._record("AUTHORITY_GRANT_UPSERT", self._grant_data(updated))
         except Exception:

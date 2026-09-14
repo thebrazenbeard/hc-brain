@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 from durable_kernel import DurableReferenceKernel, JournalIntegrityError
-from hc_kernel import EffectCandidate, EffectState, ReferenceKernel
+from hc_kernel import EpistemicClass, EffectCandidate, EffectState, ReferenceKernel
 
 UTC = timezone.utc
 
@@ -455,6 +455,206 @@ class FourAdversarialReferenceKernelR2Tests(unittest.TestCase):
                 effect_action_id=candidate.action_id,
             )
         self.assertEqual(kernel.evidence, {})
+
+
+    def test_evidence_lineage_fields_reject_non_string_items(self):
+        kernel = self._kernel()
+        with self.assertRaises(ValueError):
+            kernel.observe(
+                producer="sensor",
+                payload={"x": 1},
+                source_refs=({"uri": "sensor://a"},),
+            )
+
+        parent = kernel.observe(producer="sensor", payload={"x": 1})
+        with self.assertRaises(ValueError):
+            kernel.derive(
+                producer="cognition",
+                epistemic_class=EpistemicClass.DERIVED,
+                payload={"x": 2},
+                parent_ids=(parent.evidence_id,),
+                influence_roles=({"role": "MODEL"},),
+            )
+
+
+    def test_authority_refs_reject_non_string_items(self):
+        kernel = self._kernel()
+        with self.assertRaises(ValueError):
+            kernel.register_grant(
+                grantor="authority",
+                grantee="kinesis",
+                action_scope="MOTOR_EFFECT",
+                target_scope="arm",
+                basis_refs=({"ticket": "A"},),
+                valid_from=self.t0 - timedelta(minutes=1),
+                expires_at=self.t0 + timedelta(minutes=5),
+            )
+        with self.assertRaises(ValueError):
+            kernel.register_grant(
+                grantor="authority",
+                grantee="kinesis",
+                action_scope="MOTOR_EFFECT",
+                target_scope="arm",
+                basis_refs=("basis",),
+                provenance=({"issuer": "owner"},),
+                valid_from=self.t0 - timedelta(minutes=1),
+                expires_at=self.t0 + timedelta(minutes=5),
+            )
+
+
+    def test_memory_and_route_lineage_reject_non_string_items(self):
+        kernel = self._kernel()
+        with self.assertRaises(ValueError):
+            kernel.memory.append(
+                logical_key=("world", {"id": 1}, "state", "shared"),
+                payload={"v": 1},
+                epistemic_class=EpistemicClass.OBSERVATION,
+            )
+        with self.assertRaises(ValueError):
+            kernel.memory.append(
+                logical_key=("world", "x", "state", "shared"),
+                payload={"v": 1},
+                epistemic_class=EpistemicClass.OBSERVATION,
+                source_refs=({"source": "A"},),
+            )
+        with self.assertRaises(ValueError):
+            kernel.route(
+                source="router",
+                audience="consumer",
+                payload={"x": 1},
+                parent_ids=({"parent": "bad"},),
+            )
+
+
+    def test_effect_candidate_lineage_rejects_non_string_items(self):
+        kernel = self._kernel()
+        grant = self._register(kernel)
+        with self.assertRaises(ValueError):
+            kernel.plan_effect(
+                origin="kinesis",
+                action_scope="MOTOR_EFFECT",
+                target_scope="arm",
+                payload={"command": "move"},
+                authority_grant_id=grant.grant_id,
+                parent_ids=({"parent": "bad"},),
+            )
+        direct = EffectCandidate(
+            action_id="action-bad-parent",
+            origin="kinesis",
+            action_scope="MOTOR_EFFECT",
+            target_scope="arm",
+            payload={"command": "move"},
+            authority_grant_id=grant.grant_id,
+            planned_epoch=kernel.epoch,
+            parent_ids=({"parent": "bad"},),
+        )
+        with self.assertRaises(ValueError):
+            kernel.request_effect(direct)
+
+
+    @staticmethod
+    def _rewrite_last_journal_entry(journal, mutate):
+        lines = journal.read_text(encoding="utf-8").splitlines()
+        envelope = json.loads(lines[-1])
+        mutate(envelope["data"])
+        body = {key: value for key, value in envelope.items() if key != "entry_hash"}
+        envelope["entry_hash"] = hashlib.sha256(
+            json.dumps(
+                body,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+        lines[-1] = json.dumps(
+            envelope,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        journal.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+    def test_replay_rejects_non_string_evidence_source_refs(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            journal = Path(tempdir) / "kernel.jsonl"
+            kernel = DurableReferenceKernel(journal, clock=lambda: self.t0)
+            kernel.observe(
+                producer="sensor",
+                payload={"x": 1},
+                source_refs=("sensor://a",),
+            )
+            self._rewrite_last_journal_entry(
+                journal,
+                lambda data: data.__setitem__(
+                    "source_refs", [{"uri": "attacker://mutated"}]
+                ),
+            )
+            with self.assertRaises(JournalIntegrityError):
+                DurableReferenceKernel(
+                    journal,
+                    mode="inspect",
+                    clock=lambda: self.t0,
+                )
+
+
+    def test_replay_rejects_non_string_authority_refs(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            journal = Path(tempdir) / "kernel.jsonl"
+            kernel = DurableReferenceKernel(journal, clock=lambda: self.t0)
+            self._register(kernel)
+            self._rewrite_last_journal_entry(
+                journal,
+                lambda data: data.__setitem__(
+                    "basis_refs", [{"ticket": "mutated"}]
+                ),
+            )
+            with self.assertRaises(JournalIntegrityError):
+                DurableReferenceKernel(
+                    journal,
+                    mode="inspect",
+                    clock=lambda: self.t0,
+                )
+
+
+    def test_replay_rejects_non_string_memory_refs(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            journal = Path(tempdir) / "kernel.jsonl"
+            kernel = DurableReferenceKernel(journal, clock=lambda: self.t0)
+            kernel.memory.append(
+                logical_key=("world", "x", "state", "shared"),
+                payload={"v": 1},
+                epistemic_class=EpistemicClass.OBSERVATION,
+                source_refs=("source-A",),
+            )
+            self._rewrite_last_journal_entry(
+                journal,
+                lambda data: data.__setitem__(
+                    "source_refs", [{"source": "mutated"}]
+                ),
+            )
+            with self.assertRaises(JournalIntegrityError):
+                DurableReferenceKernel(journal, mode="inspect", clock=lambda: self.t0)
+
+
+    def test_replay_rejects_non_string_route_lineage(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            journal = Path(tempdir) / "kernel.jsonl"
+            kernel = DurableReferenceKernel(journal, clock=lambda: self.t0)
+            kernel.route(
+                source="router",
+                audience="consumer",
+                payload={"x": 1},
+                parent_ids=("parent-A",),
+            )
+            self._rewrite_last_journal_entry(
+                journal,
+                lambda data: data.__setitem__(
+                    "parent_ids", [{"parent": "mutated"}]
+                ),
+            )
+            with self.assertRaises(JournalIntegrityError):
+                DurableReferenceKernel(journal, mode="inspect", clock=lambda: self.t0)
 
 
 if __name__ == "__main__":

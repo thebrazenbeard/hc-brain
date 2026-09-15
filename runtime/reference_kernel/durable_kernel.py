@@ -21,6 +21,10 @@ from hc_kernel import (
     RoutedEvent,
     _freeze_payload,
     _jsonable_payload,
+    _logical_key,
+    _optional_string,
+    _require_string,
+    _string_tuple,
 )
 
 
@@ -279,11 +283,11 @@ class DurableReferenceKernel(ReferenceKernel):
             )
 
         if event_type == "EVIDENCE_RECORD_UPSERT":
-            evidence_id = data["evidence_id"]
+            evidence_id = _require_string(data["evidence_id"], "evidence_id")
             if evidence_id in self._evidence:
                 raise JournalIntegrityError("evidence identity rewritten in append journal")
             epistemic_class = EpistemicClass(data["epistemic_class"])
-            parent_ids = tuple(data["parent_ids"])
+            parent_ids = _string_tuple(data["parent_ids"], "parent_ids")
             if epistemic_class == EpistemicClass.OBSERVATION:
                 if parent_ids:
                     raise JournalIntegrityError(
@@ -299,7 +303,9 @@ class DurableReferenceKernel(ReferenceKernel):
                     raise JournalIntegrityError(
                         f"evidence replay references unknown parents: {missing}"
                     )
-            effect_action_id = data.get("effect_action_id")
+            effect_action_id = _optional_string(
+                data.get("effect_action_id"), "effect_action_id"
+            )
             if effect_action_id is not None and effect_action_id not in self._effect_receipts:
                 raise JournalIntegrityError(
                     "effect-linked observation references unknown requested effect"
@@ -329,37 +335,41 @@ class DurableReferenceKernel(ReferenceKernel):
                     )
             record = EvidenceRecord(
                 evidence_id=evidence_id,
-                producer=data["producer"],
+                producer=_require_string(data["producer"], "producer"),
                 epistemic_class=epistemic_class,
                 payload=_freeze_payload(data["payload"]),
                 event_time=_parse_dt(data["event_time"]),
                 record_time=_parse_dt(data["record_time"]),
                 parent_ids=parent_ids,
-                source_refs=tuple(data["source_refs"]),
-                influence_roles=tuple(data["influence_roles"]),
+                source_refs=_string_tuple(data["source_refs"], "source_refs"),
+                influence_roles=_string_tuple(
+                    data["influence_roles"], "influence_roles"
+                ),
                 effect_action_id=effect_action_id,
             )
             self._evidence[record.evidence_id] = record
             return
 
         if event_type == "ROUTED_EVENT_UPSERT":
-            event_id = data["event_id"]
+            event_id = _require_string(data["event_id"], "event_id")
             if event_id in self._routed_events:
                 raise JournalIntegrityError("routed event identity rewritten in append journal")
             event = RoutedEvent(
                 event_id=event_id,
-                source=data["source"],
-                audience=data["audience"],
+                source=_require_string(data["source"], "route.source"),
+                audience=_require_string(data["audience"], "route.audience"),
                 payload=_freeze_payload(data["payload"]),
                 priority=int(data["priority"]),
-                parent_ids=tuple(data["parent_ids"]),
-                authority_ref=data.get("authority_ref"),
+                parent_ids=_string_tuple(data["parent_ids"], "route.parent_ids"),
+                authority_ref=_optional_string(
+                    data.get("authority_ref"), "route.authority_ref"
+                ),
             )
             self._routed_events[event.event_id] = event
             return
 
         if event_type == "ROUTED_EVENT_INCORPORATED":
-            event_id = data["event_id"]
+            event_id = _require_string(data["event_id"], "event_id")
             if event_id not in self._routed_events:
                 raise JournalIntegrityError(
                     "incorporation references unknown routed event"
@@ -368,16 +378,16 @@ class DurableReferenceKernel(ReferenceKernel):
             return
 
         if event_type == "MEMORY_RECORD_UPSERT":
-            record_id = data["record_id"]
+            record_id = _require_string(data["record_id"], "record_id")
             if record_id in self.memory._records:
                 raise JournalIntegrityError("memory record identity rewritten in append journal")
             record = MemoryRecord(
                 record_id=record_id,
-                logical_key=tuple(data["logical_key"]),
+                logical_key=_logical_key(data["logical_key"]),
                 payload=_freeze_payload(data["payload"]),
                 epistemic_class=EpistemicClass(data["epistemic_class"]),
-                supersedes=tuple(data["supersedes"]),
-                source_refs=tuple(data["source_refs"]),
+                supersedes=_string_tuple(data["supersedes"], "supersedes"),
+                source_refs=_string_tuple(data["source_refs"], "source_refs"),
             )
             for predecessor in record.supersedes:
                 prior = self.memory._records.get(predecessor)
@@ -393,7 +403,7 @@ class DurableReferenceKernel(ReferenceKernel):
             return
 
         if event_type == "AUTHORITY_GRANT_UPSERT":
-            basis_refs = tuple(data["basis_refs"])
+            basis_refs = _string_tuple(data["basis_refs"], "basis_refs")
             if not basis_refs:
                 raise JournalIntegrityError("authority grant has no explicit basis")
             valid_from = _parse_dt(data["valid_from"])
@@ -409,13 +419,13 @@ class DurableReferenceKernel(ReferenceKernel):
                 else None
             )
             grant = AuthorityGrant(
-                grant_id=data["grant_id"],
-                grantor=data["grantor"],
-                grantee=data["grantee"],
-                action_scope=data["action_scope"],
-                target_scope=data["target_scope"],
+                grant_id=_require_string(data["grant_id"], "grant_id"),
+                grantor=_require_string(data["grantor"], "grantor"),
+                grantee=_require_string(data["grantee"], "grantee"),
+                action_scope=_require_string(data["action_scope"], "action_scope"),
+                target_scope=_require_string(data["target_scope"], "target_scope"),
                 basis_refs=basis_refs,
-                provenance=tuple(data["provenance"]),
+                provenance=_string_tuple(data["provenance"], "provenance"),
                 issued_epoch=issued_epoch,
                 valid_from=valid_from,
                 expires_at=expires_at,
@@ -460,14 +470,20 @@ class DurableReferenceKernel(ReferenceKernel):
 
         if event_type == "EFFECT_RECEIPT_UPSERT":
             receipt = EffectReceipt(
-                action_id=data["action_id"],
+                action_id=_require_string(data["action_id"], "action_id"),
                 state=EffectState(data["state"]),
-                reason=data["reason"],
+                reason=_require_string(data["reason"], "reason"),
                 epoch=int(data["epoch"]),
-                authority_grant_id=data.get("authority_grant_id"),
-                candidate_fingerprint=data.get("candidate_fingerprint"),
+                authority_grant_id=_optional_string(
+                    data.get("authority_grant_id"), "authority_grant_id"
+                ),
+                candidate_fingerprint=_optional_string(
+                    data.get("candidate_fingerprint"), "candidate_fingerprint"
+                ),
                 dispatch_attempts=int(data["dispatch_attempts"]),
-                confirmation_evidence_id=data.get("confirmation_evidence_id"),
+                confirmation_evidence_id=_optional_string(
+                    data.get("confirmation_evidence_id"), "confirmation_evidence_id"
+                ),
             )
             if receipt.epoch < 0 or receipt.epoch > event_epoch:
                 raise JournalIntegrityError("effect receipt has impossible originating epoch")

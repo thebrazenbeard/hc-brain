@@ -58,6 +58,37 @@ def _require_aware(value: datetime, label: str) -> datetime:
     return value
 
 
+def _require_string(value: Any, label: str) -> str:
+    if not isinstance(value, str):
+        raise ValueError(f"{label} must be a string")
+    return value
+
+
+def _optional_string(value: Any, label: str) -> Optional[str]:
+    if value is None:
+        return None
+    return _require_string(value, label)
+
+
+def _string_tuple(values: Iterable[Any], label: str) -> Tuple[str, ...]:
+    if isinstance(values, (str, bytes)):
+        raise ValueError(f"{label} must be an iterable of strings")
+    try:
+        result = tuple(values)
+    except TypeError as exc:
+        raise ValueError(f"{label} must be an iterable of strings") from exc
+    if any(not isinstance(item, str) for item in result):
+        raise ValueError(f"{label} must contain only strings")
+    return result
+
+
+def _logical_key(value: Iterable[Any]) -> Tuple[str, str, str, str]:
+    result = _string_tuple(value, "logical_key")
+    if len(result) != 4:
+        raise ValueError("logical_key must contain exactly four string components")
+    return result  # type: ignore[return-value]
+
+
 def _normalize_outcome_source_capabilities(
     registrations: Any,
 ) -> Tuple[Tuple[object, str], ...]:
@@ -94,14 +125,22 @@ def _normalize_outcome_source_capabilities(
 
 
 def _candidate_fingerprint(candidate: "EffectCandidate") -> str:
+    _require_string(candidate.action_id, "candidate.action_id")
+    _require_string(candidate.origin, "candidate.origin")
+    _require_string(candidate.action_scope, "candidate.action_scope")
+    _require_string(candidate.target_scope, "candidate.target_scope")
+    authority_grant_id = _optional_string(
+        candidate.authority_grant_id, "candidate.authority_grant_id"
+    )
+    parent_ids = _string_tuple(candidate.parent_ids, "candidate.parent_ids")
     body = {
         "origin": candidate.origin,
         "action_scope": candidate.action_scope,
         "target_scope": candidate.target_scope,
         "payload": _jsonable_payload(candidate.payload),
-        "authority_grant_id": candidate.authority_grant_id,
+        "authority_grant_id": authority_grant_id,
         "planned_epoch": candidate.planned_epoch,
-        "parent_ids": list(candidate.parent_ids),
+        "parent_ids": list(parent_ids),
     }
     try:
         encoded = json.dumps(
@@ -265,7 +304,11 @@ class CurrentMemory:
         supersedes: Iterable[str] = (),
         source_refs: Iterable[str] = (),
     ) -> MemoryRecord:
-        supersedes_tuple = tuple(dict.fromkeys(supersedes))
+        logical_key = _logical_key(logical_key)
+        supersedes_tuple = tuple(
+            dict.fromkeys(_string_tuple(supersedes, "supersedes"))
+        )
+        source_refs_tuple = _string_tuple(source_refs, "source_refs")
         for record_id in supersedes_tuple:
             prior = self._records.get(record_id)
             if prior is None:
@@ -279,12 +322,13 @@ class CurrentMemory:
             payload=_freeze_payload(payload),
             epistemic_class=epistemic_class,
             supersedes=supersedes_tuple,
-            source_refs=tuple(source_refs),
+            source_refs=source_refs_tuple,
         )
         self._records[record.record_id] = record
         return record
 
     def current(self, logical_key: Tuple[str, str, str, str]) -> CurrentProjection:
+        logical_key = _logical_key(logical_key)
         scoped = [r for r in self._records.values() if r.logical_key == logical_key]
         if not scoped:
             return CurrentProjection(
@@ -403,6 +447,9 @@ class ReferenceKernel:
         source_refs: Iterable[str] = (),
         effect_action_id: Optional[str] = None,
     ) -> EvidenceRecord:
+        producer = _require_string(producer, "producer")
+        source_refs_tuple = _string_tuple(source_refs, "source_refs")
+        effect_action_id = _optional_string(effect_action_id, "effect_action_id")
         if effect_action_id is not None and effect_action_id not in self._effect_receipts:
             raise ValueError("effect-linked observation references unknown action")
         now = self.now()
@@ -415,7 +462,7 @@ class ReferenceKernel:
             payload=_freeze_payload(payload),
             event_time=event_time or now,
             record_time=now,
-            source_refs=tuple(source_refs),
+            source_refs=source_refs_tuple,
             effect_action_id=effect_action_id,
         )
         self._evidence[record.evidence_id] = record
@@ -467,7 +514,10 @@ class ReferenceKernel:
     ) -> EvidenceRecord:
         if epistemic_class == EpistemicClass.OBSERVATION:
             raise ValueError("derived state cannot be relabeled as raw observation")
-        parents = tuple(parent_ids)
+        producer = _require_string(producer, "producer")
+        parents = _string_tuple(parent_ids, "parent_ids")
+        influence_roles_tuple = _string_tuple(influence_roles, "influence_roles")
+        source_refs_tuple = _string_tuple(source_refs, "source_refs")
         if not parents:
             raise ValueError("derived state requires at least one causal parent")
         missing = [parent for parent in parents if parent not in self._evidence]
@@ -476,7 +526,9 @@ class ReferenceKernel:
         inherited_sources = []
         for parent in parents:
             inherited_sources.extend(self._evidence[parent].source_refs)
-        combined_sources = tuple(dict.fromkeys((*inherited_sources, *source_refs)))
+        combined_sources = tuple(
+            dict.fromkeys((*inherited_sources, *source_refs_tuple))
+        )
         now = self.now()
         record = EvidenceRecord(
             evidence_id=_id("ev"),
@@ -487,7 +539,7 @@ class ReferenceKernel:
             record_time=now,
             parent_ids=parents,
             source_refs=combined_sources,
-            influence_roles=tuple(influence_roles),
+            influence_roles=influence_roles_tuple,
         )
         self._evidence[record.evidence_id] = record
         return record
@@ -502,19 +554,24 @@ class ReferenceKernel:
         parent_ids: Iterable[str] = (),
         authority_ref: Optional[str] = None,
     ) -> RoutedEvent:
+        source = _require_string(source, "route.source")
+        audience = _require_string(audience, "route.audience")
+        parent_ids_tuple = _string_tuple(parent_ids, "route.parent_ids")
+        authority_ref = _optional_string(authority_ref, "route.authority_ref")
         event = RoutedEvent(
             event_id=_id("route"),
             source=source,
             audience=audience,
             payload=_freeze_payload(payload),
             priority=priority,
-            parent_ids=tuple(parent_ids),
+            parent_ids=parent_ids_tuple,
             authority_ref=authority_ref,
         )
         self._routed_events[event.event_id] = event
         return event
 
     def incorporate_routed_event(self, event_id: str) -> None:
+        event_id = _require_string(event_id, "event_id")
         if event_id not in self._routed_events:
             raise ValueError(f"unknown routed event: {event_id}")
         self._incorporated_event_ids.add(event_id)
@@ -531,7 +588,12 @@ class ReferenceKernel:
         expires_at: datetime,
         provenance: Iterable[str] = (),
     ) -> AuthorityGrant:
-        basis = tuple(basis_refs)
+        grantor = _require_string(grantor, "grantor")
+        grantee = _require_string(grantee, "grantee")
+        action_scope = _require_string(action_scope, "action_scope")
+        target_scope = _require_string(target_scope, "target_scope")
+        basis = _string_tuple(basis_refs, "basis_refs")
+        provenance_tuple = _string_tuple(provenance, "provenance")
         if not basis:
             raise ValueError("authority registration requires an explicit basis reference")
         _require_aware(valid_from, "valid_from")
@@ -545,7 +607,7 @@ class ReferenceKernel:
             action_scope=action_scope,
             target_scope=target_scope,
             basis_refs=basis,
-            provenance=tuple(provenance),
+            provenance=provenance_tuple,
             issued_epoch=self._epoch,
             valid_from=valid_from,
             expires_at=expires_at,
@@ -559,6 +621,7 @@ class ReferenceKernel:
         *,
         revoked_at: Optional[datetime] = None,
     ) -> None:
+        grant_id = _require_string(grant_id, "grant_id")
         grant = self._authority_grants[grant_id]
         when = revoked_at or self.now()
         _require_aware(when, "revoked_at")
@@ -578,6 +641,13 @@ class ReferenceKernel:
         authority_grant_id: Optional[str],
         parent_ids: Iterable[str] = (),
     ) -> EffectCandidate:
+        origin = _require_string(origin, "origin")
+        action_scope = _require_string(action_scope, "action_scope")
+        target_scope = _require_string(target_scope, "target_scope")
+        authority_grant_id = _optional_string(
+            authority_grant_id, "authority_grant_id"
+        )
+        parent_ids_tuple = _string_tuple(parent_ids, "parent_ids")
         return EffectCandidate(
             action_id=_id("action"),
             origin=origin,
@@ -586,7 +656,7 @@ class ReferenceKernel:
             payload=_freeze_payload(payload),
             authority_grant_id=authority_grant_id,
             planned_epoch=self._epoch,
-            parent_ids=tuple(parent_ids),
+            parent_ids=parent_ids_tuple,
         )
 
     def request_effect(self, candidate: EffectCandidate) -> EffectReceipt:

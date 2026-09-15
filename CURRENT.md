@@ -22,7 +22,9 @@ The R5 pre-documentation reference-kernel code cut is:
 
 `1a40311769c69ae5d098e6a71857409032353033`
 
-That code cut passed the complete current authorial reference-kernel suite on a fresh detached clone: `64/64` tests, `OK`. The documentation head containing this file is newer and is intended to become the single active PR/review subject by fast-forwarding the existing shared hardening branch after final verification.
+That code cut passed the complete current authorial reference-kernel suite on a fresh detached clone: `64/64` tests, `OK`.
+
+The consolidated R5 + current-knowledge line is the active review subject. The exact branch head must always be fresh-read before review or promotion; any later documentation or code commit supersedes an older exact-head receipt even when executable blobs are unchanged.
 
 ## Current claim ceiling
 

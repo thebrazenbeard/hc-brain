@@ -14,17 +14,11 @@ For the complete current Noah / Noëtarch project understanding, including exact
 
 ## Current source relationship
 
-Canonical `main` was last freshly observed at:
+Canonical `main` was last freshly observed at `cf92a32122c436beb5cc516bd7480af00f0ba29f`.
 
-`cf92a32122c436beb5cc516bd7480af00f0ba29f`
+The exact R5 pre-documentation reference-kernel code cut is `1a40311769c69ae5d098e6a71857409032353033`. That code cut passed the complete current authorial reference-kernel suite on a fresh detached clone: `64/64` tests, `OK`.
 
-The R5 pre-documentation reference-kernel code cut is:
-
-`1a40311769c69ae5d098e6a71857409032353033`
-
-That code cut passed the complete current authorial reference-kernel suite on a fresh detached clone: `64/64` tests, `OK`.
-
-The consolidated R5 + current-knowledge line is the active review subject. The exact branch head must always be fresh-read before review or promotion; any later documentation or code commit supersedes an older exact-head receipt even when executable blobs are unchanged.
+The consolidated R5 + current-knowledge line is the active review subject. Always fresh-read the branch/PR exact head before review or promotion; later documentation or code commits supersede older exact-head receipts even when executable blobs are unchanged.
 
 ## Current claim ceiling
 

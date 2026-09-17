@@ -12,6 +12,16 @@ from governed_kernel_v2 import (
 )
 
 
+def allow_test_move_grants(principal, grantee, action_scope, target_scope, basis_refs):
+    return (
+        principal == "operator-A"
+        and grantee.startswith("planner")
+        and action_scope == "MOVE"
+        and target_scope.startswith("arm")
+        and bool(basis_refs)
+    )
+
+
 class VeraAuthorityMutationV2Tests(unittest.TestCase):
     def setUp(self) -> None:
         self.now = datetime(2026, 9, 17, 12, 0, tzinfo=timezone.utc)
@@ -25,6 +35,7 @@ class VeraAuthorityMutationV2Tests(unittest.TestCase):
                 (self.issuer_a, "operator-A"),
                 (self.issuer_b, "operator-B"),
             ),
+            authority_issuance_validator=allow_test_move_grants,
         )
 
     def test_unregistered_handle_cannot_mint_authority(self) -> None:
@@ -79,7 +90,8 @@ class VeraAuthorityMutationV2Tests(unittest.TestCase):
     def test_scalar_capability_registration_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "opaque object handles"):
             GovernedReferenceKernelV2(
-                authority_issuer_capabilities=(("spoofable-token", "operator-A"),)
+                authority_issuer_capabilities=(("spoofable-token", "operator-A"),),
+                authority_issuance_validator=allow_test_move_grants,
             )
 
     def test_authenticated_issuer_still_requires_scope_policy(self) -> None:
@@ -119,6 +131,22 @@ class VeraAuthorityMutationV2Tests(unittest.TestCase):
                 expires_at=self.now + timedelta(minutes=5),
             )
 
+    def test_missing_issuance_policy_fails_closed(self) -> None:
+        kernel = GovernedReferenceKernelV2(
+            clock=lambda: self.now,
+            authority_issuer_capabilities=((self.issuer_a, "operator-A"),),
+        )
+        with self.assertRaisesRegex(ValueError, "authority issuance policy is not configured"):
+            kernel.register_grant(
+                source_capability=self.issuer_a,
+                grantee="planner",
+                action_scope="MOVE",
+                target_scope="arm",
+                basis_refs=("basis:explicit",),
+                valid_from=self.now,
+                expires_at=self.now + timedelta(minutes=5),
+            )
+
 
 class VeraAtomicRecoveryFenceV2Tests(unittest.TestCase):
     def setUp(self) -> None:
@@ -130,6 +158,7 @@ class VeraAtomicRecoveryFenceV2Tests(unittest.TestCase):
             path,
             clock=lambda: self.now,
             authority_issuer_capabilities=((self.issuer, "operator-A"),),
+            authority_issuance_validator=allow_test_move_grants,
         )
 
     def _requested_action(self, kernel: GovernedDurableReferenceKernelV2, suffix: str):
@@ -242,6 +271,7 @@ class VeraAtomicRecoveryFenceV2Tests(unittest.TestCase):
                 path,
                 clock=lambda: self.now,
                 authority_issuer_capabilities=((self.issuer, "operator-A"),),
+                authority_issuance_validator=allow_test_move_grants,
             )
             action = self._requested_action(kernel, "a")
             kernel.fail_fence = True

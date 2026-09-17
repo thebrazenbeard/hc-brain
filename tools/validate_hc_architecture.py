@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -81,12 +82,16 @@ REVIEW_RECEIPT_REQUIRED_FIELDS = (
     "authored_artifact_refs",
     "shaping_or_diagnostic_refs",
     "prior_adjudication_refs",
+    "material_shaping_within_reviewed_scope",
     "admitted_context_refs",
     "verdict",
     "evidence_refs",
     "issued_at",
     "supersedes",
+    "attestation_location",
 )
+
+_COMMIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
 def _is_nonempty_string(value: Any) -> bool:
@@ -204,8 +209,11 @@ def validate_review_receipt(
 
     if receipt.get("subject_repo") != expected_repo:
         errors.append("receipt subject_repo does not match expected_repo")
-    if receipt.get("subject_head") != expected_head:
+    subject_head = receipt.get("subject_head")
+    if subject_head != expected_head:
         errors.append("receipt subject_head does not match expected_head")
+    if not isinstance(subject_head, str) or not _COMMIT_SHA_RE.fullmatch(subject_head):
+        errors.append("receipt subject_head must be a 40-character hexadecimal commit SHA")
 
     if not _is_string_list(receipt.get("reviewed_scope"), allow_empty=False):
         errors.append("receipt reviewed_scope must be a non-empty string list")
@@ -230,21 +238,30 @@ def validate_review_receipt(
         if not _is_string_list(receipt.get(field), allow_empty=True):
             errors.append(f"receipt {field} must be a string list")
 
+    material_overlap = receipt.get("material_shaping_within_reviewed_scope")
+    if not isinstance(material_overlap, bool):
+        errors.append(
+            "receipt material_shaping_within_reviewed_scope must be boolean"
+        )
+
     if receipt.get("verdict") not in ALLOWED_REVIEW_VERDICTS:
         errors.append("receipt verdict is unknown")
     if not _is_nonempty_string(receipt.get("issued_at")):
         errors.append("receipt issued_at must be non-empty")
 
-    if independence_state == "INDEPENDENT_WITHIN_DECLARED_SCOPE":
-        if (
-            receipt.get("authored_artifact_refs")
-            or receipt.get("shaping_or_diagnostic_refs")
-            or receipt.get("prior_adjudication_refs")
-        ):
-            errors.append(
-                "receipt independence claim conflicts with recorded "
-                "shaping/authorship ancestry"
-            )
+    if (
+        independence_state == "INDEPENDENT_WITHIN_DECLARED_SCOPE"
+        and material_overlap is True
+    ):
+        errors.append(
+            "receipt independence claim conflicts with material shaping "
+            "within reviewed scope"
+        )
+
+    if receipt.get("attestation_location") != "OUT_OF_SUBJECT_TREE":
+        errors.append(
+            "exact-head review receipt must be stored out of subject tree"
+        )
 
     if "merge_authority" in receipt:
         errors.append("review receipt cannot grant or encode merge authority")

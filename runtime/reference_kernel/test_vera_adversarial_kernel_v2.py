@@ -82,6 +82,43 @@ class VeraAuthorityMutationV2Tests(unittest.TestCase):
                 authority_issuer_capabilities=(("spoofable-token", "operator-A"),)
             )
 
+    def test_authenticated_issuer_still_requires_scope_policy(self) -> None:
+        def policy(principal, grantee, action_scope, target_scope, basis_refs):
+            return (
+                principal == "operator-A"
+                and grantee == "planner"
+                and action_scope == "MOVE"
+                and target_scope == "arm"
+                and bool(basis_refs)
+            )
+
+        kernel = GovernedReferenceKernelV2(
+            clock=lambda: self.now,
+            authority_issuer_capabilities=((self.issuer_a, "operator-A"),),
+            authority_issuance_validator=policy,
+        )
+        allowed = kernel.register_grant(
+            source_capability=self.issuer_a,
+            grantee="planner",
+            action_scope="MOVE",
+            target_scope="arm",
+            basis_refs=("basis:explicit",),
+            valid_from=self.now,
+            expires_at=self.now + timedelta(minutes=5),
+        )
+        self.assertEqual(allowed.grantor, "operator-A")
+
+        with self.assertRaisesRegex(ValueError, "authority issuance policy denied grant"):
+            kernel.register_grant(
+                source_capability=self.issuer_a,
+                grantee="planner",
+                action_scope="IDENTITY_REWRITE",
+                target_scope="self",
+                basis_refs=("basis:explicit",),
+                valid_from=self.now,
+                expires_at=self.now + timedelta(minutes=5),
+            )
+
 
 class VeraAtomicRecoveryFenceV2Tests(unittest.TestCase):
     def setUp(self) -> None:
@@ -161,6 +198,21 @@ class VeraAtomicRecoveryFenceV2Tests(unittest.TestCase):
                     event_epoch=0,
                 )
 
+    def test_replay_rejects_duplicate_requested_ids(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "journal.jsonl"
+            kernel = self._make_kernel(path)
+            action = self._requested_action(kernel, "a")
+            with self.assertRaisesRegex(ValueError, "unique canonical order"):
+                kernel._validate_recovery_fence(
+                    {
+                        "from_epoch": 0,
+                        "to_epoch": 1,
+                        "requested_action_ids": [action, action],
+                    },
+                    event_epoch=0,
+                )
+
     def test_replay_rejects_noncontiguous_recovery_epoch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "journal.jsonl"
@@ -174,6 +226,31 @@ class VeraAtomicRecoveryFenceV2Tests(unittest.TestCase):
                     },
                     event_epoch=0,
                 )
+
+    def test_failed_recovery_append_does_not_promote_epoch_or_receipts(self) -> None:
+        class FailingFenceKernel(GovernedDurableReferenceKernelV2):
+            fail_fence = False
+
+            def _record(self, event_type, data):
+                if self.fail_fence and event_type == "RECOVERY_FENCE":
+                    raise OSError("injected fence append failure")
+                return super()._record(event_type, data)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "journal.jsonl"
+            kernel = FailingFenceKernel(
+                path,
+                clock=lambda: self.now,
+                authority_issuer_capabilities=((self.issuer, "operator-A"),),
+            )
+            action = self._requested_action(kernel, "a")
+            kernel.fail_fence = True
+
+            with self.assertRaisesRegex(OSError, "injected fence append failure"):
+                kernel.restart()
+
+            self.assertEqual(kernel.epoch, 0)
+            self.assertEqual(kernel.effect_receipts[action].state.value, "REQUESTED")
 
 
 if __name__ == "__main__":

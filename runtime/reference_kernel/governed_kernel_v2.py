@@ -7,6 +7,7 @@ from durable_kernel import DurableReferenceKernel, JournalIntegrityError
 from hc_kernel import AuthorityGrant, EffectState, ReferenceKernel, _string_tuple
 
 RECOVERY_FENCE_EVENT = "RECOVERY_FENCE"
+AUTHORITY_POLICY_PROVENANCE_PREFIX = "authority-issuance-policy:"
 AuthorityIssuanceValidator = Callable[[str, str, str, str, tuple[str, ...]], bool]
 
 
@@ -71,8 +72,10 @@ class _AuthorityIssuerBoundary:
     @staticmethod
     def _bind_policy_provenance(provenance: Iterable[str], policy_id: str) -> tuple[str, ...]:
         values = _string_tuple(provenance, "provenance")
-        marker = f"authority-issuance-policy:{policy_id}"
-        return values if marker in values else values + (marker,)
+        if any(value.startswith(AUTHORITY_POLICY_PROVENANCE_PREFIX) for value in values):
+            raise ValueError("caller cannot supply reserved authority issuance policy provenance")
+        marker = f"{AUTHORITY_POLICY_PROVENANCE_PREFIX}{policy_id}"
+        return values + (marker,)
 
 
 class GovernedReferenceKernelV2(_AuthorityIssuerBoundary, ReferenceKernel):

@@ -51,6 +51,43 @@ class VeraAuthorityMutationV2Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "authority issuance policy denied grant"):
             kernel.register_grant(source_capability=self.issuer_a, grantee="planner", action_scope="IDENTITY_REWRITE", target_scope="self", basis_refs=("basis:explicit",), valid_from=self.now, expires_at=self.now + timedelta(minutes=5))
 
+    def test_issuance_policy_receives_temporal_and_epoch_context(self) -> None:
+        captured = {}
+
+        def temporal_policy(*args):
+            if len(args) != 1:
+                raise AssertionError("authority issuance policy must receive one immutable request context")
+            request = args[0]
+            captured["request"] = request
+            return (
+                request.principal == "operator-A"
+                and request.grantee == "planner"
+                and request.action_scope == "MOVE"
+                and request.target_scope == "arm"
+                and request.basis_refs == ("basis:explicit",)
+                and request.valid_from == self.now
+                and request.expires_at == self.now + timedelta(minutes=5)
+                and request.observed_at == self.now
+                and request.current_epoch == 0
+            )
+
+        kernel = GovernedReferenceKernelV2(
+            clock=lambda: self.now,
+            authority_issuer_capabilities=((self.issuer_a, "operator-A"),),
+            authority_issuance_validator=temporal_policy,
+            authority_issuance_policy_id="temporal-arm-policy-v1",
+        )
+        kernel.register_grant(
+            source_capability=self.issuer_a,
+            grantee="planner",
+            action_scope="MOVE",
+            target_scope="arm",
+            basis_refs=("basis:explicit",),
+            valid_from=self.now,
+            expires_at=self.now + timedelta(minutes=5),
+        )
+        self.assertEqual(captured["request"].current_epoch, 0)
+
     def test_missing_issuance_policy_fails_closed(self) -> None:
         kernel = GovernedReferenceKernelV2(clock=lambda: self.now, authority_issuer_capabilities=((self.issuer_a, "operator-A"),))
         with self.assertRaisesRegex(ValueError, "authority issuance policy is not configured"):

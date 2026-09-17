@@ -34,7 +34,7 @@ class StateFamilyConsistencyPolicyTests(unittest.TestCase):
         self.assertTrue(any("duplicate family_id" in error for error in errors))
 
     def test_unknown_consistency_class_is_rejected(self) -> None:
-        document = {"profiles": [self._profile(consistency_class="MAGIC")]} 
+        document = {"profiles": [self._profile(consistency_class="MAGIC")]}
         errors = validate_state_family_profiles(document)
         self.assertTrue(any("unknown consistency_class" in error for error in errors))
 
@@ -104,11 +104,13 @@ class ReviewReceiptTests(unittest.TestCase):
             "authored_artifact_refs": [],
             "shaping_or_diagnostic_refs": [],
             "prior_adjudication_refs": [],
+            "material_shaping_within_reviewed_scope": False,
             "admitted_context_refs": ["design:public-subject-only"],
             "verdict": "PASS",
             "evidence_refs": ["test-run:001"],
             "issued_at": "2026-09-17T12:00:00-04:00",
             "supersedes": [],
+            "attestation_location": "OUT_OF_SUBJECT_TREE",
         }
         receipt.update(overrides)
         return receipt
@@ -121,6 +123,14 @@ class ReviewReceiptTests(unittest.TestCase):
         )
         self.assertTrue(any("subject_head" in error for error in errors))
 
+    def test_non_commit_subject_head_is_rejected_even_if_expected_matches(self) -> None:
+        errors = validate_review_receipt(
+            self._receipt(subject_head="not-a-commit"),
+            expected_repo="thebrazenbeard/hc-brain",
+            expected_head="not-a-commit",
+        )
+        self.assertTrue(any("40-character hexadecimal" in error for error in errors))
+
     def test_empty_review_scope_is_rejected(self) -> None:
         errors = validate_review_receipt(
             self._receipt(reviewed_scope=[]),
@@ -129,13 +139,38 @@ class ReviewReceiptTests(unittest.TestCase):
         )
         self.assertTrue(any("reviewed_scope" in error for error in errors))
 
-    def test_independent_claim_with_shaping_ancestry_is_rejected(self) -> None:
+    def test_independent_claim_with_material_in_scope_shaping_is_rejected(self) -> None:
         errors = validate_review_receipt(
-            self._receipt(shaping_or_diagnostic_refs=["finding:used-to-build-successor"]),
+            self._receipt(
+                shaping_or_diagnostic_refs=["finding:used-to-build-successor"],
+                material_shaping_within_reviewed_scope=True,
+            ),
             expected_repo="thebrazenbeard/hc-brain",
             expected_head="a" * 40,
         )
         self.assertTrue(any("independence" in error.lower() for error in errors))
+
+    def test_unrelated_shaping_history_does_not_destroy_scoped_independence(self) -> None:
+        receipt = self._receipt(
+            shaping_or_diagnostic_refs=["unrelated-subsystem:old-work"],
+            material_shaping_within_reviewed_scope=False,
+        )
+        self.assertEqual(
+            validate_review_receipt(
+                receipt,
+                expected_repo="thebrazenbeard/hc-brain",
+                expected_head="a" * 40,
+            ),
+            [],
+        )
+
+    def test_exact_head_receipt_must_be_out_of_subject_tree(self) -> None:
+        errors = validate_review_receipt(
+            self._receipt(attestation_location="SUBJECT_TREE"),
+            expected_repo="thebrazenbeard/hc-brain",
+            expected_head="a" * 40,
+        )
+        self.assertTrue(any("out of subject tree" in error.lower() for error in errors))
 
     def test_unknown_verdict_is_rejected(self) -> None:
         errors = validate_review_receipt(
@@ -158,6 +193,7 @@ class ReviewReceiptTests(unittest.TestCase):
             verdict="COMMENT",
             independence_state="MATERIALLY_SHAPED_TARGET",
             shaping_or_diagnostic_refs=["design:v2"],
+            material_shaping_within_reviewed_scope=True,
         )
         self.assertEqual(
             validate_review_receipt(

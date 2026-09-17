@@ -26,7 +26,11 @@
         "AT_MOST_ONE_CURRENT_RECOVERY_EPOCH_PER_REFERENCE_RUNTIME",
         "NEW_EPOCH_IS_NOT_EXPOSED_WITH_UNFENCED_PRIOR_REQUESTED_EFFECTS"
       ],
-      "coordination_basis": "REQUIRED_TO_PRESERVE_EPOCH_AND_EFFECT_FENCE_INVARIANTS"
+      "coordination_basis": "REQUIRED_TO_PRESERVE_EPOCH_AND_EFFECT_FENCE_INVARIANTS",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/governed_kernel_v2.py",
+        "runtime/reference_kernel/test_vera_adversarial_kernel_v2.py"
+      ]
     },
     {
       "family_id": "reference.authority_grants",
@@ -52,7 +56,12 @@
         "GRANT_ISSUANCE_POLICY_IDENTITY_REMAINS_IN_PROVENANCE",
         "REVOKED_OR_STALE_GRANT_CANNOT_REGAIN_AUTHORITY_BY_REORDERING"
       ],
-      "coordination_basis": "REQUIRED_FOR_AUTHORITY_CURRENTNESS_AND_NO_SPLIT_BRAIN_ISSUANCE"
+      "coordination_basis": "REQUIRED_FOR_AUTHORITY_CURRENTNESS_AND_NO_SPLIT_BRAIN_ISSUANCE",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/hc_kernel.py",
+        "runtime/reference_kernel/governed_kernel_v2.py",
+        "runtime/reference_kernel/test_vera_adversarial_kernel_v2.py"
+      ]
     },
     {
       "family_id": "reference.effect_receipts",
@@ -78,7 +87,15 @@
         "CONFIRMED_OUTCOME_REQUIRES_ACTION_BOUND_OBSERVATION",
         "RESTART_NE_SAFE_TO_REDISPATCH"
       ],
-      "coordination_basis": "REQUIRED_WHERE_CONCURRENT_TRANSITIONS_COULD_VIOLATE_MONOTONE_ACTION_STATE"
+      "coordination_basis": "REQUIRED_WHERE_CONCURRENT_TRANSITIONS_COULD_VIOLATE_MONOTONE_ACTION_STATE",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/hc_kernel.py",
+        "runtime/reference_kernel/durable_kernel.py",
+        "runtime/reference_kernel/governed_kernel_v2.py",
+        "runtime/reference_kernel/test_hc_kernel.py",
+        "runtime/reference_kernel/test_durable_kernel.py",
+        "runtime/reference_kernel/test_vera_adversarial_kernel_v2.py"
+      ]
     },
     {
       "family_id": "reference.current_memory_records",
@@ -103,7 +120,12 @@
         "CONCURRENT_HEADS_REMAIN_VISIBLE",
         "LATEST_TIMESTAMP_ALONE_DOES_NOT_SELECT_CURRENT_HEAD"
       ],
-      "coordination_basis": "CANDIDATE_ADMISSION_MAY_AVOID_GLOBAL_COORDINATION_ONLY_IF_CONFLICT_PRESERVATION_REMAINS_INTACT"
+      "coordination_basis": "CANDIDATE_ADMISSION_MAY_AVOID_GLOBAL_COORDINATION_ONLY_IF_CONFLICT_PRESERVATION_REMAINS_INTACT",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/hc_kernel.py",
+        "runtime/reference_kernel/test_hc_kernel.py",
+        "runtime/reference_kernel/test_four_adversarial_kernel.py"
+      ]
     },
     {
       "family_id": "reference.evidence_records",
@@ -129,7 +151,13 @@
         "DERIVED_EVIDENCE_RETAINS_PARENT_LINEAGE",
         "OBSERVATION_NE_PREDICTION"
       ],
-      "coordination_basis": "COORDINATION_MAY_BE_AVOIDABLE_FOR_IMMUTABLE_ADMISSION_WHEN_ID_AND_LINEAGE_INVARIANTS_ARE_PRESERVED"
+      "coordination_basis": "COORDINATION_MAY_BE_AVOIDABLE_FOR_IMMUTABLE_ADMISSION_WHEN_ID_AND_LINEAGE_INVARIANTS_ARE_PRESERVED",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/hc_kernel.py",
+        "runtime/reference_kernel/durable_kernel.py",
+        "runtime/reference_kernel/test_four_adversarial_kernel.py",
+        "runtime/reference_kernel/test_four_adversarial_kernel_r2.py"
+      ]
     },
     {
       "family_id": "reference.routed_events",
@@ -154,8 +182,13 @@
         "ROUTED_NE_INCORPORATED",
         "PRIORITY_NE_AUTHORITY"
       ],
-      "coordination_basis": "LOCAL_ROUTING_MAY_CONTINUE_WITH_BOUNDED_SCOPE_WHILE_GLOBAL_PROTECTED_WRITES_REMAIN_SEPARATELY_GOVERNED"
+      "coordination_basis": "LOCAL_ROUTING_MAY_CONTINUE_WITH_BOUNDED_SCOPE_WHILE_GLOBAL_PROTECTED_WRITES_REMAIN_SEPARATELY_GOVERNED",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/hc_kernel.py",
+        "runtime/reference_kernel/durable_kernel.py",
+        "runtime/reference_kernel/test_hc_kernel.py"
+      ]
     }
   ],
-  "research_note": "Coordination is selected from state-family invariants and operation semantics rather than imposed globally; this follows the architectural lesson of invariant-confluence work without claiming a formal I-confluence proof for these candidate HC profiles."
+  "research_note": "Coordination is selected from state-family invariants and operation semantics rather than imposed globally; this follows the architectural lesson of invariant-confluence work without claiming a formal I-confluence proof for these candidate HC profiles. Mechanical evidence refs bind each profile to executable/source evidence but do not prove a complete distributed implementation."
 }

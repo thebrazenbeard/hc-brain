@@ -13,7 +13,7 @@ ALLOWED_REVIEW_VERDICTS = {"PASS", "FAIL", "COMMENT", "CONDITIONAL_PASS"}
 ALLOWED_INDEPENDENCE_STATES = {"INDEPENDENT_WITHIN_DECLARED_SCOPE", "MATERIALLY_AUTHORED_TARGET", "MATERIALLY_SHAPED_TARGET", "PRE_ADJUDICATED_TARGET_OR_EVIDENCE", "INDEPENDENCE_UNKNOWN"}
 ALLOWED_REVIEWER_ROLES = {"PRIMARY_ARCHITECT_OR_WARDEN_REVIEW", "AUTHORIAL_SECONDARY_OR_IMPLEMENTATION_READINESS_REVIEW", "INDEPENDENT_SECONDARY_REVIEW", "HOSTILE_OR_ADVERSARIAL_REVIEW", "IMPLEMENTATION_TEST_EVIDENCE"}
 
-STATE_PROFILE_REQUIRED_FIELDS = ("family_id", "semantic_owner", "consistency_class", "protected", "continuity_bearing", "partition_write_policy", "partition_read_policy", "merge_or_reconciliation_rule", "stale_state_policy", "recovery_fence_policy", "effect_dependency_policy", "qualification_refs", "provenance")
+STATE_PROFILE_REQUIRED_FIELDS = ("family_id", "semantic_owner", "consistency_class", "protected", "continuity_bearing", "partition_write_policy", "partition_read_policy", "merge_or_reconciliation_rule", "stale_state_policy", "recovery_fence_policy", "effect_dependency_policy", "qualification_refs", "provenance", "safety_invariants", "coordination_basis")
 REVIEW_RECEIPT_REQUIRED_FIELDS = ("receipt_id", "subject_repo", "subject_head", "reviewed_scope", "reviewer_execution_subject", "reviewer_role", "independence_state", "authored_artifact_refs", "shaping_or_diagnostic_refs", "prior_adjudication_refs", "material_shaping_within_reviewed_scope", "admitted_context_refs", "verdict", "evidence_refs", "issued_at", "supersedes", "attestation_location")
 _COMMIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
@@ -77,6 +77,10 @@ def validate_state_family_profiles(document: dict[str, Any]) -> list[str]:
             errors.append(f"{label}.qualification_refs must be a string list")
         if not _is_string_list(profile.get("provenance"), allow_empty=False):
             errors.append(f"{label}.provenance must be a non-empty string list")
+        if not _is_string_list(profile.get("safety_invariants"), allow_empty=False):
+            errors.append(f"{label}.safety_invariants must be a non-empty string list")
+        if not _is_nonempty_string(profile.get("coordination_basis")):
+            errors.append(f"{label}.coordination_basis must be non-empty")
     return errors
 
 

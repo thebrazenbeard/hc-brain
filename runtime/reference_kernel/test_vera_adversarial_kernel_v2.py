@@ -6,22 +6,13 @@ import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from governed_kernel_v2 import (
-    GovernedDurableReferenceKernelV2,
-    GovernedReferenceKernelV2,
-)
+from governed_kernel_v2 import GovernedDurableReferenceKernelV2, GovernedReferenceKernelV2
 
 TEST_POLICY_ID = "test-move-policy-v1"
 
 
 def allow_test_move_grants(principal, grantee, action_scope, target_scope, basis_refs):
-    return (
-        principal == "operator-A"
-        and grantee.startswith("planner")
-        and action_scope == "MOVE"
-        and target_scope.startswith("arm")
-        and bool(basis_refs)
-    )
+    return principal == "operator-A" and grantee.startswith("planner") and action_scope == "MOVE" and target_scope.startswith("arm") and bool(basis_refs)
 
 
 class VeraAuthorityMutationV2Tests(unittest.TestCase):
@@ -31,20 +22,11 @@ class VeraAuthorityMutationV2Tests(unittest.TestCase):
         self.issuer_b = object()
 
     def kernel(self) -> GovernedReferenceKernelV2:
-        return GovernedReferenceKernelV2(
-            clock=lambda: self.now,
-            authority_issuer_capabilities=(
-                (self.issuer_a, "operator-A"),
-                (self.issuer_b, "operator-B"),
-            ),
-            authority_issuance_validator=allow_test_move_grants,
-            authority_issuance_policy_id=TEST_POLICY_ID,
-        )
+        return GovernedReferenceKernelV2(clock=lambda: self.now, authority_issuer_capabilities=((self.issuer_a, "operator-A"), (self.issuer_b, "operator-B")), authority_issuance_validator=allow_test_move_grants, authority_issuance_policy_id=TEST_POLICY_ID)
 
     def test_unregistered_handle_cannot_mint_authority(self) -> None:
-        kernel = self.kernel()
         with self.assertRaisesRegex(ValueError, "authority issuer capability is not registered"):
-            kernel.register_grant(source_capability=object(), grantee="planner", action_scope="MOVE", target_scope="arm", basis_refs=("basis:explicit",), valid_from=self.now, expires_at=self.now + timedelta(minutes=5))
+            self.kernel().register_grant(source_capability=object(), grantee="planner", action_scope="MOVE", target_scope="arm", basis_refs=("basis:explicit",), valid_from=self.now, expires_at=self.now + timedelta(minutes=5))
 
     def test_grantor_is_derived_from_opaque_capability(self) -> None:
         grant = self.kernel().register_grant(source_capability=self.issuer_a, grantee="planner", action_scope="MOVE", target_scope="arm", basis_refs=("basis:explicit",), valid_from=self.now, expires_at=self.now + timedelta(minutes=5))
@@ -64,10 +46,8 @@ class VeraAuthorityMutationV2Tests(unittest.TestCase):
     def test_authenticated_issuer_still_requires_scope_policy(self) -> None:
         def policy(principal, grantee, action_scope, target_scope, basis_refs):
             return principal == "operator-A" and grantee == "planner" and action_scope == "MOVE" and target_scope == "arm" and bool(basis_refs)
-
         kernel = GovernedReferenceKernelV2(clock=lambda: self.now, authority_issuer_capabilities=((self.issuer_a, "operator-A"),), authority_issuance_validator=policy, authority_issuance_policy_id="bounded-arm-policy-v1")
-        allowed = kernel.register_grant(source_capability=self.issuer_a, grantee="planner", action_scope="MOVE", target_scope="arm", basis_refs=("basis:explicit",), valid_from=self.now, expires_at=self.now + timedelta(minutes=5))
-        self.assertEqual(allowed.grantor, "operator-A")
+        self.assertEqual(kernel.register_grant(source_capability=self.issuer_a, grantee="planner", action_scope="MOVE", target_scope="arm", basis_refs=("basis:explicit",), valid_from=self.now, expires_at=self.now + timedelta(minutes=5)).grantor, "operator-A")
         with self.assertRaisesRegex(ValueError, "authority issuance policy denied grant"):
             kernel.register_grant(source_capability=self.issuer_a, grantee="planner", action_scope="IDENTITY_REWRITE", target_scope="self", basis_refs=("basis:explicit",), valid_from=self.now, expires_at=self.now + timedelta(minutes=5))
 
@@ -81,10 +61,13 @@ class VeraAuthorityMutationV2Tests(unittest.TestCase):
             GovernedReferenceKernelV2(authority_issuer_capabilities=((self.issuer_a, "operator-A"),), authority_issuance_validator=allow_test_move_grants)
 
     def test_issuance_policy_identity_is_kernel_bound_into_grant_provenance(self) -> None:
-        kernel = GovernedReferenceKernelV2(clock=lambda: self.now, authority_issuer_capabilities=((self.issuer_a, "operator-A"),), authority_issuance_validator=allow_test_move_grants, authority_issuance_policy_id=TEST_POLICY_ID)
-        grant = kernel.register_grant(source_capability=self.issuer_a, grantee="planner", action_scope="MOVE", target_scope="arm", basis_refs=("basis:explicit",), valid_from=self.now, expires_at=self.now + timedelta(minutes=5), provenance=("caller-context",))
+        grant = self.kernel().register_grant(source_capability=self.issuer_a, grantee="planner", action_scope="MOVE", target_scope="arm", basis_refs=("basis:explicit",), valid_from=self.now, expires_at=self.now + timedelta(minutes=5), provenance=("caller-context",))
         self.assertIn("caller-context", grant.provenance)
         self.assertIn(f"authority-issuance-policy:{TEST_POLICY_ID}", grant.provenance)
+
+    def test_caller_cannot_forge_reserved_authority_policy_provenance(self) -> None:
+        with self.assertRaisesRegex(ValueError, "reserved authority issuance policy provenance"):
+            self.kernel().register_grant(source_capability=self.issuer_a, grantee="planner", action_scope="MOVE", target_scope="arm", basis_refs=("basis:explicit",), valid_from=self.now, expires_at=self.now + timedelta(minutes=5), provenance=("authority-issuance-policy:forged",))
 
 
 class VeraAtomicRecoveryFenceV2Tests(unittest.TestCase):
@@ -106,12 +89,10 @@ class VeraAtomicRecoveryFenceV2Tests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "journal.jsonl"
             kernel = self._make_kernel(path)
-            action_a = self._requested_action(kernel, "a")
-            action_b = self._requested_action(kernel, "b")
+            action_a, action_b = self._requested_action(kernel, "a"), self._requested_action(kernel, "b")
             before = len(path.read_text(encoding="utf-8").splitlines())
             self.assertEqual(kernel.restart(), 1)
-            lines = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
-            appended = lines[before:]
+            appended = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()][before:]
             self.assertEqual(len(appended), 1)
             self.assertEqual(appended[0]["event_type"], "RECOVERY_FENCE")
             self.assertEqual(appended[0]["data"]["requested_action_ids"], sorted([action_a, action_b]))
@@ -121,8 +102,7 @@ class VeraAtomicRecoveryFenceV2Tests(unittest.TestCase):
     def test_replay_rejects_recovery_fence_with_incomplete_requested_set(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             kernel = self._make_kernel(Path(tmp) / "journal.jsonl")
-            self._requested_action(kernel, "a")
-            self._requested_action(kernel, "b")
+            self._requested_action(kernel, "a"); self._requested_action(kernel, "b")
             with self.assertRaisesRegex(ValueError, "requested_action_ids must exactly match"):
                 kernel._validate_recovery_fence({"from_epoch": 0, "to_epoch": 1, "requested_action_ids": [next(iter(kernel.effect_receipts))]}, event_epoch=0)
 
@@ -146,7 +126,6 @@ class VeraAtomicRecoveryFenceV2Tests(unittest.TestCase):
                 if self.fail_fence and event_type == "RECOVERY_FENCE":
                     raise OSError("injected fence append failure")
                 return super()._record(event_type, data)
-
         with tempfile.TemporaryDirectory() as tmp:
             kernel = FailingFenceKernel(Path(tmp) / "journal.jsonl", clock=lambda: self.now, authority_issuer_capabilities=((self.issuer, "operator-A"),), authority_issuance_validator=allow_test_move_grants, authority_issuance_policy_id=TEST_POLICY_ID)
             action = self._requested_action(kernel, "a")

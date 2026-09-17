@@ -14,7 +14,7 @@ ALLOWED_INDEPENDENCE_STATES = {"INDEPENDENT_WITHIN_DECLARED_SCOPE", "MATERIALLY_
 ALLOWED_REVIEWER_ROLES = {"PRIMARY_ARCHITECT_OR_WARDEN_REVIEW", "AUTHORIAL_SECONDARY_OR_IMPLEMENTATION_READINESS_REVIEW", "INDEPENDENT_SECONDARY_REVIEW", "HOSTILE_OR_ADVERSARIAL_REVIEW", "IMPLEMENTATION_TEST_EVIDENCE"}
 ALLOWED_ATTESTATION_LOCATIONS = {"OUT_OF_SUBJECT_TREE"}
 
-STATE_PROFILE_REQUIRED_FIELDS = ("family_id", "semantic_owner", "consistency_class", "protected", "continuity_bearing", "partition_write_policy", "partition_read_policy", "merge_or_reconciliation_rule", "stale_state_policy", "recovery_fence_policy", "effect_dependency_policy", "qualification_refs", "provenance", "safety_invariants", "coordination_basis")
+STATE_PROFILE_REQUIRED_FIELDS = ("family_id", "semantic_owner", "consistency_class", "protected", "continuity_bearing", "partition_write_policy", "partition_read_policy", "merge_or_reconciliation_rule", "stale_state_policy", "recovery_fence_policy", "effect_dependency_policy", "qualification_refs", "provenance", "safety_invariants", "coordination_basis", "mechanical_evidence_refs")
 REVIEW_RECEIPT_REQUIRED_FIELDS = ("receipt_id", "subject_repo", "subject_head", "reviewed_scope", "reviewer_execution_subject", "reviewer_role", "independence_state", "authored_artifact_refs", "shaping_or_diagnostic_refs", "prior_adjudication_refs", "material_shaping_within_reviewed_scope", "admitted_context_refs", "verdict", "evidence_refs", "issued_at", "supersedes", "attestation_location")
 _COMMIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
@@ -82,6 +82,8 @@ def validate_state_family_profiles(document: dict[str, Any]) -> list[str]:
             errors.append(f"{label}.safety_invariants must be a non-empty string list")
         if not _is_nonempty_string(profile.get("coordination_basis")):
             errors.append(f"{label}.coordination_basis must be non-empty")
+        if not _is_string_list(profile.get("mechanical_evidence_refs"), allow_empty=False):
+            errors.append(f"{label}.mechanical_evidence_refs must be a non-empty string list")
     return errors
 
 
@@ -157,7 +159,7 @@ def _validate_file_references(document: dict[str, Any], *, root: Path, source: P
         refs.extend(document["references"])
     for profile in document.get("profiles", []) if isinstance(document.get("profiles"), list) else []:
         if isinstance(profile, dict):
-            for field in ("qualification_refs", "provenance"):
+            for field in ("qualification_refs", "provenance", "mechanical_evidence_refs"):
                 values = profile.get(field)
                 if isinstance(values, list):
                     refs.extend(values)

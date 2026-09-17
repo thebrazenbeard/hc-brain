@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
-from typing import Any, Iterable, Optional, Tuple
+from typing import Any, Callable, Iterable, Optional, Tuple
 
 from durable_kernel import DurableReferenceKernel, JournalIntegrityError
 from hc_kernel import (
@@ -13,6 +13,7 @@ from hc_kernel import (
 
 
 RECOVERY_FENCE_EVENT = "RECOVERY_FENCE"
+AuthorityIssuanceValidator = Callable[[str, str, str, str, tuple[str, ...]], bool]
 
 
 def _normalize_authority_issuer_capabilities(
@@ -59,11 +60,19 @@ def _normalize_authority_issuer_capabilities(
 
 class _AuthorityIssuerBoundary:
     _authority_issuer_capabilities: Tuple[Tuple[object, str], ...]
+    _authority_issuance_validator: Optional[AuthorityIssuanceValidator]
 
-    def _set_authority_issuer_capabilities(self, registrations: Any) -> None:
+    def _set_authority_issuer_boundary(
+        self,
+        registrations: Any,
+        validator: Optional[AuthorityIssuanceValidator],
+    ) -> None:
+        if validator is not None and not callable(validator):
+            raise ValueError("authority issuance validator must be callable")
         self._authority_issuer_capabilities = _normalize_authority_issuer_capabilities(
             registrations
         )
+        self._authority_issuance_validator = validator
 
     def _principal_for_authority_capability(
         self, source_capability: object
@@ -79,23 +88,49 @@ class _AuthorityIssuerBoundary:
             raise ValueError("authority issuer capability is not registered")
         return principal
 
+    def _require_issuance_policy(
+        self,
+        *,
+        principal: str,
+        grantee: str,
+        action_scope: str,
+        target_scope: str,
+        basis_refs: tuple[str, ...],
+    ) -> None:
+        validator = self._authority_issuance_validator
+        if validator is None:
+            raise ValueError("authority issuance policy is not configured")
+        if not validator(
+            principal,
+            grantee,
+            action_scope,
+            target_scope,
+            basis_refs,
+        ):
+            raise ValueError("authority issuance policy denied grant")
+
 
 class GovernedReferenceKernelV2(_AuthorityIssuerBoundary, ReferenceKernel):
-    """ReferenceKernel with capability-authenticated authority mutation.
+    """ReferenceKernel with capability-authenticated, scope-governed authority mutation.
 
-    The capability authenticates the in-process principal identity used by this
-    narrow reference slice. It does not by itself prove that the principal has
-    unrestricted jurisdiction to mint every possible grant class/scope.
+    The opaque capability authenticates the in-process principal identity used
+    by this narrow reference slice. A separate host policy must also authorize
+    the exact grantee/action/target/basis tuple. Neither mechanism claims
+    cryptographic identity or complete delegation law.
     """
 
     def __init__(
         self,
         *,
         authority_issuer_capabilities: Any = None,
+        authority_issuance_validator: Optional[AuthorityIssuanceValidator] = None,
         **kwargs: Any,
     ) -> None:
         super().__init__(**kwargs)
-        self._set_authority_issuer_capabilities(authority_issuer_capabilities)
+        self._set_authority_issuer_boundary(
+            authority_issuer_capabilities,
+            authority_issuance_validator,
+        )
 
     def register_grant(
         self,
@@ -110,13 +145,21 @@ class GovernedReferenceKernelV2(_AuthorityIssuerBoundary, ReferenceKernel):
         provenance: Iterable[str] = (),
     ) -> AuthorityGrant:
         principal = self._require_authority_principal(source_capability)
+        basis_tuple = _string_tuple(basis_refs, "basis_refs")
+        self._require_issuance_policy(
+            principal=principal,
+            grantee=grantee,
+            action_scope=action_scope,
+            target_scope=target_scope,
+            basis_refs=basis_tuple,
+        )
         return ReferenceKernel.register_grant(
             self,
             grantor=principal,
             grantee=grantee,
             action_scope=action_scope,
             target_scope=target_scope,
-            basis_refs=basis_refs,
+            basis_refs=basis_tuple,
             valid_from=valid_from,
             expires_at=expires_at,
             provenance=provenance,
@@ -148,14 +191,20 @@ class GovernedDurableReferenceKernelV2(_AuthorityIssuerBoundary, DurableReferenc
         journal_path,
         *,
         authority_issuer_capabilities: Any = None,
+        authority_issuance_validator: Optional[AuthorityIssuanceValidator] = None,
         **kwargs: Any,
     ) -> None:
         # `_load_existing()` may call our overridden recovery path through the
-        # base constructor, but recovery fencing itself does not depend on live
-        # issuer handles. Register those handles after durable reconstruction.
+        # base constructor. Recovery fencing does not depend on live issuer
+        # handles or live issuance policy; those are required only for new
+        # authority mutations after reconstruction.
         self._authority_issuer_capabilities = ()
+        self._authority_issuance_validator = None
         super().__init__(journal_path, **kwargs)
-        self._set_authority_issuer_capabilities(authority_issuer_capabilities)
+        self._set_authority_issuer_boundary(
+            authority_issuer_capabilities,
+            authority_issuance_validator,
+        )
 
     def register_grant(
         self,
@@ -171,13 +220,21 @@ class GovernedDurableReferenceKernelV2(_AuthorityIssuerBoundary, DurableReferenc
     ) -> AuthorityGrant:
         self._ensure_writable()
         principal = self._require_authority_principal(source_capability)
+        basis_tuple = _string_tuple(basis_refs, "basis_refs")
+        self._require_issuance_policy(
+            principal=principal,
+            grantee=grantee,
+            action_scope=action_scope,
+            target_scope=target_scope,
+            basis_refs=basis_tuple,
+        )
         grant = ReferenceKernel.register_grant(
             self,
             grantor=principal,
             grantee=grantee,
             action_scope=action_scope,
             target_scope=target_scope,
-            basis_refs=basis_refs,
+            basis_refs=basis_tuple,
             valid_from=valid_from,
             expires_at=expires_at,
             provenance=provenance,

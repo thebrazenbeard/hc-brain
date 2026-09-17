@@ -6,100 +6,78 @@ Subject branch base: `3d9df59b2ad8b10f2d46b4dfe67a309e2b02f207` (`noah/reference
 
 ## Purpose
 
-The current HC architecture already separates routing, authority, epistemic support, resource state, temporal-hypergraph state, recovery, reviewer provenance, and effect confirmation. The next hardening step is not another broad conceptual layer. It is to make four existing architectural promises mechanically harder to counterfeit:
+The current HC architecture already separates routing, authority, epistemic support, resource state, temporal-hypergraph state, recovery, reviewer provenance, and effect confirmation. V2 makes four existing promises mechanically harder to counterfeit:
 
-1. a grant must not become valid merely because a caller can construct a syntactically valid grant object;
+1. a grant must not become valid merely because a caller can construct a valid object or possess an authenticated issuer handle;
 2. restart fencing must become one semantically atomic recovery transition rather than a sequence that can be observed half-applied;
 3. partition behavior must be declared per protected state family rather than left as a generic choice among leases, epochs, quorum, consensus, or mergeable island operation;
 4. qualification must bind exact source, exact evidence ancestry, reviewer provenance, and architecture/spec conformance through executable checks rather than prose conventions alone.
 
 This design deliberately does not introduce a central executive, one universal consistency algorithm, or a global truth scalar.
 
-## Evidence and architecture basis
-
-The existing architecture already supports this direction:
-
-- `AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md` requires explicit, scoped, current, provenance-bearing authority and states that routing, capability, desire, role, and technical access do not create effect permission.
-- `BOOTSTRAP_RECOVERY_AND_SAFE_DEGRADATION.md` requires recovery epochs or equivalent causal-currentness identities and treats interrupted non-idempotent effects as unresolved until reconciled.
-- `FAULT_TOLERANCE_AND_SELF_REPAIR.md` explicitly allows different partition mechanisms but requires each continuity-bearing protected state family to have a declared policy.
-- `TEMPORAL_EVENT_CONTRACT.md` rejects insertion order and wall-clock recency as automatic semantic precedence.
-- `RUNTIME_COMPONENT_REGISTRATION_AND_STATE_CUSTODY.md` requires all material causal state to have explicit lifetime, referent, durability, recovery, and governance semantics.
-- `QUALIFICATION_REVIEWER_PROVENANCE.md` defines independence as scope-relative shaping ancestry, not reviewer label inequality.
-
-External research reinforces but does not dictate the design. Recent network-neuroscience work continues to support dynamic, nonstationary, higher-order interactions rather than one static pairwise graph, while distributed-systems literature emphasizes state-machine replication/consensus as tools whose guarantees depend on the failure and consistency model. Filesystem journaling literature likewise distinguishes a durable transaction commit from a sequence of individually durable writes. These are transfer principles, not claims that HC should copy one biological or distributed-systems implementation.
-
 ## Design principle 1 — authority mutation is itself an effect
 
-The current reference kernel checks whether a stored grant allows an effect, but `register_grant()` and `revoke_grant()` accept caller-supplied semantic identities. That means the narrow slice protects consumption of authority more strongly than creation/mutation of authority.
+The predecessor kernel protects consumption of stored authority more strongly than creation/mutation of authority. V2 separates two questions that must both pass:
 
-The replacement rule is:
+`WHO_IS_REQUESTING_ISSUANCE?`
+
+`IS_THAT_PRINCIPAL_ALLOWED_TO_ISSUE_THIS_EXACT_GRANT?`
+
+Therefore:
 
 `VALID_GRANT_SHAPE != AUTHORIZED_GRANT_ISSUANCE`
+
+`AUTHENTICATED_ISSUER != UNLIMITED_ISSUANCE_JURISDICTION`
 
 `KNOWN_GRANT_ID != AUTHORIZED_REVOCATION`
 
 ### Issuer capability boundary
 
-The reference slice will use the same narrow pattern already proven useful for effect-outcome sources: host-registered opaque in-process capabilities.
+The reference slice uses host-registered opaque in-process capabilities. A grant request supplies the opaque capability; the kernel derives the grantor principal by object identity rather than trusting a caller-supplied label.
 
-Conceptually:
+This authenticates only the in-process principal identity used by the narrow reference slice.
 
-```text
-AUTHORITY_ISSUER_REGISTRATION {
-  opaque_capability
-  principal_id
-}
-```
+### Issuance-jurisdiction policy
 
-A grant-creation request supplies possession of the opaque capability; the kernel derives the grantor principal from the registered capability rather than trusting a caller-supplied grantor label.
+The kernel separately consults a host-owned policy over the exact tuple `(issuer principal, grantee, action scope, target scope, basis refs)`. Missing policy fails closed. Policy denial prevents grant creation.
 
-A revocation request must likewise carry an issuer/revoker capability. The kernel may permit revocation when the capability principal equals the original grantor in the minimal slice. More complex delegation/revocation ancestry remains an architectural extension and must not be faked by broad string matching.
+A future implementation may replace the callback with a typed delegation graph, jurisdiction lattice, grant-class registry, or equivalent governed mechanism, but must preserve the separation between issuer identity and issuance jurisdiction.
 
-This mechanism is explicitly an in-process reference boundary, not cryptographic identity proof or process isolation.
+### Revocation
+
+Revocation also requires an opaque capability. The current V2 slice permits revocation only when the capability principal equals the original grantor. Emergency or hierarchical revocation remains an explicit future policy extension rather than being inferred from technical access or labels.
+
+These are in-process reference boundaries, not cryptographic identity proof or process isolation.
 
 ## Design principle 2 — recovery fencing is one semantic transaction
 
-The current durable recovery path advances the epoch and then emits one receipt transition per unresolved requested action. A crash or journal failure between those records can leave a durable prefix in which the recovery epoch advanced while only some in-flight effects have been fenced.
+The predecessor durable recovery path writes an epoch advance and then one receipt transition per unresolved action. A durable prefix can therefore expose a new epoch while only some prior in-flight effects have been fenced.
 
-The replacement invariant is:
+V2 requires:
 
 `RECOVERY_EPOCH_ADVANCE <=> ALL_PREVIOUS_EPOCH_REQUESTED_EFFECTS_FENCED`
 
-For the reference journal, recovery will be encoded as one append event whose payload contains:
+The reference journal uses one `RECOVERY_FENCE` event containing `from_epoch`, `to_epoch`, and the exact canonical set of `requested_action_ids`.
 
-```text
-RECOVERY_FENCE {
-  from_epoch
-  to_epoch
-  requested_action_ids[]
-}
-```
+Replay rejects missing IDs, extra IDs, duplicates, noncanonical order, epoch mismatch, noncontiguous epoch advance, or a requested receipt originating in another epoch. Applying the event advances the epoch and converts the exact set to `UNRESOLVED_AFTER_RESTART` as one in-memory semantic transition.
 
-Replay validates that:
+Durability precedes live semantic promotion: if the fence append fails, the in-memory epoch and receipts remain in their old state.
 
-- `to_epoch == from_epoch + 1`;
-- `from_epoch` equals the currently reconstructed epoch;
-- `requested_action_ids` exactly equals the set of currently `REQUESTED` receipts;
-- every listed receipt originates in `from_epoch`;
-- applying the event changes the epoch and all those receipts to `UNRESOLVED_AFTER_RESTART` as one in-memory semantic transition.
-
-A missing action, extra action, duplicate, stale epoch, or reordered/replayed fence is journal corruption, not a partially acceptable recovery.
-
-This does not claim a single filesystem append is universally power-loss atomic. The journal's existing integrity model remains a reference-slice limitation. Future torn-tail handling may add explicit transaction framing or a repair/quarantine mode, but this design removes the current *semantic* multi-record recovery split.
+This does not prove power-loss atomicity of one filesystem append. Torn-tail handling and production-scale transaction framing remain separate implementation work.
 
 ## Design principle 3 — partition policy belongs to the state family
 
-The architecture correctly refuses to mandate one distributed-systems algorithm. That freedom is unsafe if an implementation can omit the policy entirely.
+The architecture correctly refuses to mandate one global distributed-systems algorithm. That freedom is unsafe if an implementation can omit the policy entirely.
 
-Every protected or continuity-bearing distributed state family therefore needs a machine-readable profile:
+Every protected or continuity-bearing distributed state family therefore needs a profile equivalent to:
 
 ```text
 STATE_FAMILY_CONSISTENCY_PROFILE {
   family_id
   semantic_owner
   consistency_class
-  write_authority_model
-  causal_metadata
+  protected
+  continuity_bearing
   partition_write_policy
   partition_read_policy
   merge_or_reconciliation_rule
@@ -111,27 +89,13 @@ STATE_FAMILY_CONSISTENCY_PROFILE {
 }
 ```
 
-Candidate `consistency_class` values describe semantics, not vendor algorithms:
+Consistency classes describe required semantics, not vendor algorithms. V2 allows `SINGLE_WRITER_EPOCH`, `QUORUM_COMMITTED`, `LINEARIZABLE_REQUIRED`, `CAUSALLY_ORDERED`, `MERGEABLE_CONCURRENT`, `LOCAL_EPHEMERAL`, and `READ_ONLY_REPLICA`.
 
-- `SINGLE_WRITER_EPOCH`;
-- `QUORUM_COMMITTED`;
-- `LINEARIZABLE_REQUIRED`;
-- `CAUSALLY_ORDERED`;
-- `MERGEABLE_CONCURRENT`;
-- `LOCAL_EPHEMERAL`;
-- `READ_ONLY_REPLICA`.
-
-Candidate partition write policies include `BLOCK`, `BOUNDED_ISLAND`, and `MERGE_CANDIDATES_ONLY`.
-
-Important default: a protected family without a declared profile is **not** silently treated as eventually consistent. For material writes its distributed conformance state is `UNKNOWN` and the write path fails closed where the policy is required.
-
-The point is not maximum consistency everywhere. Telemetry, ephemeral coalition scratch state, evidence append logs, authority state, identity/continuity state, and effect receipts have different semantics and should be permitted to choose different policies explicitly.
+An undeclared protected/material family is `UNKNOWN`, not eventually consistent by default. Material writes fail closed where the family policy is required.
 
 ## Design principle 4 — causal frontier is distinct from wall clock
 
-Temporal metadata remains important, but clocks do not by themselves establish semantic precedence under partition or replay.
-
-Where ordering materially affects authority, continuity, reconciliation, or durable state, records should be able to carry a causal frontier or equivalent predecessor set:
+Where ordering materially affects authority, continuity, reconciliation, or durable state, records should carry enough causal metadata to reconstruct predecessor relationships. A generic form is:
 
 ```text
 CAUSAL_FRONTIER {
@@ -142,96 +106,103 @@ CAUSAL_FRONTIER {
 }
 ```
 
-This does not force vector clocks universally. A single-writer epoch may need only `(epoch, generation)`. A mergeable concurrent family may need richer predecessor information. The common invariant is that semantic currentness can be reconstructed without pretending wall-clock recency implies causality.
+A single-writer family may need only `(epoch, generation)`; a concurrent mergeable family may need richer predecessor metadata.
 
 `LATER_TIMESTAMP != CAUSAL_SUCCESSOR`
 
+`CAUSAL_SUCCESSOR != MORE_TRUE`
+
+`CAUSAL_SUCCESSOR != MORE_AUTHORIZED`
+
 ## Qualification and review plane
 
-Qualification must not merely say that a reviewer was different from the author. The existing provenance contract already defines shaping ancestry. V2 therefore treats a review receipt as an exact-subject evidence object with at least:
+Qualification must not merely compare reviewer and author labels. Independence remains scope-relative material authorship/shaping ancestry.
 
-```text
-REVIEW_RECEIPT {
-  receipt_id
-  subject_repo
-  subject_head
-  reviewed_scope[]
-  reviewer_execution_subject
-  reviewer_role
-  independence_state
-  authored_artifact_refs[]
-  shaping_or_diagnostic_refs[]
-  prior_adjudication_refs[]
-  admitted_context_refs[]
-  verdict
-  evidence_refs[]
-  issued_at
-  supersedes[]
-}
-```
+A V2 review receipt includes exact subject, reviewed scope, reviewer execution subject/role, independence state, provenance refs, whether material shaping overlaps the reviewed scope, verdict, evidence refs, and attestation location.
 
-A promotion/qualification gate may consume such a receipt. The receipt never grants merge authority.
+### Scope-relative reviewer dependence
 
-The repository also needs a separate architecture/spec conformance workflow. It should validate machine-readable files, referenced canonical paths, duplicate IDs, status vocabulary, exact-subject fields where required, and known architecture-to-kernel contract bindings. Kernel unit tests should remain narrow and not become a repository linter.
+Unrelated historical work must not automatically destroy independence for every future scope:
 
-## Hostile design challenges
+`UNRELATED_AUTHORSHIP != AUTOMATIC_DEPENDENCE_FOR_ALL_SCOPES`
+
+`MATERIAL_SHAPING_WITHIN_REVIEWED_SCOPE != INDEPENDENT_WITHIN_THAT_SCOPE`
+
+### Exact-head attestation placement
+
+An exact-head receipt cannot be committed into the same Git subject tree that it attests without changing that head:
+
+`REVIEW HEAD A -> COMMIT RECEIPT FOR A -> HEAD B`
+
+The committed receipt is then historical evidence about A, not an exact-head receipt for B. Therefore current exact-head receipts must live out of the subject tree—for example as an exact-head-bound pull-request review, external check/attestation, or governed Bus receipt. The repository contains the receipt schema and validator, not a self-invalidating current receipt.
+
+`IN_SUBJECT_RECEIPT_FOR_CURRENT_HEAD = SELF_INVALIDATING`
+
+A review receipt can feed qualification eligibility within policy; it never grants merge authority.
+
+## Hostile design challenges and dispositions
 
 ### H1 — capability possession becomes universal authority
 
 Counterexample: one issuer handle can mint every action/target scope.
 
-Response: the minimal slice proves issuer authenticity only, not unrestricted semantic jurisdiction. A host policy or later delegation contract must constrain which registered principal may issue which grant class/scope. Qualification must not generalize the narrow slice into complete delegation governance.
+Disposition: **REPAIRED IN V2 REFERENCE SLICE.** Issuer authentication and issuance jurisdiction are separate; missing or denying policy fails closed.
+
+Residual ceiling: the callback is a narrow host-policy seam, not complete delegation/jurisdiction architecture.
 
 ### H2 — revocation by original grantor is too weak
 
-Counterexample: emergency or hierarchical revocation may need a different principal.
-
-Response: the reference slice's same-principal rule is intentionally narrow. The architecture record reserves explicit revocation ancestry/policy rather than pretending string equality solves delegation.
+Disposition: **OPEN BY DESIGN / NARROW SLICE.** Broader revocation requires explicit typed policy rather than implicit power inheritance.
 
 ### H3 — one recovery record can become huge
 
-Counterexample: millions of in-flight effects make a single fence record impractical.
-
-Response: the reference slice is small. A production design may use transaction framing or a committed recovery manifest plus chunked members. What may not change is the semantic atomicity rule: no externally usable state may claim the new recovery epoch while a subset of prior requested effects remain unfenced.
+Disposition: **OPEN PRODUCTION-SCALE DESIGN.** Production may use transaction framing or a committed manifest with chunks, but no externally usable state may claim the new epoch while only a subset of prior requested effects is fenced.
 
 ### H4 — strong consistency everywhere destroys availability
 
-Counterexample: global linearizability would make benign local cognition brittle under partition.
-
-Response: V2 explicitly rejects one global consistency class. The state-family profile exists to permit weaker semantics where safe and stronger semantics where required.
+Disposition: **REJECTED DESIGN.** V2 requires state-family semantics rather than one global consistency mode.
 
 ### H5 — causal metadata becomes another truth scalar
 
-Counterexample: a causally later record is assumed more correct.
-
-Response: causal succession establishes dependency/order only. It does not establish epistemic truth, authority, or identity relevance.
+Disposition: **REJECTED DESIGN.** Causal order remains separate from epistemic support, authority, consent, and identity relevance.
 
 ### H6 — qualification receipts become self-certifying
 
-Counterexample: a branch adds its own PASS receipt and passes CI.
+Disposition: **PARTIALLY MECHANICALLY HARDENED.** Repository-local validation can check structure and declared provenance consistency but cannot independently prove reviewer identity/trust root.
 
-Response: repository-local structure can verify shape, subject binding, and declared provenance, but cannot independently prove the human/agent/process identity behind a receipt. Acceptance policy must classify the trust root explicitly; exact-head receipt presence is eligibility evidence, not autonomous promotion authority.
+### H7 — exact-head receipt invalidates itself
 
-## Proposed implementation cut
+Disposition: **REPAIRED IN V2 CONTRACT.** Current exact-head receipts are out-of-subject attestations.
 
-This branch will implement only the smallest executable vertical slices needed to falsify the three most immediate runtime gaps and the current qualification-process gaps:
+### H8 — unrelated work destroys all reviewer independence
 
-1. opaque capability-bound authority issuance/revocation in `ReferenceKernel` and durable replay;
-2. single-event atomic recovery fencing in `DurableReferenceKernel`;
+Disposition: **REPAIRED IN V2 VALIDATOR.** Material dependence is evaluated within the declared review scope.
+
+## Implemented V2 cut
+
+This branch implements:
+
+1. opaque capability-bound authority issuer identity plus separate fail-closed issuance-jurisdiction policy;
+2. single-event semantic recovery fencing in `GovernedDurableReferenceKernelV2`;
 3. machine-readable state-family consistency policy schema plus hostile conformance fixtures;
-4. machine-readable review receipt schema/validator and a separate repo-wide architecture/spec conformance command/workflow.
+4. machine-readable exact-head review receipt schema/validator and separate architecture/spec workflow;
+5. external research synthesis and hostile self-review surface.
 
-It will not implement complete cognition, distributed consensus, cryptographic identities, full delegation law, autonomous merge, or production deployment.
+It does not implement complete cognition, distributed consensus, cryptographic identities, complete delegation law, production-scale torn-write recovery, autonomous merge, or deployment.
 
 ## Claim ceiling
-
-A successful V2 test run would establish only that the named reference mechanisms enforce their declared invariants under the tested fixtures.
 
 `V2_TEST_PASS != COMPLETE_HC_IMPLEMENTATION`
 
 `V2_TEST_PASS != DISTRIBUTED_CONSENSUS_PROOF`
 
 `V2_TEST_PASS != CRYPTOGRAPHIC_IDENTITY_PROOF`
+
+`V2_TEST_PASS != COMPLETE_DELEGATION_GOVERNANCE`
+
+`V2_TEST_PASS != POWER_LOSS_ATOMICITY_PROOF`
+
+`V2_TEST_PASS != INDEPENDENT_REVIEW`
 
 `V2_TEST_PASS != MERGE_AUTHORITY`
 

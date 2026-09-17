@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import unittest
+from pathlib import Path
 
 from tools.validate_hc_architecture import (
     validate_review_receipt,
@@ -89,6 +91,15 @@ class StateFamilyConsistencyPolicyTests(unittest.TestCase):
             ]
         }
         self.assertEqual(validate_state_family_profiles(document), [])
+
+    def test_reference_kernel_state_family_registry_exists_and_validates(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        registry = json.loads(
+            (root / "specs/HC_STATE_FAMILY_CONSISTENCY_REGISTRY_V1.yaml").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(validate_state_family_profiles(registry), [])
 
 
 class ReviewReceiptTests(unittest.TestCase):

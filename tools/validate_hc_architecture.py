@@ -12,6 +12,7 @@ ALLOWED_PARTITION_READ_POLICIES = {"CURRENT_ONLY", "LOCAL_ALLOWED", "STALE_WITH_
 ALLOWED_REVIEW_VERDICTS = {"PASS", "FAIL", "COMMENT", "CONDITIONAL_PASS"}
 ALLOWED_INDEPENDENCE_STATES = {"INDEPENDENT_WITHIN_DECLARED_SCOPE", "MATERIALLY_AUTHORED_TARGET", "MATERIALLY_SHAPED_TARGET", "PRE_ADJUDICATED_TARGET_OR_EVIDENCE", "INDEPENDENCE_UNKNOWN"}
 ALLOWED_REVIEWER_ROLES = {"PRIMARY_ARCHITECT_OR_WARDEN_REVIEW", "AUTHORIAL_SECONDARY_OR_IMPLEMENTATION_READINESS_REVIEW", "INDEPENDENT_SECONDARY_REVIEW", "HOSTILE_OR_ADVERSARIAL_REVIEW", "IMPLEMENTATION_TEST_EVIDENCE"}
+ALLOWED_ATTESTATION_LOCATIONS = {"OUT_OF_SUBJECT_TREE"}
 
 STATE_PROFILE_REQUIRED_FIELDS = ("family_id", "semantic_owner", "consistency_class", "protected", "continuity_bearing", "partition_write_policy", "partition_read_policy", "merge_or_reconciliation_rule", "stale_state_policy", "recovery_fence_policy", "effect_dependency_policy", "qualification_refs", "provenance", "safety_invariants", "coordination_basis")
 REVIEW_RECEIPT_REQUIRED_FIELDS = ("receipt_id", "subject_repo", "subject_head", "reviewed_scope", "reviewer_execution_subject", "reviewer_role", "independence_state", "authored_artifact_refs", "shaping_or_diagnostic_refs", "prior_adjudication_refs", "material_shaping_within_reviewed_scope", "admitted_context_refs", "verdict", "evidence_refs", "issued_at", "supersedes", "attestation_location")
@@ -84,7 +85,13 @@ def validate_state_family_profiles(document: dict[str, Any]) -> list[str]:
     return errors
 
 
-def validate_review_receipt(receipt: dict[str, Any], *, expected_repo: str, expected_head: str) -> list[str]:
+def validate_review_receipt(
+    receipt: dict[str, Any],
+    *,
+    expected_repo: str,
+    expected_head: str,
+    observed_attestation_location: str,
+) -> list[str]:
     errors: list[str] = []
     if not isinstance(receipt, dict):
         return ["receipt must be an object"]
@@ -119,8 +126,15 @@ def validate_review_receipt(receipt: dict[str, Any], *, expected_repo: str, expe
         errors.append("receipt issued_at must be non-empty")
     if independence_state == "INDEPENDENT_WITHIN_DECLARED_SCOPE" and material_overlap is True:
         errors.append("receipt independence claim conflicts with material shaping within reviewed scope")
-    if receipt.get("attestation_location") != "OUT_OF_SUBJECT_TREE":
-        errors.append("exact-head review receipt must be stored out of subject tree")
+
+    declared_location = receipt.get("attestation_location")
+    if declared_location not in ALLOWED_ATTESTATION_LOCATIONS:
+        errors.append("receipt declared attestation location must be out of subject tree")
+    if observed_attestation_location not in ALLOWED_ATTESTATION_LOCATIONS:
+        errors.append("observed attestation location must be out of subject tree")
+    if declared_location != observed_attestation_location:
+        errors.append("receipt declared attestation location does not match observed attestation location")
+
     if "merge_authority" in receipt:
         errors.append("review receipt cannot grant or encode merge authority")
     return errors

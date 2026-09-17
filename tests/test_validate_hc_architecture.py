@@ -141,11 +141,20 @@ class ReviewReceiptTests(unittest.TestCase):
         receipt.update(overrides)
         return receipt
 
+    def _validate(self, receipt, *, observed_location="OUT_OF_SUBJECT_TREE"):
+        return validate_review_receipt(
+            receipt,
+            expected_repo="thebrazenbeard/hc-brain",
+            expected_head="a" * 40,
+            observed_attestation_location=observed_location,
+        )
+
     def test_stale_subject_head_is_rejected(self) -> None:
         errors = validate_review_receipt(
             self._receipt(subject_head="b" * 40),
             expected_repo="thebrazenbeard/hc-brain",
             expected_head="a" * 40,
+            observed_attestation_location="OUT_OF_SUBJECT_TREE",
         )
         self.assertTrue(any("subject_head" in error for error in errors))
 
@@ -154,25 +163,20 @@ class ReviewReceiptTests(unittest.TestCase):
             self._receipt(subject_head="not-a-commit"),
             expected_repo="thebrazenbeard/hc-brain",
             expected_head="not-a-commit",
+            observed_attestation_location="OUT_OF_SUBJECT_TREE",
         )
         self.assertTrue(any("40-character hexadecimal" in error for error in errors))
 
     def test_empty_review_scope_is_rejected(self) -> None:
-        errors = validate_review_receipt(
-            self._receipt(reviewed_scope=[]),
-            expected_repo="thebrazenbeard/hc-brain",
-            expected_head="a" * 40,
-        )
+        errors = self._validate(self._receipt(reviewed_scope=[]))
         self.assertTrue(any("reviewed_scope" in error for error in errors))
 
     def test_independent_claim_with_material_in_scope_shaping_is_rejected(self) -> None:
-        errors = validate_review_receipt(
+        errors = self._validate(
             self._receipt(
                 shaping_or_diagnostic_refs=["finding:used-to-build-successor"],
                 material_shaping_within_reviewed_scope=True,
-            ),
-            expected_repo="thebrazenbeard/hc-brain",
-            expected_head="a" * 40,
+            )
         )
         self.assertTrue(any("independence" in error.lower() for error in errors))
 
@@ -181,37 +185,28 @@ class ReviewReceiptTests(unittest.TestCase):
             shaping_or_diagnostic_refs=["unrelated-subsystem:old-work"],
             material_shaping_within_reviewed_scope=False,
         )
-        self.assertEqual(
-            validate_review_receipt(
-                receipt,
-                expected_repo="thebrazenbeard/hc-brain",
-                expected_head="a" * 40,
-            ),
-            [],
-        )
+        self.assertEqual(self._validate(receipt), [])
 
     def test_exact_head_receipt_must_be_out_of_subject_tree(self) -> None:
-        errors = validate_review_receipt(
+        errors = self._validate(
             self._receipt(attestation_location="SUBJECT_TREE"),
-            expected_repo="thebrazenbeard/hc-brain",
-            expected_head="a" * 40,
+            observed_location="SUBJECT_TREE",
         )
         self.assertTrue(any("out of subject tree" in error.lower() for error in errors))
 
-    def test_unknown_verdict_is_rejected(self) -> None:
-        errors = validate_review_receipt(
-            self._receipt(verdict="SUPER_PASS"),
-            expected_repo="thebrazenbeard/hc-brain",
-            expected_head="a" * 40,
+    def test_self_declared_location_cannot_override_observed_subject_tree_location(self) -> None:
+        errors = self._validate(
+            self._receipt(attestation_location="OUT_OF_SUBJECT_TREE"),
+            observed_location="SUBJECT_TREE",
         )
+        self.assertTrue(any("observed attestation location" in error.lower() for error in errors))
+
+    def test_unknown_verdict_is_rejected(self) -> None:
+        errors = self._validate(self._receipt(verdict="SUPER_PASS"))
         self.assertTrue(any("verdict" in error for error in errors))
 
     def test_receipt_cannot_grant_merge_authority(self) -> None:
-        errors = validate_review_receipt(
-            self._receipt(merge_authority=True),
-            expected_repo="thebrazenbeard/hc-brain",
-            expected_head="a" * 40,
-        )
+        errors = self._validate(self._receipt(merge_authority=True))
         self.assertTrue(any("merge authority" in error.lower() for error in errors))
 
     def test_open_review_can_be_valid_without_claiming_independence(self) -> None:
@@ -221,14 +216,7 @@ class ReviewReceiptTests(unittest.TestCase):
             shaping_or_diagnostic_refs=["design:v2"],
             material_shaping_within_reviewed_scope=True,
         )
-        self.assertEqual(
-            validate_review_receipt(
-                receipt,
-                expected_repo="thebrazenbeard/hc-brain",
-                expected_head="a" * 40,
-            ),
-            [],
-        )
+        self.assertEqual(self._validate(receipt), [])
 
 
 if __name__ == "__main__":

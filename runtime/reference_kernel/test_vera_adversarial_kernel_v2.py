@@ -11,8 +11,8 @@ from governed_kernel_v2 import GovernedDurableReferenceKernelV2, GovernedReferen
 TEST_POLICY_ID = "test-move-policy-v1"
 
 
-def allow_test_move_grants(principal, grantee, action_scope, target_scope, basis_refs):
-    return principal == "operator-A" and grantee.startswith("planner") and action_scope == "MOVE" and target_scope.startswith("arm") and bool(basis_refs)
+def allow_test_move_grants(request):
+    return request.principal == "operator-A" and request.grantee.startswith("planner") and request.action_scope == "MOVE" and request.target_scope.startswith("arm") and bool(request.basis_refs)
 
 
 class VeraAuthorityMutationV2Tests(unittest.TestCase):
@@ -44,8 +44,8 @@ class VeraAuthorityMutationV2Tests(unittest.TestCase):
             GovernedReferenceKernelV2(authority_issuer_capabilities=(("spoofable-token", "operator-A"),), authority_issuance_validator=allow_test_move_grants, authority_issuance_policy_id=TEST_POLICY_ID)
 
     def test_authenticated_issuer_still_requires_scope_policy(self) -> None:
-        def policy(principal, grantee, action_scope, target_scope, basis_refs):
-            return principal == "operator-A" and grantee == "planner" and action_scope == "MOVE" and target_scope == "arm" and bool(basis_refs)
+        def policy(request):
+            return request.principal == "operator-A" and request.grantee == "planner" and request.action_scope == "MOVE" and request.target_scope == "arm" and bool(request.basis_refs)
         kernel = GovernedReferenceKernelV2(clock=lambda: self.now, authority_issuer_capabilities=((self.issuer_a, "operator-A"),), authority_issuance_validator=policy, authority_issuance_policy_id="bounded-arm-policy-v1")
         self.assertEqual(kernel.register_grant(source_capability=self.issuer_a, grantee="planner", action_scope="MOVE", target_scope="arm", basis_refs=("basis:explicit",), valid_from=self.now, expires_at=self.now + timedelta(minutes=5)).grantor, "operator-A")
         with self.assertRaisesRegex(ValueError, "authority issuance policy denied grant"):

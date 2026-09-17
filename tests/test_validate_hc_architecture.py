@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import unittest
 from pathlib import Path
@@ -126,6 +127,10 @@ class StateFamilyConsistencyPolicyTests(unittest.TestCase):
 
 
 class ReviewReceiptTests(unittest.TestCase):
+    TRUSTED_VERIFIERS = {"verifier:hc-independent-reviewer"}
+    TRUSTED_POLICIES = {"policy:hc-exact-head-review-v1"}
+    TRUSTED_ROOTS = {"trust-root:github-review-surface-v1"}
+
     def _receipt(self, **overrides):
         receipt = {
             "receipt_id": "review-001",
@@ -149,43 +154,69 @@ class ReviewReceiptTests(unittest.TestCase):
         receipt.update(overrides)
         return receipt
 
-    def _validate(self, receipt, *, observed_location="OUT_OF_SUBJECT_TREE"):
+    @staticmethod
+    def _receipt_sha256(receipt) -> str:
+        canonical = json.dumps(receipt, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+    def _observation(self, receipt, **overrides):
+        observation = {
+            "observed_location": "OUT_OF_SUBJECT_TREE",
+            "surface_type": "PULL_REQUEST_REVIEW",
+            "attestation_uri": "github://thebrazenbeard/hc-brain/pull/19/reviews/123",
+            "attestation_sha256": self._receipt_sha256(receipt),
+            "subject_repo": "thebrazenbeard/hc-brain",
+            "subject_head": "a" * 40,
+            "verifier_id": "verifier:hc-independent-reviewer",
+            "verification_policy_id": "policy:hc-exact-head-review-v1",
+            "trust_root_id": "trust-root:github-review-surface-v1",
+            "observed_at": "2026-09-17T12:01:00-04:00",
+        }
+        observation.update(overrides)
+        return observation
+
+    def _validate(self, receipt, *, observation=None):
+        if observation is None:
+            observation = self._observation(receipt)
         return validate_review_receipt(
             receipt,
             expected_repo="thebrazenbeard/hc-brain",
             expected_head="a" * 40,
-            observed_attestation_location=observed_location,
+            attestation_observation=observation,
+            trusted_verifier_ids=self.TRUSTED_VERIFIERS,
+            trusted_policy_ids=self.TRUSTED_POLICIES,
+            trusted_root_ids=self.TRUSTED_ROOTS,
         )
 
     def test_stale_subject_head_is_rejected(self) -> None:
-        errors = validate_review_receipt(
-            self._receipt(subject_head="b" * 40),
-            expected_repo="thebrazenbeard/hc-brain",
-            expected_head="a" * 40,
-            observed_attestation_location="OUT_OF_SUBJECT_TREE",
-        )
+        receipt = self._receipt(subject_head="b" * 40)
+        errors = self._validate(receipt, observation=self._observation(receipt, subject_head="b" * 40))
         self.assertTrue(any("subject_head" in error for error in errors))
 
     def test_non_commit_subject_head_is_rejected_even_if_expected_matches(self) -> None:
+        receipt = self._receipt(subject_head="not-a-commit")
         errors = validate_review_receipt(
-            self._receipt(subject_head="not-a-commit"),
+            receipt,
             expected_repo="thebrazenbeard/hc-brain",
             expected_head="not-a-commit",
-            observed_attestation_location="OUT_OF_SUBJECT_TREE",
+            attestation_observation=self._observation(receipt, subject_head="not-a-commit"),
+            trusted_verifier_ids=self.TRUSTED_VERIFIERS,
+            trusted_policy_ids=self.TRUSTED_POLICIES,
+            trusted_root_ids=self.TRUSTED_ROOTS,
         )
         self.assertTrue(any("40-character hexadecimal" in error for error in errors))
 
     def test_empty_review_scope_is_rejected(self) -> None:
-        errors = self._validate(self._receipt(reviewed_scope=[]))
+        receipt = self._receipt(reviewed_scope=[])
+        errors = self._validate(receipt)
         self.assertTrue(any("reviewed_scope" in error for error in errors))
 
     def test_independent_claim_with_material_in_scope_shaping_is_rejected(self) -> None:
-        errors = self._validate(
-            self._receipt(
-                shaping_or_diagnostic_refs=["finding:used-to-build-successor"],
-                material_shaping_within_reviewed_scope=True,
-            )
+        receipt = self._receipt(
+            shaping_or_diagnostic_refs=["finding:used-to-build-successor"],
+            material_shaping_within_reviewed_scope=True,
         )
+        errors = self._validate(receipt)
         self.assertTrue(any("independence" in error.lower() for error in errors))
 
     def test_unrelated_shaping_history_does_not_destroy_scoped_independence(self) -> None:
@@ -196,25 +227,63 @@ class ReviewReceiptTests(unittest.TestCase):
         self.assertEqual(self._validate(receipt), [])
 
     def test_exact_head_receipt_must_be_out_of_subject_tree(self) -> None:
-        errors = self._validate(
-            self._receipt(attestation_location="SUBJECT_TREE"),
-            observed_location="SUBJECT_TREE",
-        )
+        receipt = self._receipt(attestation_location="SUBJECT_TREE")
+        errors = self._validate(receipt, observation=self._observation(receipt, observed_location="SUBJECT_TREE"))
         self.assertTrue(any("out of subject tree" in error.lower() for error in errors))
 
     def test_self_declared_location_cannot_override_observed_subject_tree_location(self) -> None:
-        errors = self._validate(
-            self._receipt(attestation_location="OUT_OF_SUBJECT_TREE"),
-            observed_location="SUBJECT_TREE",
-        )
+        receipt = self._receipt(attestation_location="OUT_OF_SUBJECT_TREE")
+        errors = self._validate(receipt, observation=self._observation(receipt, observed_location="SUBJECT_TREE"))
         self.assertTrue(any("observed attestation location" in error.lower() for error in errors))
 
+    def test_observation_subject_head_must_match_expected_subject(self) -> None:
+        receipt = self._receipt()
+        errors = self._validate(receipt, observation=self._observation(receipt, subject_head="b" * 40))
+        self.assertTrue(any("observation subject_head" in error for error in errors))
+
+    def test_observation_subject_repo_must_match_expected_subject(self) -> None:
+        receipt = self._receipt()
+        errors = self._validate(receipt, observation=self._observation(receipt, subject_repo="attacker/other"))
+        self.assertTrue(any("observation subject_repo" in error for error in errors))
+
+    def test_attestation_digest_must_bind_exact_receipt(self) -> None:
+        receipt = self._receipt()
+        errors = self._validate(receipt, observation=self._observation(receipt, attestation_sha256="0" * 64))
+        self.assertTrue(any("attestation_sha256" in error for error in errors))
+
+    def test_attestation_digest_must_be_sha256_hex(self) -> None:
+        receipt = self._receipt()
+        errors = self._validate(receipt, observation=self._observation(receipt, attestation_sha256="not-a-digest"))
+        self.assertTrue(any("64-character hexadecimal" in error for error in errors))
+
+    def test_untrusted_verifier_is_rejected(self) -> None:
+        receipt = self._receipt()
+        errors = self._validate(receipt, observation=self._observation(receipt, verifier_id="verifier:unknown"))
+        self.assertTrue(any("verifier_id is not trusted" in error for error in errors))
+
+    def test_untrusted_verification_policy_is_rejected(self) -> None:
+        receipt = self._receipt()
+        errors = self._validate(receipt, observation=self._observation(receipt, verification_policy_id="policy:unknown"))
+        self.assertTrue(any("verification_policy_id is not trusted" in error for error in errors))
+
+    def test_untrusted_root_is_rejected(self) -> None:
+        receipt = self._receipt()
+        errors = self._validate(receipt, observation=self._observation(receipt, trust_root_id="trust-root:unknown"))
+        self.assertTrue(any("trust_root_id is not trusted" in error for error in errors))
+
+    def test_missing_attestation_locator_is_rejected(self) -> None:
+        receipt = self._receipt()
+        errors = self._validate(receipt, observation=self._observation(receipt, attestation_uri=""))
+        self.assertTrue(any("attestation_uri" in error for error in errors))
+
     def test_unknown_verdict_is_rejected(self) -> None:
-        errors = self._validate(self._receipt(verdict="SUPER_PASS"))
+        receipt = self._receipt(verdict="SUPER_PASS")
+        errors = self._validate(receipt)
         self.assertTrue(any("verdict" in error for error in errors))
 
     def test_receipt_cannot_grant_merge_authority(self) -> None:
-        errors = self._validate(self._receipt(merge_authority=True))
+        receipt = self._receipt(merge_authority=True)
+        errors = self._validate(receipt)
         self.assertTrue(any("merge authority" in error.lower() for error in errors))
 
     def test_open_review_can_be_valid_without_claiming_independence(self) -> None:
@@ -224,6 +293,10 @@ class ReviewReceiptTests(unittest.TestCase):
             shaping_or_diagnostic_refs=["design:v2"],
             material_shaping_within_reviewed_scope=True,
         )
+        self.assertEqual(self._validate(receipt), [])
+
+    def test_valid_receipt_requires_trusted_external_attestation_context(self) -> None:
+        receipt = self._receipt()
         self.assertEqual(self._validate(receipt), [])
 
 

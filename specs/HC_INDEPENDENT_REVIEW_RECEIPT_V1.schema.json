@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/thebrazenbeard/hc-brain/specs/HC_INDEPENDENT_REVIEW_RECEIPT_V1.schema.json",
+  "title": "HC Independent Exact-Head Review Receipt V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "subject",
+    "reviewer",
+    "result",
+    "reviewed_at",
+    "evidence",
+    "remaining_uncertainty",
+    "claim_ceiling"
+  ],
+  "properties": {
+    "schema_id": {"const": "HC_INDEPENDENT_REVIEW_RECEIPT_V1"},
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "scope"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "scope": {"type": "string", "minLength": 1}
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "independence", "shaping_ancestry"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1},
+        "independence": {"const": "INDEPENDENT"},
+        "shaping_ancestry": {"const": false}
+      }
+    },
+    "result": {"enum": ["PASS", "CONDITIONAL_PASS", "FAIL"]},
+    "reviewed_at": {"type": "string", "minLength": 1},
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "reference"],
+        "properties": {
+          "kind": {"type": "string", "minLength": 1},
+          "reference": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "remaining_uncertainty": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "claim_ceiling": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

@@ -2,7 +2,7 @@
   "schema_version": "HC_STATE_FAMILY_CONSISTENCY_POLICY_V1",
   "status": "DESIGN_CANDIDATE_NOT_CANONICAL",
   "scope": "HC_DISTRIBUTED_STATE_POLICY",
-  "purpose": "Require every material distributed state family to declare consistency, partition, stale-state, recovery-fence, reconciliation, and effect-dependency semantics without mandating one global consensus algorithm.",
+  "purpose": "Require every material distributed state family to declare consistency, partition, stale-state, recovery-fence, reconciliation, effect-dependency, safety-invariant, coordination-rationale, and mechanical-evidence semantics without mandating one global consensus algorithm.",
   "required_profile_fields": [
     "family_id",
     "semantic_owner",
@@ -15,6 +15,9 @@
     "stale_state_policy",
     "recovery_fence_policy",
     "effect_dependency_policy",
+    "safety_invariants",
+    "coordination_basis",
+    "mechanical_evidence_refs",
     "qualification_refs",
     "provenance"
   ],
@@ -42,6 +45,10 @@
   "rules": [
     "NO_PROTECTED_OR_CONTINUITY_BEARING_FAMILY_MAY_OMIT_RECOVERY_FENCE_POLICY",
     "MERGE_CANDIDATES_ONLY_REQUIRES_EXPLICIT_RECONCILIATION_RULE",
+    "EVERY_CONCRETE_REFERENCE_PROFILE_NAMES_NONEMPTY_SAFETY_INVARIANTS",
+    "EVERY_CONCRETE_REFERENCE_PROFILE_STATES_WHY_COORDINATION_OR_COORDINATION_AVOIDANCE_IS_SAFE",
+    "MECHANICAL_EVIDENCE_REFS_MUST_RESOLVE_TO_EXISTING_SOURCE_OR_TEST_ARTIFACTS",
+    "MECHANICAL_EVIDENCE_BINDING_IS_NOT_FORMAL_PROOF_OF_DISTRIBUTED_CONSISTENCY",
     "CAUSAL_SUCCESSION_DOES_NOT_IMPLY_EPISTEMIC_TRUTH",
     "CAUSAL_SUCCESSION_DOES_NOT_IMPLY_EFFECT_AUTHORITY",
     "LATER_WALL_CLOCK_TIMESTAMP_DOES_NOT_IMPLY_CAUSAL_SUCCESSOR",
@@ -84,6 +91,16 @@
       "id": "SFC-NEG-005",
       "stimulus": "PARTITIONED_FRAGMENT_WRITES_CONTINUITY_BEARING_STATE_WITHOUT_DECLARED_ISLAND_OR_MERGE_POLICY",
       "expected": "WRITE_INELIGIBLE_OR_CONFORMANCE_FAIL"
+    },
+    {
+      "id": "SFC-NEG-006",
+      "stimulus": "REFERENCE_PROFILE_NAMES_A_CONSISTENCY_CLASS_BUT_NO_SAFETY_INVARIANT_OR_COORDINATION_BASIS",
+      "expected": "CONFORMANCE_FAILS_AS_UNJUSTIFIED_CONSISTENCY_LABEL"
+    },
+    {
+      "id": "SFC-NEG-007",
+      "stimulus": "REFERENCE_PROFILE_CLAIMS_MECHANICAL_BINDING_TO_A_MISSING_FILE",
+      "expected": "CONFORMANCE_FAILS_REFERENCE_RESOLUTION"
     }
   ],
   "references": [

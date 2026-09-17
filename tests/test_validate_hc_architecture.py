@@ -28,6 +28,7 @@ class StateFamilyConsistencyPolicyTests(unittest.TestCase):
             "provenance": ["test-fixture"],
             "safety_invariants": ["NO_SPLIT_BRAIN_AUTHORITY"],
             "coordination_basis": "COORDINATION_REQUIRED_TO_PRESERVE_AUTHORITY_INVARIANT",
+            "mechanical_evidence_refs": ["runtime/reference_kernel/test_vera_adversarial_kernel_v2.py"],
         }
         profile.update(overrides)
         return profile
@@ -85,6 +86,12 @@ class StateFamilyConsistencyPolicyTests(unittest.TestCase):
         errors = validate_state_family_profiles({"profiles": [profile]})
         self.assertTrue(any("coordination_basis" in error for error in errors))
 
+    def test_profile_requires_mechanical_evidence_refs(self) -> None:
+        profile = self._profile()
+        profile.pop("mechanical_evidence_refs")
+        errors = validate_state_family_profiles({"profiles": [profile]})
+        self.assertTrue(any("mechanical_evidence_refs" in error for error in errors))
+
     def test_distinct_strong_and_weak_profiles_can_coexist(self) -> None:
         document = {
             "profiles": [
@@ -102,6 +109,7 @@ class StateFamilyConsistencyPolicyTests(unittest.TestCase):
                     effect_dependency_policy="NOT_EFFECT_AUTHORITY",
                     safety_invariants=["LOCAL_SCRATCH_NE_GLOBAL_AUTHORITY"],
                     coordination_basis="GLOBAL_COORDINATION_NOT_REQUIRED_WHILE_SCOPE_REMAINS_LOCAL_AND_NONAUTHORITATIVE",
+                    mechanical_evidence_refs=["runtime/reference_kernel/test_hc_kernel.py"],
                 ),
             ]
         }

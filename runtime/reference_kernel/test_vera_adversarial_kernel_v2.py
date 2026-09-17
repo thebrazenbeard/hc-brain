@@ -147,6 +147,29 @@ class VeraAuthorityMutationV2Tests(unittest.TestCase):
                 expires_at=self.now + timedelta(minutes=5),
             )
 
+    def test_issuance_policy_identity_is_kernel_bound_into_grant_provenance(self) -> None:
+        kernel = GovernedReferenceKernelV2(
+            clock=lambda: self.now,
+            authority_issuer_capabilities=((self.issuer_a, "operator-A"),),
+            authority_issuance_validator=allow_test_move_grants,
+            authority_issuance_policy_id="test-move-policy-v1",
+        )
+        grant = kernel.register_grant(
+            source_capability=self.issuer_a,
+            grantee="planner",
+            action_scope="MOVE",
+            target_scope="arm",
+            basis_refs=("basis:explicit",),
+            valid_from=self.now,
+            expires_at=self.now + timedelta(minutes=5),
+            provenance=("caller-context",),
+        )
+        self.assertIn("caller-context", grant.provenance)
+        self.assertIn(
+            "authority-issuance-policy:test-move-policy-v1",
+            grant.provenance,
+        )
+
 
 class VeraAtomicRecoveryFenceV2Tests(unittest.TestCase):
     def setUp(self) -> None:

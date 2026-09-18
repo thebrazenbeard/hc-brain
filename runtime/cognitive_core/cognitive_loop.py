@@ -268,6 +268,19 @@ class CognitiveRuntime:
     def set_affect(self, state: AffectState) -> None:
         self._affect = state
 
+    def apply_regulatory_modulation(self, modulation: Any) -> AffectState:
+        arousal = _bounded(float(modulation.arousal_pressure))
+        threat = _bounded(float(modulation.threat_pressure))
+        negative_valence = _bounded(float(modulation.negative_valence_pressure))
+        source_refs = tuple(getattr(modulation, "source_refs", ()))
+        self._affect = AffectState(
+            valence=max(-1.0, self._affect.valence - negative_valence),
+            arousal=max(self._affect.arousal, arousal),
+            threat=max(self._affect.threat, threat),
+            source_refs=tuple(dict.fromkeys((*self._affect.source_refs, *source_refs))),
+        )
+        return self._affect
+
     def set_concern(self, concern: Concern) -> None:
         self._concerns[concern.concern_id] = concern
         history = self._concern_history.setdefault(concern.concern_id, [])

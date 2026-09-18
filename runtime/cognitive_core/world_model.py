@@ -225,14 +225,28 @@ class WorldModelRuntime:
     ) -> tuple[Tuple[str, ...], Tuple[str, ...], Optional[float]]:
         observed: list[str] = []
         generated: list[str] = []
-        ancestor_confidence: Optional[float] = None
+        confidence_limits: list[float] = []
+        visited_evidence: set[str] = set()
 
-        for eid in parent_evidence_ids:
+        def walk_evidence(eid: str) -> None:
+            if eid in visited_evidence:
+                return
+            visited_evidence.add(eid)
             evidence = self.kernel.evidence[eid]
             if evidence.epistemic_class == EpistemicClass.OBSERVATION:
                 observed.append(eid)
             else:
                 generated.append(eid)
+                payload = evidence.payload
+                if isinstance(payload, Mapping):
+                    value = payload.get("confidence")
+                    if isinstance(value, (int, float)) and 0.0 <= float(value) <= 1.0:
+                        confidence_limits.append(float(value))
+                for parent_id in evidence.parent_ids:
+                    walk_evidence(parent_id)
+
+        for eid in parent_evidence_ids:
+            walk_evidence(eid)
 
         for fid in parent_forecast_ids:
             forecast = self.forecasts.get(fid)
@@ -241,11 +255,9 @@ class WorldModelRuntime:
             generated.append(fid)
             observed.extend(forecast.observed_ancestor_ids)
             generated.extend(forecast.generated_ancestor_ids)
-            ancestor_confidence = (
-                forecast.confidence if ancestor_confidence is None
-                else min(ancestor_confidence, forecast.confidence)
-            )
+            confidence_limits.append(forecast.confidence)
 
+        ancestor_confidence = min(confidence_limits) if confidence_limits else None
         return (
             tuple(dict.fromkeys(observed)),
             tuple(dict.fromkeys(generated)),

@@ -33,3 +33,4 @@ jobs:
           runtime.cognitive_core.test_world_model
           runtime.cognitive_core.test_deep_memory
           runtime.cognitive_core.test_metacognition
+          runtime.cognitive_core.test_homeostasis_somatics

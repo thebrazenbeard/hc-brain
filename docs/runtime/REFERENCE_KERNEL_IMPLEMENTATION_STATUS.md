@@ -1,6 +1,6 @@
 # Reference Kernel Implementation Status
 
-Status: current implementation-status note as of 2026-09-17.
+Status: current implementation-status note as of 2026-09-18.
 
 The HC architecture remains broader than the executable runtime. The repository now has two materially executable layers:
 
@@ -39,14 +39,20 @@ The cognitive core adds tested integration for:
 - conative concern state/lifecycle;
 - bounded transient coalitions;
 - current-memory admission and same-scope correction;
-- explicit deep-memory candidate/admission separation;
+- HC-owned deep-memory durability, scoped retrieval, consolidation, and contradiction retention;
 - self-model candidate/admission separation;
 - action candidate generation without effect authorization;
 - route-use evidence -> plasticity candidate -> explicit consolidation;
 - learned route weighting affecting later routing;
-- developmental capability presence/activation/maturity state.
+- developmental capability presence/activation/maturity state;
+- rival world models, prediction ancestry, counterfactual rehearsal, and forecast reconciliation;
+- bounded metacognitive monitoring;
+- typed homeostatic/interoceptive observation, estimation, target/error state, and regulatory request;
+- narrow local protective control;
+- morphology-neutral body-schema calibration, pose update, and reachability prediction;
+- regulatory-to-affect/salience coupling and body-prediction-to-world-model lineage.
 
-See `docs/runtime/EXECUTABLE_COGNITIVE_CORE_STATUS_2026-09-17.md`.
+See `docs/runtime/EXECUTABLE_COGNITIVE_CORE_STATUS_2026-09-18.md`.
 
 ## Fresh local evidence before promotion
 
@@ -56,7 +62,10 @@ Fresh verification on that workspace:
 
 - hardened reference-kernel suite: **79/79 PASS**;
 - architecture-conformance suite: **29/29 PASS**;
-- cognitive-core suite: **41/41 PASS** (18 integrated-loop + 8 world-model + 8 deep-memory + 7 metacognition).
+- cognitive-core suite: **53/53 PASS** (18 integrated-loop + 8 world-model + 8 deep-memory + 7 metacognition + 12 homeostasis/somatics);
+- combined repository gate: **161 tests, 0 failures**;
+- Python compilation: PASS;
+- `git diff --check`: PASS.
 
 This is authorial/local evidence for the tested surfaces.
 
@@ -83,8 +92,8 @@ The current executable layers do not yet establish:
 - rich multimodal perception;
 - learned relational/causal model discovery beyond explicit model proposals;
 - large-scale associative deep-memory indexing and bounded replay scheduling;
-- homeostasis/interoception dynamics;
-- somatics/body schema;
+- richer allostatic learning and long-timescale homeostatic dynamics beyond the bounded reference slice;
+- motor-control/body-schema calibration beyond reachability prediction;
 - empathy/social modelling;
 - pragmatic/language generation integration;
 - full kinesis/embodiment;

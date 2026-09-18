@@ -102,6 +102,22 @@ Explicit qualification evidence can move a capability to `ACTIVE / STABLE_WITHIN
 
 `SELF_CRITIQUE != AUTOMATIC_SELF_MODIFICATION`
 
+## Homeostasis, interoception, and body schema
+
+`homeostasis_somatics.py` adds typed internal observations, fused physiological estimates, explicit regulatory targets/errors, bounded regulatory requests, narrow local protective scopes, morphology-neutral body calibration, pose updates, and reachability prediction.
+
+Regulatory pressure can modulate affect/salience without changing evidence confidence. Body-schema predictions feed world-model forecasting with full generated/observed ancestry.
+
+`INTERNAL_SENSOR_READING != PHYSIOLOGICAL_TRUTH`
+
+`HOMEOSTATIC_ERROR != AFFECT`
+
+`URGENCY != AUTHORITY`
+
+`PREAUTHORIZED_PROTECTIVE_EFFECT != GENERAL_ACTION_PERMISSION`
+
+`PREDICTED_REACHABILITY != CURRENT_BODY_FACT`
+
 ## Test surface
 
 `test_cognitive_loop.py` currently covers the integrated loop, epistemic/conative separation, authority separation, coalition expiry, memory/identity admission gates, plasticity consolidation, affect decay, concern lifecycle, semantic ambiguity, and developmental qualification state.

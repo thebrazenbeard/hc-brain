@@ -1,33 +1,84 @@
 # HC Brain — Current State
 
-This is the repository entrypoint for **currentness**, not a replacement for canonical architecture documents.
+This is the repository entrypoint for currentness, not a replacement for canonical architecture documents.
 
 For architecture and source layout, read `docs/REPOSITORY_MAP.md`.
 
-For the complete current Noah / Noëtarch project understanding, including exact hardening history, implementation facts, hostile findings, uncertainty, claim ceilings, and open frontiers, read:
+## Canonical implementation state
 
-- `docs/runtime/NOAH_CURRENT_KNOWLEDGE_2026-09-15.md`
-- `docs/runtime/REFERENCE_KERNEL_IMPLEMENTATION_STATUS.md`
+Canonical `main` now contains the hardened reference-kernel lineage plus the first integrated executable cognitive core.
+
+Exact implementation baseline promoted on 2026-09-17:
+
+`416b4cbb50c278813b9aa3b2649551bedd2bb33b`
+
+That baseline includes the closed R3/R4/R5/V2 hardening work and `runtime/cognitive_core/`.
+
+This `CURRENT.md` may live on a later documentation-only descendant; use the implementation commit above when an exact executable baseline is required.
+
+## Current executable evidence
+
+Fresh local verification immediately before promotion:
+
+- hardened reference kernel: **79/79 PASS**;
+- architecture-conformance suite: **29/29 PASS**;
+- integrated cognitive core: **18/18 PASS**;
+- Python compilation: PASS;
+- `git diff --check`: PASS.
+
+The cognitive core is documented in:
+
+- `runtime/cognitive_core/README.md`
+- `docs/runtime/EXECUTABLE_COGNITIVE_CORE_STATUS_2026-09-17.md`
 - `docs/runtime/CAPABILITY_IMPLEMENTATION_LEDGER.md`
-- `docs/runtime/NOAH_HANDOFF_2026-09-15.md`
-- `docs/qualification/HOSTILE_AUDIT_DISPOSITION_2026-09-15.md`
+- `docs/runtime/REFERENCE_KERNEL_IMPLEMENTATION_STATUS.md`
 
-## Current source relationship
+## What is executable now
 
-Canonical `main` was last freshly observed at `cf92a32122c436beb5cc516bd7480af00f0ba29f`.
+Material reference implementation exists for:
 
-The exact R5 pre-documentation reference-kernel code cut is `1a40311769c69ae5d098e6a71857409032353033`. That code cut passed the complete current authorial reference-kernel suite on a fresh detached clone: `64/64` tests, `OK`.
+- evidence classes, provenance, durable replay, authority/effect boundaries;
+- current-memory projection and correction;
+- semantic interpretation and ambiguity preservation;
+- salience/attention appraisal;
+- affective modulation and decay;
+- conative concern lifecycle;
+- transient coalition formation and expiry;
+- current-memory integration;
+- explicit deep-memory admission boundary;
+- self-model candidate/admission boundary;
+- action-candidate generation without authority bypass;
+- route-use plasticity proposals and explicit consolidation;
+- learned route weighting;
+- developmental capability presence/activation/maturity state.
 
-The consolidated R5 + current-knowledge line is the active review subject. Always fresh-read the branch/PR exact head before review or promotion; later documentation or code commits supersede older exact-head receipts even when executable blobs are unchanged.
+## Remaining high-value frontier
 
-## Current claim ceiling
+The largest remaining architecture-to-runtime gaps are:
 
-The active reference-kernel line is **not canonical main**, has **not received independent exact-head PASS for R5**, and does **not** establish a complete HC runtime, general intelligence, consciousness, or biological equivalence.
+1. learned world model and prediction;
+2. counterfactual simulation and planning;
+3. full deep-memory consolidation/retrieval/replay;
+4. metacognitive monitoring;
+5. homeostasis/interoception and somatic/body-schema dynamics;
+6. empathy/social modelling and pragmatics;
+7. kinesis/embodiment integration;
+8. distributed multi-process Noöplex execution;
+9. resource/fault management for a physical distributed organ;
+10. behavioral qualification beyond unit/integration tests.
 
-`CURRENT_WORK != CANONICAL_MAIN`
+## Review and claim ceiling
 
-`AUTHORIAL_TEST_PASS != INDEPENDENT_REVIEW_PASS`
+The integrated V2 lineage did not receive a materially independent exact-head PASS visible in the currently verified coordination state before source promotion.
 
-`REFERENCE_KERNEL != COMPLETE_COGNITIVE_ORGAN`
+Its source integration therefore does not become an independent qualification claim.
 
-Any future head movement invalidates exact-head review/currentness records until refreshed.
+`AUTHORIAL_AND_UNIT_PASS != INDEPENDENT_REVIEW_PASS`
+
+`REFERENCE_COGNITIVE_SLICE != COMPLETE_COGNITIVE_ORGAN`
+
+`INTEGRATED_UNIT_TESTS != BEHAVIORAL_QUALIFICATION`
+
+`BEHAVIORAL_QUALIFICATION != GENERAL_INTELLIGENCE`
+
+`ANY_IMPLEMENTATION_PASS != CONSCIOUSNESS_OR_PERSONHOOD_PROOF`

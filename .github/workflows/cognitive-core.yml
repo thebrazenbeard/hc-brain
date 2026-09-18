@@ -1,0 +1,30 @@
+name: Cognitive Core
+
+on:
+  push:
+    paths:
+      - "runtime/cognitive_core/**"
+      - "runtime/reference_kernel/**"
+      - ".github/workflows/cognitive-core.yml"
+  pull_request:
+    paths:
+      - "runtime/cognitive_core/**"
+      - "runtime/reference_kernel/**"
+      - ".github/workflows/cognitive-core.yml"
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone exact source head
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git clone --no-checkout "https://x-access-token:${GITHUB_TOKEN}@github.com/${REPOSITORY}.git" repo
+          cd repo
+          git checkout --detach "${COMMIT_SHA}"
+      - name: Run cognitive-core tests
+        working-directory: repo
+        run: python3 -m unittest -v runtime.cognitive_core.test_cognitive_loop

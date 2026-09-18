@@ -23,9 +23,21 @@ class DurableReferenceKernelTests(unittest.TestCase):
         self.tempdir = tempfile.TemporaryDirectory()
         self.journal = Path(self.tempdir.name) / "hc.jsonl"
         self.now = datetime(2026, 9, 10, 19, 0, tzinfo=UTC)
+        self.somatics_capability = object()
 
     def tearDown(self) -> None:
         self.tempdir.cleanup()
+
+    def _kernel(self, *, mode="recover"):
+        return DurableReferenceKernel(
+            self.journal,
+            mode=mode,
+            clock=lambda: self.now,
+            outcome_source_validator=lambda producer, authority: (
+                producer == "somatics"
+            ),
+            outcome_source_capabilities=((self.somatics_capability, "somatics"),),
+        )
 
     def _grant(self, kernel):
         return kernel.register_grant(
@@ -66,7 +78,7 @@ class DurableReferenceKernelTests(unittest.TestCase):
         self.journal.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     def test_memory_and_ambiguity_survive_reopen(self):
-        first = DurableReferenceKernel(self.journal)
+        first = self._kernel()
         key = ("world", "object-1", "state", "shared")
         a = first.memory.append(
             logical_key=key,
@@ -80,13 +92,13 @@ class DurableReferenceKernelTests(unittest.TestCase):
         )
         self.assertEqual(first.memory.current(key).status, ProjectionStatus.AMBIGUOUS)
 
-        second = DurableReferenceKernel(self.journal)
+        second = self._kernel()
         projection = second.memory.current(key)
         self.assertEqual(projection.status, ProjectionStatus.AMBIGUOUS)
         self.assertEqual(set(projection.head_ids), {a.record_id, b.record_id})
 
     def test_derived_evidence_lineage_survives_reopen(self):
-        first = DurableReferenceKernel(self.journal)
+        first = self._kernel()
         obs = first.observe(
             producer="optics",
             payload={"object": "ball"},
@@ -100,14 +112,14 @@ class DurableReferenceKernelTests(unittest.TestCase):
             influence_roles=("WORLD_MODEL_INPUT",),
         )
 
-        second = DurableReferenceKernel(self.journal)
+        second = self._kernel()
         restored = second.evidence[pred.evidence_id]
         self.assertEqual(restored.epistemic_class, EpistemicClass.PREDICTION)
         self.assertEqual(restored.parent_ids, (obs.evidence_id,))
         self.assertIn("camera-1", restored.source_refs)
 
     def test_requested_effect_becomes_unresolved_on_reopen_and_is_not_redispatched(self):
-        first = DurableReferenceKernel(self.journal)
+        first = self._kernel()
         grant = self._grant(first)
         candidate = first.plan_effect(
             origin="kinesis",
@@ -116,16 +128,16 @@ class DurableReferenceKernelTests(unittest.TestCase):
             payload={"command": "move"},
             authority_grant_id=grant.grant_id,
         )
-        receipt = first.request_effect(candidate, now=self.now)
+        receipt = first.request_effect(candidate)
         self.assertEqual(receipt.state, EffectState.REQUESTED)
         self.assertEqual(receipt.dispatch_attempts, 1)
 
-        second = DurableReferenceKernel(self.journal)
+        second = self._kernel()
         restored = second.effect_receipts[candidate.action_id]
         self.assertEqual(restored.state, EffectState.UNRESOLVED_AFTER_RESTART)
         self.assertEqual(restored.dispatch_attempts, 1)
 
-        replay = second.request_effect(candidate, now=self.now)
+        replay = second.request_effect(candidate)
         self.assertIs(replay, restored)
         self.assertEqual(replay.state, EffectState.UNRESOLVED_AFTER_RESTART)
         self.assertEqual(replay.dispatch_attempts, 1)
@@ -137,12 +149,12 @@ class DurableReferenceKernelTests(unittest.TestCase):
             payload={"command": "other"},
             authority_grant_id=grant.grant_id,
         )
-        old_authority = second.request_effect(fresh_candidate, now=self.now)
+        old_authority = second.request_effect(fresh_candidate)
         self.assertEqual(old_authority.state, EffectState.BLOCKED)
         self.assertEqual(old_authority.reason, "STALE_AUTHORITY_EPOCH")
 
     def test_confirmed_effect_remains_confirmed_after_reopen(self):
-        first = DurableReferenceKernel(self.journal)
+        first = self._kernel()
         grant = self._grant(first)
         candidate = first.plan_effect(
             origin="kinesis",
@@ -151,9 +163,9 @@ class DurableReferenceKernelTests(unittest.TestCase):
             payload={"command": "move"},
             authority_grant_id=grant.grant_id,
         )
-        first.request_effect(candidate, now=self.now)
-        observation = first.observe(
-            producer="somatics",
+        first.request_effect(candidate)
+        observation = first.observe_effect_outcome(
+            source_capability=self.somatics_capability,
             payload={"arm_position": "moved"},
             source_refs=("proprioception",),
             effect_action_id=candidate.action_id,
@@ -164,13 +176,13 @@ class DurableReferenceKernelTests(unittest.TestCase):
             confirmation_evidence_id=observation.evidence_id,
         )
 
-        second = DurableReferenceKernel(self.journal)
+        second = self._kernel()
         restored = second.effect_receipts[candidate.action_id]
         self.assertEqual(restored.state, EffectState.CONFIRMED)
         self.assertEqual(restored.confirmation_evidence_id, observation.evidence_id)
 
     def test_corrupted_entry_hash_fails_closed(self):
-        kernel = DurableReferenceKernel(self.journal)
+        kernel = self._kernel()
         kernel.observe(producer="optics", payload={"x": 1})
         lines = self.journal.read_text(encoding="utf-8").splitlines()
         envelope = json.loads(lines[-1])
@@ -179,26 +191,39 @@ class DurableReferenceKernelTests(unittest.TestCase):
         self.journal.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
         with self.assertRaises(JournalIntegrityError):
-            DurableReferenceKernel(self.journal, mode="inspect")
+            self._kernel(mode="inspect")
+
+    def test_rehashed_nonfinite_payload_fails_as_journal_integrity_error(self):
+        kernel = self._kernel()
+        kernel.observe(producer="optics", payload={"x": 1})
+        self._rewrite_line(
+            -1,
+            lambda envelope: envelope["data"]["payload"].__setitem__(
+                "x", float("nan")
+            ),
+        )
+
+        with self.assertRaises(JournalIntegrityError):
+            self._kernel(mode="inspect")
 
     def test_sequence_discontinuity_fails_closed_even_if_entry_rehashed(self):
-        kernel = DurableReferenceKernel(self.journal)
+        kernel = self._kernel()
         kernel.observe(producer="optics", payload={"x": 1})
         self._rewrite_line(-1, lambda envelope: envelope.__setitem__("seq", 9))
 
         with self.assertRaises(JournalIntegrityError):
-            DurableReferenceKernel(self.journal, mode="inspect")
+            self._kernel(mode="inspect")
 
     def test_epoch_mismatch_fails_closed_even_if_entry_rehashed(self):
-        kernel = DurableReferenceKernel(self.journal)
+        kernel = self._kernel()
         kernel.observe(producer="optics", payload={"x": 1})
         self._rewrite_line(-1, lambda envelope: envelope.__setitem__("epoch", 1))
 
         with self.assertRaises(JournalIntegrityError):
-            DurableReferenceKernel(self.journal, mode="inspect")
+            self._kernel(mode="inspect")
 
     def test_grant_without_basis_fails_replay_even_if_entry_rehashed(self):
-        kernel = DurableReferenceKernel(self.journal)
+        kernel = self._kernel()
         self._grant(kernel)
         self._rewrite_line(
             -1,
@@ -206,10 +231,10 @@ class DurableReferenceKernelTests(unittest.TestCase):
         )
 
         with self.assertRaises(JournalIntegrityError):
-            DurableReferenceKernel(self.journal, mode="inspect")
+            self._kernel(mode="inspect")
 
     def test_missing_derived_parent_fails_replay_even_if_entry_rehashed(self):
-        kernel = DurableReferenceKernel(self.journal)
+        kernel = self._kernel()
         obs = kernel.observe(producer="optics", payload={"x": 1})
         kernel.derive(
             producer="cognition",
@@ -225,10 +250,10 @@ class DurableReferenceKernelTests(unittest.TestCase):
         )
 
         with self.assertRaises(JournalIntegrityError):
-            DurableReferenceKernel(self.journal, mode="inspect")
+            self._kernel(mode="inspect")
 
     def test_confirmed_receipt_rejects_wrong_bound_evidence_on_replay(self):
-        kernel = DurableReferenceKernel(self.journal)
+        kernel = self._kernel()
         grant = self._grant(kernel)
         candidate = kernel.plan_effect(
             origin="kinesis",
@@ -237,13 +262,13 @@ class DurableReferenceKernelTests(unittest.TestCase):
             payload={"command": "move"},
             authority_grant_id=grant.grant_id,
         )
-        kernel.request_effect(candidate, now=self.now)
+        kernel.request_effect(candidate)
         unrelated = kernel.observe(
             producer="somatics",
             payload={"temperature": 37},
         )
-        bound = kernel.observe(
-            producer="somatics",
+        bound = kernel.observe_effect_outcome(
+            source_capability=self.somatics_capability,
             payload={"arm_position": "moved"},
             effect_action_id=candidate.action_id,
         )
@@ -260,21 +285,21 @@ class DurableReferenceKernelTests(unittest.TestCase):
         )
 
         with self.assertRaises(JournalIntegrityError):
-            DurableReferenceKernel(self.journal, mode="inspect")
+            self._kernel(mode="inspect")
 
     def test_unserializable_payload_rejected_before_state_mutation(self):
-        kernel = DurableReferenceKernel(self.journal)
+        kernel = self._kernel()
         with self.assertRaises(ValueError):
             kernel.observe(producer="optics", payload={1, 2, 3})
         self.assertEqual(kernel.evidence, {})
         self.assertFalse(self.journal.exists())
 
     def test_inspection_mode_is_nonmutating_and_read_only(self):
-        kernel = DurableReferenceKernel(self.journal)
+        kernel = self._kernel()
         kernel.observe(producer="optics", payload={"x": 1})
         before = self.journal.read_bytes()
 
-        inspection = DurableReferenceKernel(self.journal, mode="inspect")
+        inspection = self._kernel(mode="inspect")
         self.assertEqual(inspection.epoch, kernel.epoch)
         self.assertEqual(self.journal.read_bytes(), before)
         with self.assertRaises(ReadOnlyInspectionError):
@@ -282,7 +307,7 @@ class DurableReferenceKernelTests(unittest.TestCase):
         self.assertEqual(self.journal.read_bytes(), before)
 
     def test_reconciled_outcome_is_durable(self):
-        first = DurableReferenceKernel(self.journal)
+        first = self._kernel()
         grant = self._grant(first)
         candidate = first.plan_effect(
             origin="kinesis",
@@ -291,11 +316,11 @@ class DurableReferenceKernelTests(unittest.TestCase):
             payload={"command": "move"},
             authority_grant_id=grant.grant_id,
         )
-        first.request_effect(candidate, now=self.now)
+        first.request_effect(candidate)
 
-        second = DurableReferenceKernel(self.journal)
-        observation = second.observe(
-            producer="somatics",
+        second = self._kernel()
+        observation = second.observe_effect_outcome(
+            source_capability=self.somatics_capability,
             payload={"arm_position": "moved"},
             source_refs=("proprioception",),
             effect_action_id=candidate.action_id,
@@ -306,7 +331,7 @@ class DurableReferenceKernelTests(unittest.TestCase):
             confirmation_evidence_id=observation.evidence_id,
         )
 
-        third = DurableReferenceKernel(self.journal, mode="inspect")
+        third = self._kernel(mode="inspect")
         restored = third.effect_receipts[candidate.action_id]
         self.assertEqual(restored.state, EffectState.CONFIRMED)
 
@@ -316,11 +341,11 @@ class DurableReferenceKernelTests(unittest.TestCase):
 import sys
 from datetime import datetime, timedelta, timezone
 from durable_kernel import DurableReferenceKernel
-k = DurableReferenceKernel(sys.argv[1])
 now = datetime(2026, 9, 10, 19, 0, tzinfo=timezone.utc)
+k = DurableReferenceKernel(sys.argv[1], clock=lambda: now)
 g = k.register_grant(grantor='fixture', grantee='kinesis', action_scope='MOTOR_EFFECT', target_scope='arm', basis_refs=('basis',), valid_from=now-timedelta(minutes=1), expires_at=now+timedelta(minutes=10))
 c = k.plan_effect(origin='kinesis', action_scope='MOTOR_EFFECT', target_scope='arm', payload={'command':'move'}, authority_grant_id=g.grant_id)
-r = k.request_effect(c, now=now)
+r = k.request_effect(c)
 print(c.action_id)
 """
         result = subprocess.run(
@@ -336,8 +361,10 @@ print(c.action_id)
 
         reader = """
 import sys
+from datetime import datetime, timezone
 from durable_kernel import DurableReferenceKernel
-k = DurableReferenceKernel(sys.argv[1])
+now = datetime(2026, 9, 10, 19, 0, tzinfo=timezone.utc)
+k = DurableReferenceKernel(sys.argv[1], clock=lambda: now)
 r = k.effect_receipts[sys.argv[2]]
 print(r.state.value, r.dispatch_attempts, k.epoch)
 """

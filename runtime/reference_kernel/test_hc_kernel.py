@@ -8,8 +8,15 @@ UTC = timezone.utc
 
 class ReferenceKernelTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.kernel = ReferenceKernel()
         self.now = datetime(2026, 9, 10, 18, 0, tzinfo=UTC)
+        self.somatics_capability = object()
+        self.kernel = ReferenceKernel(
+            clock=lambda: self.now,
+            outcome_source_validator=lambda producer, authority: (
+                producer == "somatics"
+            ),
+            outcome_source_capabilities=((self.somatics_capability, "somatics"),),
+        )
 
     def _grant(self, action_scope="MOTOR_EFFECT", target_scope="arm"):
         return self.kernel.register_grant(
@@ -52,7 +59,7 @@ class ReferenceKernelTests(unittest.TestCase):
             authority_grant_id=None,
             parent_ids=(routed.event_id,),
         )
-        receipt = self.kernel.request_effect(candidate, now=self.now)
+        receipt = self.kernel.request_effect(candidate)
         self.assertEqual(receipt.state, EffectState.BLOCKED)
         self.assertEqual(receipt.reason, "MISSING_AUTHORITY")
 
@@ -107,6 +114,7 @@ class ReferenceKernelTests(unittest.TestCase):
         self.assertEqual(projection.status, ProjectionStatus.CURRENT)
         self.assertEqual(projection.head_ids, (resolved.record_id,))
         self.assertEqual(projection.payload, "C")
+        self.assertEqual(projection.epistemic_class, EpistemicClass.DERIVED)
 
     def test_supersession_cannot_cross_logical_scope(self):
         first = self.kernel.memory.append(
@@ -139,7 +147,7 @@ class ReferenceKernelTests(unittest.TestCase):
             payload={"command": "move"},
             authority_grant_id=grant.grant_id,
         )
-        receipt = self.kernel.request_effect(candidate, now=self.now)
+        receipt = self.kernel.request_effect(candidate)
         self.assertEqual(receipt.state, EffectState.BLOCKED)
         self.assertEqual(receipt.reason, "EXPIRED_AUTHORITY")
 
@@ -156,7 +164,7 @@ class ReferenceKernelTests(unittest.TestCase):
             grant.grant_id,
             revoked_at=self.now - timedelta(seconds=1),
         )
-        receipt = self.kernel.request_effect(candidate, now=self.now)
+        receipt = self.kernel.request_effect(candidate)
         self.assertEqual(receipt.state, EffectState.BLOCKED)
         self.assertEqual(receipt.reason, "REVOKED_AUTHORITY")
 
@@ -169,11 +177,11 @@ class ReferenceKernelTests(unittest.TestCase):
             payload={"command": "move"},
             authority_grant_id=grant.grant_id,
         )
-        requested = self.kernel.request_effect(candidate, now=self.now)
+        requested = self.kernel.request_effect(candidate)
         self.assertEqual(requested.state, EffectState.REQUESTED)
 
-        confirmation = self.kernel.observe(
-            producer="somatics",
+        confirmation = self.kernel.observe_effect_outcome(
+            source_capability=self.somatics_capability,
             payload={"arm_position": "moved"},
             source_refs=("proprioception",),
             effect_action_id=candidate.action_id,
@@ -194,7 +202,7 @@ class ReferenceKernelTests(unittest.TestCase):
             payload={"command": "move"},
             authority_grant_id=grant.grant_id,
         )
-        self.kernel.request_effect(candidate, now=self.now)
+        self.kernel.request_effect(candidate)
         unrelated = self.kernel.observe(
             producer="somatics",
             payload={"temperature": 37},
@@ -216,8 +224,8 @@ class ReferenceKernelTests(unittest.TestCase):
             payload={"command": "move"},
             authority_grant_id=grant.grant_id,
         )
-        first = self.kernel.request_effect(candidate, now=self.now)
-        second = self.kernel.request_effect(candidate, now=self.now)
+        first = self.kernel.request_effect(candidate)
+        second = self.kernel.request_effect(candidate)
         self.assertIs(first, second)
         self.assertEqual(first.dispatch_attempts, 1)
 
@@ -230,14 +238,14 @@ class ReferenceKernelTests(unittest.TestCase):
             payload={"command": "move"},
             authority_grant_id=grant.grant_id,
         )
-        requested = self.kernel.request_effect(candidate, now=self.now)
+        requested = self.kernel.request_effect(candidate)
         self.assertEqual(requested.state, EffectState.REQUESTED)
 
         self.kernel.restart()
         unresolved = self.kernel.effect_receipts[candidate.action_id]
         self.assertEqual(unresolved.state, EffectState.UNRESOLVED_AFTER_RESTART)
 
-        repeated = self.kernel.request_effect(candidate, now=self.now)
+        repeated = self.kernel.request_effect(candidate)
         self.assertIs(repeated, unresolved)
         self.assertEqual(repeated.dispatch_attempts, 1)
 
@@ -248,10 +256,7 @@ class ReferenceKernelTests(unittest.TestCase):
             payload={"command": "new_action"},
             authority_grant_id=grant.grant_id,
         )
-        retry_receipt = self.kernel.request_effect(
-            old_grant_candidate,
-            now=self.now,
-        )
+        retry_receipt = self.kernel.request_effect(old_grant_candidate)
         self.assertEqual(retry_receipt.state, EffectState.BLOCKED)
         self.assertEqual(retry_receipt.reason, "STALE_AUTHORITY_EPOCH")
 
@@ -265,7 +270,7 @@ class ReferenceKernelTests(unittest.TestCase):
             authority_grant_id=grant.grant_id,
         )
         self.kernel.restart()
-        receipt = self.kernel.request_effect(candidate, now=self.now)
+        receipt = self.kernel.request_effect(candidate)
         self.assertEqual(receipt.state, EffectState.BLOCKED)
         self.assertEqual(receipt.reason, "STALE_PLAN_EPOCH")
 

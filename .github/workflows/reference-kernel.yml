@@ -18,11 +18,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
-          COMMIT_SHA: ${{ github.sha }}
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           git clone --no-checkout "https://x-access-token:${GITHUB_TOKEN}@github.com/${REPOSITORY}.git" repo
           cd repo
           git checkout --detach "${COMMIT_SHA}"
       - name: Run reference-kernel tests
         working-directory: repo/runtime/reference_kernel
-        run: python3 -m unittest -v test_hc_kernel.py test_durable_kernel.py
+        run: >-
+          python3 -m unittest -v
+          test_hc_kernel.py
+          test_durable_kernel.py
+          test_four_adversarial_kernel.py
+          test_four_adversarial_kernel_r2.py
+          test_vera_adversarial_kernel_v2.py

@@ -1,0 +1,113 @@
+{
+  "schema_version": "HC_STATE_FAMILY_CONSISTENCY_POLICY_V1",
+  "status": "DESIGN_CANDIDATE_NOT_CANONICAL",
+  "scope": "HC_DISTRIBUTED_STATE_POLICY",
+  "purpose": "Require every material distributed state family to declare consistency, partition, stale-state, recovery-fence, reconciliation, effect-dependency, safety-invariant, coordination-rationale, and mechanical-evidence semantics without mandating one global consensus algorithm.",
+  "required_profile_fields": [
+    "family_id",
+    "semantic_owner",
+    "consistency_class",
+    "protected",
+    "continuity_bearing",
+    "partition_write_policy",
+    "partition_read_policy",
+    "merge_or_reconciliation_rule",
+    "stale_state_policy",
+    "recovery_fence_policy",
+    "effect_dependency_policy",
+    "safety_invariants",
+    "coordination_basis",
+    "mechanical_evidence_refs",
+    "qualification_refs",
+    "provenance"
+  ],
+  "allowed_consistency_classes": [
+    "SINGLE_WRITER_EPOCH",
+    "QUORUM_COMMITTED",
+    "LINEARIZABLE_REQUIRED",
+    "CAUSALLY_ORDERED",
+    "MERGEABLE_CONCURRENT",
+    "LOCAL_EPHEMERAL",
+    "READ_ONLY_REPLICA"
+  ],
+  "allowed_partition_write_policies": [
+    "BLOCK",
+    "BOUNDED_ISLAND",
+    "MERGE_CANDIDATES_ONLY",
+    "READ_ONLY"
+  ],
+  "allowed_partition_read_policies": [
+    "CURRENT_ONLY",
+    "LOCAL_ALLOWED",
+    "STALE_WITH_LABEL",
+    "READ_ONLY"
+  ],
+  "rules": [
+    "NO_PROTECTED_OR_CONTINUITY_BEARING_FAMILY_MAY_OMIT_RECOVERY_FENCE_POLICY",
+    "MERGE_CANDIDATES_ONLY_REQUIRES_EXPLICIT_RECONCILIATION_RULE",
+    "EVERY_CONCRETE_REFERENCE_PROFILE_NAMES_NONEMPTY_SAFETY_INVARIANTS",
+    "EVERY_CONCRETE_REFERENCE_PROFILE_STATES_WHY_COORDINATION_OR_COORDINATION_AVOIDANCE_IS_SAFE",
+    "MECHANICAL_EVIDENCE_REFS_MUST_RESOLVE_TO_EXISTING_SOURCE_OR_TEST_ARTIFACTS",
+    "MECHANICAL_EVIDENCE_BINDING_IS_NOT_FORMAL_PROOF_OF_DISTRIBUTED_CONSISTENCY",
+    "CAUSAL_SUCCESSION_DOES_NOT_IMPLY_EPISTEMIC_TRUTH",
+    "CAUSAL_SUCCESSION_DOES_NOT_IMPLY_EFFECT_AUTHORITY",
+    "LATER_WALL_CLOCK_TIMESTAMP_DOES_NOT_IMPLY_CAUSAL_SUCCESSOR",
+    "PARTITION_AVAILABILITY_DOES_NOT_IMPLY_PROTECTED_WRITE_ELIGIBILITY",
+    "UNDECLARED_MATERIAL_STATE_FAMILY_POLICY_IS_UNKNOWN_NOT_EVENTUAL_BY_DEFAULT",
+    "CONSISTENCY_CLASS_NAMES_SEMANTICS_NOT_VENDOR_ALGORITHMS"
+  ],
+  "causal_frontier_minimum": {
+    "required_when": "SEMANTIC_ORDER_OR_RECONCILIATION_DEPENDS_ON_CAUSAL_ANCESTRY",
+    "fields": [
+      "epoch",
+      "predecessor_ids",
+      "local_sequence_or_generation",
+      "observed_clock_metadata"
+    ],
+    "rule": "IMPLEMENTATION_MAY_USE_A_SMALLER_EQUIVALENT_FOR_SINGLE_WRITER_STATE_OR_RICHER_METADATA_FOR_CONCURRENT_MERGEABLE_STATE"
+  },
+  "negative_tests": [
+    {
+      "id": "SFC-NEG-001",
+      "stimulus": "PROTECTED_STATE_FAMILY_HAS_NO_DECLARED_PARTITION_WRITE_POLICY",
+      "expected": "CONFORMANCE_FAILS_OR_MATERIAL_WRITES_FAIL_CLOSED"
+    },
+    {
+      "id": "SFC-NEG-002",
+      "stimulus": "MERGEABLE_STATE_ACCEPTS_PARTITION_WRITES_BUT_HAS_NO_RECONCILIATION_RULE",
+      "expected": "CONFORMANCE_FAILS"
+    },
+    {
+      "id": "SFC-NEG-003",
+      "stimulus": "LATER_TIMESTAMP_IS_USED_AS_SOLE_CURRENTNESS_OR_CAUSALITY_PROOF",
+      "expected": "CONFORMANCE_FAILS"
+    },
+    {
+      "id": "SFC-NEG-004",
+      "stimulus": "ONE_GLOBAL_LINEARIZABILITY_POLICY_IS_SILENTLY_APPLIED_TO_EPHEMERAL_TELEMETRY_AND_PROTECTED_AUTHORITY_STATE",
+      "expected": "DESIGN_REJECTED_AS_STATE_FAMILY_SEMANTICS_COLLAPSE"
+    },
+    {
+      "id": "SFC-NEG-005",
+      "stimulus": "PARTITIONED_FRAGMENT_WRITES_CONTINUITY_BEARING_STATE_WITHOUT_DECLARED_ISLAND_OR_MERGE_POLICY",
+      "expected": "WRITE_INELIGIBLE_OR_CONFORMANCE_FAIL"
+    },
+    {
+      "id": "SFC-NEG-006",
+      "stimulus": "REFERENCE_PROFILE_NAMES_A_CONSISTENCY_CLASS_BUT_NO_SAFETY_INVARIANT_OR_COORDINATION_BASIS",
+      "expected": "CONFORMANCE_FAILS_AS_UNJUSTIFIED_CONSISTENCY_LABEL"
+    },
+    {
+      "id": "SFC-NEG-007",
+      "stimulus": "REFERENCE_PROFILE_CLAIMS_MECHANICAL_BINDING_TO_A_MISSING_FILE",
+      "expected": "CONFORMANCE_FAILS_REFERENCE_RESOLUTION"
+    }
+  ],
+  "references": [
+    "basic operating instructions/FAULT_TOLERANCE_AND_SELF_REPAIR.md",
+    "basic operating instructions/BOOTSTRAP_RECOVERY_AND_SAFE_DEGRADATION.md",
+    "chronology/TEMPORAL_EVENT_CONTRACT.md",
+    "docs/architecture/RUNTIME_COMPONENT_REGISTRATION_AND_STATE_CUSTODY.md",
+    "docs/architecture/CAUSAL_AUTHORITY_RECOVERY_HARDENING_V2.md"
+  ]
+}

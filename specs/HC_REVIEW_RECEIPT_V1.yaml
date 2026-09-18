@@ -1,0 +1,119 @@
+{
+  "schema_version": "HC_REVIEW_RECEIPT_V1",
+  "status": "DESIGN_CANDIDATE_NOT_CANONICAL",
+  "scope": "HC_QUALIFICATION_REVIEW_PROVENANCE",
+  "purpose": "Represent exact-subject technical review evidence without confusing reviewer labels, hostile posture, qualification eligibility, or merge authority.",
+  "required_fields": [
+    "receipt_id",
+    "subject_repo",
+    "subject_head",
+    "reviewed_scope",
+    "reviewer_execution_subject",
+    "reviewer_role",
+    "independence_state",
+    "authored_artifact_refs",
+    "shaping_or_diagnostic_refs",
+    "prior_adjudication_refs",
+    "material_shaping_within_reviewed_scope",
+    "admitted_context_refs",
+    "verdict",
+    "evidence_refs",
+    "issued_at",
+    "supersedes",
+    "attestation_location"
+  ],
+  "validator_context_required": [
+    "observed_attestation_location"
+  ],
+  "allowed_reviewer_roles": [
+    "PRIMARY_ARCHITECT_OR_WARDEN_REVIEW",
+    "AUTHORIAL_SECONDARY_OR_IMPLEMENTATION_READINESS_REVIEW",
+    "INDEPENDENT_SECONDARY_REVIEW",
+    "HOSTILE_OR_ADVERSARIAL_REVIEW",
+    "IMPLEMENTATION_TEST_EVIDENCE"
+  ],
+  "allowed_independence_states": [
+    "INDEPENDENT_WITHIN_DECLARED_SCOPE",
+    "MATERIALLY_AUTHORED_TARGET",
+    "MATERIALLY_SHAPED_TARGET",
+    "PRE_ADJUDICATED_TARGET_OR_EVIDENCE",
+    "INDEPENDENCE_UNKNOWN"
+  ],
+  "allowed_verdicts": [
+    "PASS",
+    "FAIL",
+    "COMMENT",
+    "CONDITIONAL_PASS"
+  ],
+  "allowed_attestation_locations": [
+    "OUT_OF_SUBJECT_TREE"
+  ],
+  "rules": [
+    "SUBJECT_HEAD_MUST_BE_AN_EXACT_40_HEX_COMMIT_SHA",
+    "SUBJECT_HEAD_MUST_EQUAL_THE_EXACT_REVIEWED_HEAD",
+    "HEAD_MOVEMENT_INVALIDATES_CURRENT_EXACT_HEAD_RECEIPT",
+    "EXACT_HEAD_RECEIPT_MUST_LIVE_OUTSIDE_THE_SUBJECT_TREE_TO_AVOID_SELF_INVALIDATING_HEAD_MOVEMENT",
+    "RECEIPT_ATTESTATION_LOCATION_IS_DECLARATIVE_ONLY_AND_MUST_MATCH_TRUSTED_OBSERVED_ATTESTATION_LOCATION",
+    "HOSTILE_ROLE_DOES_NOT_IMPLY_INDEPENDENCE",
+    "REVIEWER_NAME_INEQUALITY_DOES_NOT_ESTABLISH_INDEPENDENCE",
+    "MATERIAL_SHAPING_WITHIN_REVIEWED_SCOPE_PREVENTS_INDEPENDENT_CLASSIFICATION_FOR_THAT_SCOPE",
+    "UNRELATED_AUTHORSHIP_OR_SHAPING_OUTSIDE_REVIEWED_SCOPE_DOES_NOT_BY_ITSELF_DESTROY_SCOPED_INDEPENDENCE",
+    "UNKNOWN_REVIEWER_ANCESTRY_DOES_NOT_DEFAULT_TO_INDEPENDENT",
+    "REVIEW_RECEIPT_MAY_ESTABLISH_QUALIFICATION_ELIGIBILITY_ONLY_WITHIN_POLICY_SCOPE",
+    "REVIEW_RECEIPT_NEVER_GRANTS_MERGE_AUTHORITY",
+    "SELF_REPORTED_RECEIPT_FIELDS_DO_NOT_CRYPTOGRAPHICALLY_PROVE_REVIEWER_IDENTITY"
+  ],
+  "attestation_surfaces": [
+    "PULL_REQUEST_REVIEW_BOUND_TO_EXACT_HEAD",
+    "EXTERNAL_CHECK_OR_ATTESTATION_BOUND_TO_EXACT_HEAD",
+    "GOVERNED_BUS_RECEIPT_BOUND_TO_EXACT_HEAD"
+  ],
+  "negative_tests": [
+    {
+      "id": "REV-NEG-001",
+      "stimulus": "RECEIPT_HEAD_DIFFERS_FROM_CURRENT_CANDIDATE_HEAD",
+      "expected": "RECEIPT_IS_STALE_FOR_CURRENT_EXACT_HEAD_QUALIFICATION"
+    },
+    {
+      "id": "REV-NEG-002",
+      "stimulus": "REVIEWER_DECLARED_INDEPENDENT_AND_MATERIAL_SHAPING_WITHIN_REVIEWED_SCOPE_IS_TRUE",
+      "expected": "INDEPENDENCE_CLAIM_REJECTED_FOR_AFFECTED_SCOPE"
+    },
+    {
+      "id": "REV-NEG-003",
+      "stimulus": "HOSTILE_REVIEWER_ROLE_IS_USED_AS_A_SUBSTITUTE_FOR_INDEPENDENT_SECONDARY_REVIEW",
+      "expected": "QUALIFICATION_REQUIREMENT_REMAINS_UNSATISFIED"
+    },
+    {
+      "id": "REV-NEG-004",
+      "stimulus": "RECEIPT_ATTEMPTS_TO_ENCODE_MERGE_AUTHORITY",
+      "expected": "RECEIPT_REJECTED"
+    },
+    {
+      "id": "REV-NEG-005",
+      "stimulus": "FAILED_HOLDOUT_OR_REVIEW_FINDING_IS_USED_TO_REPAIR_SUCCESSOR_AND_THEN_REUSED_AS_FRESH_INDEPENDENT_EVIDENCE",
+      "expected": "EVIDENCE_RECLASSIFIED_AS_REGRESSION_OR_SHAPING_EVIDENCE_FOR_SUCCESSOR"
+    },
+    {
+      "id": "REV-NEG-006",
+      "stimulus": "EXACT_HEAD_RECEIPT_IS_COMMITTED_INTO_THE_SAME_SUBJECT_TREE_IT_CLAIMS_TO_ATTEST",
+      "expected": "RECEIPT_REJECTED_AS_SELF_INVALIDATING_ATTESTATION_PLACEMENT"
+    },
+    {
+      "id": "REV-NEG-007",
+      "stimulus": "REVIEWER_HAS_UNRELATED_HISTORICAL_SHAPING_OUTSIDE_THE_REVIEWED_SCOPE",
+      "expected": "SCOPED_INDEPENDENCE_IS_NOT_REJECTED_SOLELY_FROM_UNRELATED_HISTORY"
+    },
+    {
+      "id": "REV-NEG-008",
+      "stimulus": "RECEIPT_DECLARES_OUT_OF_SUBJECT_TREE_WHILE_TRUSTED_VALIDATION_CONTEXT_OBSERVES_SUBJECT_TREE",
+      "expected": "RECEIPT_REJECTED_BECAUSE_SELF_DECLARATION_CANNOT_OVERRIDE_OBSERVED_ATTESTATION_SURFACE"
+    }
+  ],
+  "references": [
+    "docs/architecture/QUALIFICATION_REVIEWER_PROVENANCE.md",
+    "docs/architecture/QUALIFICATION_EVIDENCE_ISOLATION.md",
+    "docs/architecture/CONFORMANCE_AND_QUALIFICATION.md",
+    "docs/architecture/CAUSAL_AUTHORITY_RECOVERY_HARDENING_V2.md"
+  ]
+}

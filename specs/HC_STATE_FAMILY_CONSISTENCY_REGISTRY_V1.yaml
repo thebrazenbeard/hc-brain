@@ -1,0 +1,194 @@
+{
+  "schema_version": "HC_STATE_FAMILY_CONSISTENCY_REGISTRY_V1",
+  "status": "DESIGN_CANDIDATE_NOT_CANONICAL",
+  "scope": "HC_REFERENCE_KERNEL_STATE_FAMILIES",
+  "profiles": [
+    {
+      "family_id": "reference.recovery_epoch",
+      "semantic_owner": "bootstrap-recovery",
+      "consistency_class": "SINGLE_WRITER_EPOCH",
+      "protected": true,
+      "continuity_bearing": true,
+      "partition_write_policy": "BLOCK",
+      "partition_read_policy": "CURRENT_ONLY",
+      "merge_or_reconciliation_rule": "NO_AUTOMATIC_MERGE; RECONCILE_EXACT_PREDECESSOR_EPOCH",
+      "stale_state_policy": "FAIL_CLOSED",
+      "recovery_fence_policy": "MONOTONE_CONTIGUOUS_RECOVERY_FENCE",
+      "effect_dependency_policy": "PREVIOUS_EPOCH_MATERIAL_EFFECT_ELIGIBILITY_INVALIDATED",
+      "qualification_refs": [
+        "specs/HC_BOOTSTRAP_RECOVERY_V1.yaml",
+        "runtime/reference_kernel/test_vera_adversarial_kernel_v2.py"
+      ],
+      "provenance": [
+        "docs/architecture/CAUSAL_AUTHORITY_RECOVERY_HARDENING_V2.md"
+      ],
+      "safety_invariants": [
+        "AT_MOST_ONE_CURRENT_RECOVERY_EPOCH_PER_REFERENCE_RUNTIME",
+        "NEW_EPOCH_IS_NOT_EXPOSED_WITH_UNFENCED_PRIOR_REQUESTED_EFFECTS"
+      ],
+      "coordination_basis": "REQUIRED_TO_PRESERVE_EPOCH_AND_EFFECT_FENCE_INVARIANTS",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/governed_kernel_v2.py",
+        "runtime/reference_kernel/test_vera_adversarial_kernel_v2.py"
+      ]
+    },
+    {
+      "family_id": "reference.authority_grants",
+      "semantic_owner": "authority-governance",
+      "consistency_class": "SINGLE_WRITER_EPOCH",
+      "protected": true,
+      "continuity_bearing": false,
+      "partition_write_policy": "BLOCK",
+      "partition_read_policy": "CURRENT_ONLY",
+      "merge_or_reconciliation_rule": "NO_AUTOMATIC_GRANT_MERGE; PRESERVE_HISTORY_AND_REQUIRE_CURRENT_EPOCH_REISSUANCE_OR_REVALIDATION",
+      "stale_state_policy": "STALE_GRANT_CANNOT_AUTHORIZE_EFFECT",
+      "recovery_fence_policy": "ISSUED_EPOCH_MUST_MATCH_CURRENT_EPOCH",
+      "effect_dependency_policy": "EFFECT_REQUEST_REQUIRES_CURRENT_SCOPE_MATCHED_NONREVOKED_UNEXPIRED_GRANT",
+      "qualification_refs": [
+        "basic operating instructions/AUTHORITY_CONSENT_AND_EFFECT_GOVERNANCE.md",
+        "runtime/reference_kernel/test_vera_adversarial_kernel_v2.py"
+      ],
+      "provenance": [
+        "docs/architecture/CAUSAL_AUTHORITY_RECOVERY_HARDENING_V2.md"
+      ],
+      "safety_invariants": [
+        "AUTHENTICATED_ISSUER_DOES_NOT_IMPLY_UNLIMITED_JURISDICTION",
+        "GRANT_ISSUANCE_POLICY_IDENTITY_REMAINS_IN_PROVENANCE",
+        "REVOKED_OR_STALE_GRANT_CANNOT_REGAIN_AUTHORITY_BY_REORDERING"
+      ],
+      "coordination_basis": "REQUIRED_FOR_AUTHORITY_CURRENTNESS_AND_NO_SPLIT_BRAIN_ISSUANCE",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/hc_kernel.py",
+        "runtime/reference_kernel/governed_kernel_v2.py",
+        "runtime/reference_kernel/test_vera_adversarial_kernel_v2.py"
+      ]
+    },
+    {
+      "family_id": "reference.effect_receipts",
+      "semantic_owner": "effect-governance",
+      "consistency_class": "CAUSALLY_ORDERED",
+      "protected": true,
+      "continuity_bearing": false,
+      "partition_write_policy": "BLOCK",
+      "partition_read_policy": "CURRENT_ONLY",
+      "merge_or_reconciliation_rule": "MONOTONE_PER_ACTION_STATE_MACHINE; CONFLICT_OR_UNKNOWN_REQUIRES_RECONCILIATION",
+      "stale_state_policy": "UNCONFIRMED_OR_OLD_EPOCH_EFFECT_REMAINS_UNRESOLVED",
+      "recovery_fence_policy": "ALL_REQUESTED_RECEIPTS_FROM_PREVIOUS_EPOCH_BECOME_UNRESOLVED_TOGETHER",
+      "effect_dependency_policy": "NO_NONIDEMPOTENT_RETRY_WITHOUT_RECONCILIATION",
+      "qualification_refs": [
+        "specs/HC_BOOTSTRAP_RECOVERY_V1.yaml",
+        "runtime/reference_kernel/test_vera_adversarial_kernel_v2.py"
+      ],
+      "provenance": [
+        "docs/architecture/CAUSAL_AUTHORITY_RECOVERY_HARDENING_V2.md"
+      ],
+      "safety_invariants": [
+        "REQUESTED_NE_CONFIRMED",
+        "CONFIRMED_OUTCOME_REQUIRES_ACTION_BOUND_OBSERVATION",
+        "RESTART_NE_SAFE_TO_REDISPATCH"
+      ],
+      "coordination_basis": "REQUIRED_WHERE_CONCURRENT_TRANSITIONS_COULD_VIOLATE_MONOTONE_ACTION_STATE",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/hc_kernel.py",
+        "runtime/reference_kernel/durable_kernel.py",
+        "runtime/reference_kernel/governed_kernel_v2.py",
+        "runtime/reference_kernel/test_hc_kernel.py",
+        "runtime/reference_kernel/test_durable_kernel.py",
+        "runtime/reference_kernel/test_vera_adversarial_kernel_v2.py"
+      ]
+    },
+    {
+      "family_id": "reference.current_memory_records",
+      "semantic_owner": "current-memory",
+      "consistency_class": "MERGEABLE_CONCURRENT",
+      "protected": false,
+      "continuity_bearing": true,
+      "partition_write_policy": "MERGE_CANDIDATES_ONLY",
+      "partition_read_policy": "CURRENT_ONLY",
+      "merge_or_reconciliation_rule": "PRESERVE_COMPETING_HEADS; UNIQUE_CURRENT_PROJECTION_ONLY_AFTER_SUPERSESSION_OR_RECONCILIATION",
+      "stale_state_policy": "AMBIGUOUS_CURRENT_HEAD_FAILS_CLOSED",
+      "recovery_fence_policy": "REPLAY_LINEAGE_AND_RECOMPUTE_CURRENT_PROJECTION",
+      "effect_dependency_policy": "MATERIAL_EFFECT_CANNOT_ASSUME_UNIQUE_CURRENT_MEMORY_WHEN_PROJECTION_IS_AMBIGUOUS",
+      "qualification_refs": [
+        "current memory storage/CURRENT_STATE_SELECTION.md",
+        "runtime/reference_kernel/test_hc_kernel.py"
+      ],
+      "provenance": [
+        "docs/architecture/STATE_FAMILY_CONSISTENCY_AND_CAUSAL_FRONTIER.md"
+      ],
+      "safety_invariants": [
+        "CONCURRENT_HEADS_REMAIN_VISIBLE",
+        "LATEST_TIMESTAMP_ALONE_DOES_NOT_SELECT_CURRENT_HEAD"
+      ],
+      "coordination_basis": "CANDIDATE_ADMISSION_MAY_AVOID_GLOBAL_COORDINATION_ONLY_IF_CONFLICT_PRESERVATION_REMAINS_INTACT",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/hc_kernel.py",
+        "runtime/reference_kernel/test_hc_kernel.py",
+        "runtime/reference_kernel/test_four_adversarial_kernel.py"
+      ]
+    },
+    {
+      "family_id": "reference.evidence_records",
+      "semantic_owner": "epistemic-evidence",
+      "consistency_class": "CAUSALLY_ORDERED",
+      "protected": false,
+      "continuity_bearing": false,
+      "partition_write_policy": "BOUNDED_ISLAND",
+      "partition_read_policy": "STALE_WITH_LABEL",
+      "merge_or_reconciliation_rule": "IMMUTABLE_ID_UNION_WITH_LINEAGE_PRESERVATION; CONFLICTING_CLAIMS_COEXIST",
+      "stale_state_policy": "STALE_OR_PARTITION_LOCAL_EVIDENCE_RETAINS_SCOPE_LABEL",
+      "recovery_fence_policy": "REPLAY_IMMUTABLE_EVIDENCE_AND_VALIDATE_PARENT_REFERENCES",
+      "effect_dependency_policy": "EVIDENCE_PRESENCE_ALONE_DOES_NOT_GRANT_EFFECT_AUTHORITY",
+      "qualification_refs": [
+        "docs/architecture/EXECUTED_DATAFLOW_AND_BINDING_INTEGRITY.md",
+        "runtime/reference_kernel/test_four_adversarial_kernel_r2.py"
+      ],
+      "provenance": [
+        "docs/architecture/STATE_FAMILY_CONSISTENCY_AND_CAUSAL_FRONTIER.md"
+      ],
+      "safety_invariants": [
+        "EVIDENCE_APPEND_DOES_NOT_OVERWRITE_CONTRADICTION",
+        "DERIVED_EVIDENCE_RETAINS_PARENT_LINEAGE",
+        "OBSERVATION_NE_PREDICTION"
+      ],
+      "coordination_basis": "COORDINATION_MAY_BE_AVOIDABLE_FOR_IMMUTABLE_ADMISSION_WHEN_ID_AND_LINEAGE_INVARIANTS_ARE_PRESERVED",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/hc_kernel.py",
+        "runtime/reference_kernel/durable_kernel.py",
+        "runtime/reference_kernel/test_four_adversarial_kernel.py",
+        "runtime/reference_kernel/test_four_adversarial_kernel_r2.py"
+      ]
+    },
+    {
+      "family_id": "reference.routed_events",
+      "semantic_owner": "routing-fabric",
+      "consistency_class": "CAUSALLY_ORDERED",
+      "protected": false,
+      "continuity_bearing": false,
+      "partition_write_policy": "BOUNDED_ISLAND",
+      "partition_read_policy": "LOCAL_ALLOWED",
+      "merge_or_reconciliation_rule": "IMMUTABLE_EVENT_ID_UNION; INCORPORATION_STATE_REMAINS_SEPARATE",
+      "stale_state_policy": "ROUTED_EVENT_DOES_NOT_BECOME_CURRENT_STATE_OR_AUTHORITY_FROM_AGE_OR_PRIORITY",
+      "recovery_fence_policy": "REPLAY_ROUTE_AND_INCORPORATION_MARKERS_WITHOUT_IMPLICIT_REDELIVERY_AUTHORITY",
+      "effect_dependency_policy": "ROUTED_OR_HIGH_PRIORITY_EVENT_NE_EFFECT_AUTHORIZATION",
+      "qualification_refs": [
+        "routing instructions with neuroplasticity/TYPED_ROUTING_AND_PLASTICITY.md",
+        "runtime/reference_kernel/test_hc_kernel.py"
+      ],
+      "provenance": [
+        "docs/architecture/STATE_FAMILY_CONSISTENCY_AND_CAUSAL_FRONTIER.md"
+      ],
+      "safety_invariants": [
+        "ROUTED_NE_INCORPORATED",
+        "PRIORITY_NE_AUTHORITY"
+      ],
+      "coordination_basis": "LOCAL_ROUTING_MAY_CONTINUE_WITH_BOUNDED_SCOPE_WHILE_GLOBAL_PROTECTED_WRITES_REMAIN_SEPARATELY_GOVERNED",
+      "mechanical_evidence_refs": [
+        "runtime/reference_kernel/hc_kernel.py",
+        "runtime/reference_kernel/durable_kernel.py",
+        "runtime/reference_kernel/test_hc_kernel.py"
+      ]
+    }
+  ],
+  "research_note": "Coordination is selected from state-family invariants and operation semantics rather than imposed globally; this follows the architectural lesson of invariant-confluence work without claiming a formal I-confluence proof for these candidate HC profiles. Mechanical evidence refs bind each profile to executable/source evidence but do not prove a complete distributed implementation."
+}

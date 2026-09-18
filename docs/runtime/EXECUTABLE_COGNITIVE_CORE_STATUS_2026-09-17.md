@@ -6,7 +6,7 @@ Status: current implementation evidence / not behavioral qualification.
 
 HC now has an executable cognitive layer above the reference invariant kernel.
 
-The cognitive core implements a bounded cross-system loop spanning semantic interpretation, salience/attention, affective/conative modulation, transient coalition formation, current-memory admission, explicit deep-memory and self-model admission gates, plasticity proposal/consolidation, and developmental capability state.
+The cognitive core implements a bounded cross-system loop spanning semantic interpretation, salience/attention, affective/conative modulation, transient coalition formation, current-memory admission, HC-owned deep-memory durability/retrieval/consolidation, self-model admission gates, plasticity proposal/consolidation, developmental capability state, rival world models, forecast lineage, counterfactual rehearsal, and metacognitive monitoring.
 
 This is the first repository state in which several previously documentation-only cognitive subsystems operate together in one tested runtime path.
 
@@ -27,7 +27,7 @@ The integration branch also carries the closed V2 hardening lineage, including:
 On the integration workspace:
 - hardened reference-kernel suite: 79/79 PASS;
 - architecture-conformance suite: 29/29 PASS;
-- cognitive-core suite: 18/18 PASS.
+- cognitive-core suite: 41/41 PASS (18 integrated-loop + 8 world-model + 8 deep-memory + 7 metacognition).
 
 These are authorial/local implementation tests.
 
@@ -54,10 +54,8 @@ The current runtime demonstrates:
 
 Major remaining surfaces include:
 - richer perception and multimodal fusion;
-- world-model learning and prediction;
-- counterfactual simulation/planning;
-- metacognitive monitoring;
-- full deep-memory consolidation/retrieval/replay;
+- learned relational/causal model discovery beyond explicit model proposals;
+- large-scale associative deep-memory indexing and bounded replay scheduling;
 - homeostasis/interoception dynamics;
 - somatics/body schema;
 - empathy and social modelling;

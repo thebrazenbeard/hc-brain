@@ -27,4 +27,9 @@ jobs:
           git checkout --detach "${COMMIT_SHA}"
       - name: Run cognitive-core tests
         working-directory: repo
-        run: python3 -m unittest -v runtime.cognitive_core.test_cognitive_loop
+        run: >-
+          python3 -m unittest -v
+          runtime.cognitive_core.test_cognitive_loop
+          runtime.cognitive_core.test_world_model
+          runtime.cognitive_core.test_deep_memory
+          runtime.cognitive_core.test_metacognition

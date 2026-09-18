@@ -12,6 +12,32 @@ from .cognitive_loop import (
     SelfModelCandidate,
     SemanticArbitrationResult,
 )
+from .deep_memory import (
+    DeepMemoryRuntime,
+    DurableMemoryRecord,
+    DurabilityClass,
+    MemoryClass,
+    MemoryConflict,
+    MemoryLifecycle,
+    RetrievalCandidate,
+)
+from .metacognition import (
+    CognitiveMonitorState,
+    MetacognitiveRuntime,
+    MetacognitiveTrace,
+    Recommendation,
+    StrategyOutcome,
+)
+from .world_model import (
+    ActionRehearsal,
+    CausalSupport,
+    Forecast,
+    ForecastReconciliation,
+    ModelHypothesis,
+    ModelLifecycle,
+    Simulation,
+    WorldModelRuntime,
+)
 
 __all__ = [
     "AffectState",
@@ -26,4 +52,24 @@ __all__ = [
     "PlasticityCandidate",
     "SelfModelCandidate",
     "SemanticArbitrationResult",
+    "DeepMemoryRuntime",
+    "DurableMemoryRecord",
+    "DurabilityClass",
+    "MemoryClass",
+    "MemoryConflict",
+    "MemoryLifecycle",
+    "RetrievalCandidate",
+    "CognitiveMonitorState",
+    "MetacognitiveRuntime",
+    "MetacognitiveTrace",
+    "Recommendation",
+    "StrategyOutcome",
+    "ActionRehearsal",
+    "CausalSupport",
+    "Forecast",
+    "ForecastReconciliation",
+    "ModelHypothesis",
+    "ModelLifecycle",
+    "Simulation",
+    "WorldModelRuntime",
 ]

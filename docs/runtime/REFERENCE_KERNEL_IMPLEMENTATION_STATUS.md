@@ -56,7 +56,7 @@ Fresh verification on that workspace:
 
 - hardened reference-kernel suite: **79/79 PASS**;
 - architecture-conformance suite: **29/29 PASS**;
-- cognitive-core suite: **18/18 PASS**.
+- cognitive-core suite: **41/41 PASS** (18 integrated-loop + 8 world-model + 8 deep-memory + 7 metacognition).
 
 This is authorial/local evidence for the tested surfaces.
 
@@ -81,10 +81,8 @@ The cognitive core is in-process and deterministic; it is not yet distributed No
 The current executable layers do not yet establish:
 
 - rich multimodal perception;
-- learned world-model dynamics and forecasting;
-- counterfactual simulation/planning;
-- metacognitive monitoring;
-- complete deep-memory consolidation/retrieval/replay;
+- learned relational/causal model discovery beyond explicit model proposals;
+- large-scale associative deep-memory indexing and bounded replay scheduling;
 - homeostasis/interoception dynamics;
 - somatics/body schema;
 - empathy/social modelling;

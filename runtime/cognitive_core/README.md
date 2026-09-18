@@ -72,6 +72,36 @@ Relevant capabilities begin as:
 
 Explicit qualification evidence can move a capability to `ACTIVE / STABLE_WITHIN_SCOPE`. The transition and basis remain in local history.
 
+## World model, prediction, and counterfactuals
+
+`world_model.py` adds a bounded world-model slice that preserves rival models, prediction ancestry, descendant uncertainty ceilings, counterfactual provenance, action-conditional forecasts, and observation reconciliation.
+
+`MODEL_STATE != WORLD_STATE`
+
+`PREDICTION != OBSERVATION`
+
+`SIMULATED != OBSERVED != REMEMBERED_AS_LIVED`
+
+`REHEARSED_ACTION != AUTHORIZED_ACTION`
+
+`DESCENDANT_FORECAST != INDEPENDENT_CORROBORATION`
+
+## Deep memory
+
+`deep_memory.py` adds HC-owned durable admission, integrity metadata, privacy-scoped retrieval, provenance-preserving consolidation, and contradiction records. Retrieval remains a candidate operation rather than automatic truth/currentness admission.
+
+`EXTERNAL_REPLICA_WRITE != DURABLE_MEMORY_ADMISSION`
+
+`RETRIEVED != ADMITTED_AS_TRUE`
+
+## Metacognition
+
+`metacognition.py` represents uncertainty, conflict, stale evidence, repeated strategy failure, and resource exhaustion as derived monitor state. It can recommend evidence gathering, broader arbitration, strategy revision, or stopping without becoming an executive or gaining effect authority.
+
+`METACOGNITIVE_RECOMMENDATION != ACTION_AUTHORITY`
+
+`SELF_CRITIQUE != AUTOMATIC_SELF_MODIFICATION`
+
 ## Test surface
 
 `test_cognitive_loop.py` currently covers the integrated loop, epistemic/conative separation, authority separation, coalition expiry, memory/identity admission gates, plasticity consolidation, affect decay, concern lifecycle, semantic ambiguity, and developmental qualification state.

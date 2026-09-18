@@ -10,7 +10,7 @@ Canonical `main` now contains the hardened reference-kernel lineage plus the fir
 
 Exact implementation baseline promoted on 2026-09-17:
 
-`416b4cbb50c278813b9aa3b2649551bedd2bb33b`
+`9e1a67db9da49da6ba3bbaed2df806943ddd83f7`
 
 That baseline includes the closed R3/R4/R5/V2 hardening work and `runtime/cognitive_core/`.
 
@@ -22,7 +22,7 @@ Fresh local verification immediately before promotion:
 
 - hardened reference kernel: **79/79 PASS**;
 - architecture-conformance suite: **29/29 PASS**;
-- integrated cognitive core: **18/18 PASS**;
+- integrated cognitive core: **41/41 PASS** (18 integrated-loop + 8 world-model + 8 deep-memory + 7 metacognition);
 - Python compilation: PASS;
 - `git diff --check`: PASS.
 
@@ -40,6 +40,10 @@ Material reference implementation exists for:
 - evidence classes, provenance, durable replay, authority/effect boundaries;
 - current-memory projection and correction;
 - semantic interpretation and ambiguity preservation;
+- rival world models, forecast lineage and observation reconciliation;
+- counterfactual simulation and action rehearsal with explicit simulated provenance;
+- HC-internal deep-memory durability, privacy-scoped retrieval, consolidation and contradiction preservation;
+- metacognitive monitoring of uncertainty, conflict, stale evidence, strategy failure and resource exhaustion;
 - salience/attention appraisal;
 - affective modulation and decay;
 - conative concern lifecycle;

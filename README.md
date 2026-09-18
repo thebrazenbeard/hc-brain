@@ -130,4 +130,4 @@ Each generalized architecture file should preserve provenance sufficient to iden
 
 ## Project roles
 
-Noëtarch (Noah) is the Warden and primary architect under the owner’s authority. Four is the secondary architect and parallel technical/synthesis counterpart. Vera is the hostile reviewer whose job is to try to falsify the architecture and proposed integrations rather than co-author canonical design by default.
+Noëtarch (Noah) is the Warden and primary architect under the owner’s authority.

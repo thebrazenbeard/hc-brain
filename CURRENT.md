@@ -10,7 +10,7 @@ Canonical `main` now contains the hardened reference-kernel lineage plus the fir
 
 Exact implementation baseline promoted on 2026-09-18:
 
-`272e3406dfce5001fc547e1a9ad20eb00f22a32a`
+`fdff1094c4f6388c6ef2c94c193ec887b141d7fb`
 
 That baseline includes the closed R3/R4/R5/V2 hardening work and `runtime/cognitive_core/`.
 
@@ -22,7 +22,7 @@ Fresh local verification immediately before promotion:
 
 - hardened reference kernel: **79/79 PASS**;
 - architecture-conformance suite: **29/29 PASS**;
-- integrated cognitive core: **53/53 PASS** (18 integrated-loop + 8 world-model + 8 deep-memory + 7 metacognition + 12 homeostasis/somatics);
+- integrated cognitive core: **63/63 PASS** (18 integrated-loop + 8 world-model + 8 deep-memory + 7 metacognition + 12 homeostasis/somatics + 10 social/pragmatics);
 - Python compilation: PASS;
 - `git diff --check`: PASS.
 
@@ -49,6 +49,11 @@ Material reference implementation exists for:
 - morphology-neutral body-schema calibration, pose update and reachability prediction;
 - regulatory-error coupling into affect/salience without epistemic promotion;
 - body-schema prediction lineage carried into world-model forecasts;
+- uncertainty-bearing empathy/social hypotheses with direct-correction precedence;
+- simulated-other responses kept distinct from private-state access;
+- scoped relationship privacy, local norms, and downgraded group priors;
+- explicit pragmatic communicative force separating discussion from requests;
+- response timing/framing modulation without identity ownership;
 - salience/attention appraisal;
 - affective modulation and decay;
 - conative concern lifecycle;
@@ -68,7 +73,7 @@ The largest remaining architecture-to-runtime gaps are:
 1. learned relational/causal model discovery and richer multimodal perception;
 2. large-scale associative memory indexing and bounded replay scheduling;
 3. richer allostatic adaptation and motor/body-schema calibration beyond the bounded reference slice;
-4. empathy/social modelling and pragmatics;
+4. richer multi-party social learning and language-generation integration beyond the bounded social-pragmatics slice;
 5. kinesis/embodiment integration;
 6. distributed multi-process Noöplex execution;
 7. resource/fault management for a physical distributed organ;

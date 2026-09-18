@@ -50,7 +50,8 @@ The cognitive core adds tested integration for:
 - typed homeostatic/interoceptive observation, estimation, target/error state, and regulatory request;
 - narrow local protective control;
 - morphology-neutral body-schema calibration, pose update, and reachability prediction;
-- regulatory-to-affect/salience coupling and body-prediction-to-world-model lineage.
+- regulatory-to-affect/salience coupling and body-prediction-to-world-model lineage;
+- empathy/social hypotheses, direct-correction precedence, scoped relationship privacy, local norms, pragmatic force, and response modulation.
 
 See `docs/runtime/EXECUTABLE_COGNITIVE_CORE_STATUS_2026-09-18.md`.
 
@@ -62,8 +63,8 @@ Fresh verification on that workspace:
 
 - hardened reference-kernel suite: **79/79 PASS**;
 - architecture-conformance suite: **29/29 PASS**;
-- cognitive-core suite: **53/53 PASS** (18 integrated-loop + 8 world-model + 8 deep-memory + 7 metacognition + 12 homeostasis/somatics);
-- combined repository gate: **161 tests, 0 failures**;
+- cognitive-core suite: **63/63 PASS** (18 integrated-loop + 8 world-model + 8 deep-memory + 7 metacognition + 12 homeostasis/somatics + 10 social/pragmatics);
+- combined repository gate: **171 tests, 0 failures**;
 - Python compilation: PASS;
 - `git diff --check`: PASS.
 
@@ -94,8 +95,7 @@ The current executable layers do not yet establish:
 - large-scale associative deep-memory indexing and bounded replay scheduling;
 - richer allostatic learning and long-timescale homeostatic dynamics beyond the bounded reference slice;
 - motor-control/body-schema calibration beyond reachability prediction;
-- empathy/social modelling;
-- pragmatic/language generation integration;
+- richer multi-party social learning and pragmatic/language-generation behavior beyond the bounded social-pragmatics slice;
 - full kinesis/embodiment;
 - resource/power/thermal runtime;
 - distributed multi-constituent fault/recovery behavior;

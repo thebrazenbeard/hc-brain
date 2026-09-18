@@ -118,6 +118,22 @@ Regulatory pressure can modulate affect/salience without changing evidence confi
 
 `PREDICTED_REACHABILITY != CURRENT_BODY_FACT`
 
+## Empathy, social modelling, and pragmatics
+
+`social_pragmatics.py` adds bounded other-agent hypotheses, direct-correction precedence, social-response simulation, communicative-force interpretation, scoped relationship context, local norms, group-prior downgrading, and response-modulation candidates.
+
+`EMPATHIC_MODEL != OTHER_MIND`
+
+`SIMULATED_OTHER_RESPONSE != ACCESS_TO_OTHER_PRIVATE_STATE`
+
+`LOCAL_NORM != UNIVERSAL_NORM`
+
+`GROUP_PRIOR != INDIVIDUAL_FACT`
+
+`DISCUSSION_ABOUT_ACTION != ACTION_REQUEST`
+
+`SOCIAL_EXPECTATION != ACTION_AUTHORIZATION`
+
 ## Test surface
 
 `test_cognitive_loop.py` currently covers the integrated loop, epistemic/conative separation, authority separation, coalition expiry, memory/identity admission gates, plasticity consolidation, affect decay, concern lifecycle, semantic ambiguity, and developmental qualification state.
@@ -132,8 +148,8 @@ It does not establish:
 - autonomous open-world competence;
 - complete deep-memory consolidation/retrieval;
 - full world modelling or planning;
-- empathy/social cognition;
-- embodiment;
+- richer multi-party social cognition and language-generation integration beyond the bounded social-pragmatics slice;
+- embodiment-specific motor control beyond the bounded body-schema slice;
 - general intelligence;
 - consciousness or phenomenal experience;
 - biological equivalence.

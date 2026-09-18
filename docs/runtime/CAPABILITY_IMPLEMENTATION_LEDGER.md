@@ -1,6 +1,6 @@
 # HC Capability Implementation Ledger
 
-Status: current layer-separation ledger as of 2026-09-17.
+Status: current layer-separation ledger as of 2026-09-18.
 
 Purpose: prevent architectural presence from being mistaken for implementation, integration, or behavioral qualification.
 
@@ -39,14 +39,14 @@ These states are cumulative only when evidence explicitly supports the higher la
 | Optics | ARCHITECTURALLY_REQUIRED + SPECIFIED | No | No | No | `optics/` |
 | Speech recognition & synthesis | ARCHITECTURALLY_REQUIRED + SPECIFIED | No | No | No | `speech recognition & synthesis/` |
 | Semantics | ARCHITECTURALLY_REQUIRED + SPECIFIED | REFERENCE_IMPLEMENTED for inferred hypotheses and ambiguity arbitration | DEMONSTRATED_INTEGRATED in cognitive-core slice | No | `semantics/`; cognitive core |
-| Pragmatics | ARCHITECTURALLY_REQUIRED + SPECIFIED | No | No | No | `pragmatics/` |
+| Pragmatics | ARCHITECTURALLY_REQUIRED + SPECIFIED | REFERENCE_IMPLEMENTED for explicit communicative-force interpretation and request-vs-discussion separation | DEMONSTRATED_INTEGRATED with non-authorizing action candidates | No | `pragmatics/`; `runtime/cognitive_core/social_pragmatics.py` |
 | Phonetics | ARCHITECTURALLY_REQUIRED + SPECIFIED | No | No | No | `phoenetics/` |
 | Cognition: perception, world model, counterfactuals, metacognition, relational reasoning | ARCHITECTURALLY_REQUIRED + SPECIFIED | REFERENCE_IMPLEMENTED for observation/interpretation, rival world models, forecast lineage, counterfactual/rehearsal and bounded metacognitive monitoring; relational reasoning still incomplete | DEMONSTRATED_INTEGRATED across bounded cognition/world-model/metacognition slices | No | `cognition/`; cognitive core |
 | Self identity / continuity substrate | ARCHITECTURALLY_REQUIRED + SPECIFIED | REFERENCE_IMPLEMENTED for self-model candidate/admission boundary only | DEMONSTRATED_INTEGRATED in cognitive-core slice | No | `self identity/`; cognitive core |
-| Empathy / self-other modeling | ARCHITECTURALLY_REQUIRED + SPECIFIED | No | No | No | `Empathy/` |
-| Sociological behavior / social modeling | ARCHITECTURALLY_REQUIRED + SPECIFIED | No | No | No | `sociological behaviors/` |
+| Empathy / self-other modeling | ARCHITECTURALLY_REQUIRED + SPECIFIED | REFERENCE_IMPLEMENTED for uncertainty-bearing other-state hypotheses, direct correction, and simulated response prediction | DEMONSTRATED_INTEGRATED with pragmatics and response modulation | No | `Empathy/`; `runtime/cognitive_core/social_pragmatics.py` |
+| Sociological behavior / social modeling | ARCHITECTURALLY_REQUIRED + SPECIFIED | REFERENCE_IMPLEMENTED for scoped relationships, privacy-gated context, local norms and group-prior downgrading | DEMONSTRATED_INTEGRATED in social-pragmatics slice | No | `sociological behaviors/`; `runtime/cognitive_core/social_pragmatics.py` |
 | Psychological / learned behavior | ARCHITECTURALLY_REQUIRED + SPECIFIED | No | No | No | `psychological behaviors/` |
-| Personification / social presentation | ARCHITECTURALLY_REQUIRED + SPECIFIED | No | No | No | `personification/`; presentation must not silently own volition/action authority |
+| Personification / social presentation | ARCHITECTURALLY_REQUIRED + SPECIFIED | REFERENCE_IMPLEMENTED for bounded response timing/framing modulation only | DEMONSTRATED_INTEGRATED with social hypotheses; no identity ownership | No | `personification/`; `runtime/cognitive_core/social_pragmatics.py` |
 | Sexuality / embodied affect | ARCHITECTURALLY_REQUIRED + SPECIFIED | No | No | No | `sexuality/`; desire/arousal/attraction remain distinct from consent/effect authority |
 | Chronology / temporal event contract | ARCHITECTURALLY_REQUIRED + SPECIFIED | Partial timestamp/restart semantics in reference kernel only | No full chronology runtime | No | `chronology/`; reference kernel |
 | Resolver / conflict and reconciliation | ARCHITECTURALLY_REQUIRED + SPECIFIED | REFERENCE_IMPLEMENTED for semantic ambiguity preservation/selection only | DEMONSTRATED_INTEGRATED in cognitive-core slice | No | `resolver/`; cognitive core |

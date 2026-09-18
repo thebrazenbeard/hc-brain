@@ -16,7 +16,12 @@ The current cognitive runtime candidate extends canonical HC cognition with:
 - narrowly scoped local protective control that cannot expand into general action authority;
 - morphology-neutral body-schema calibration, pose update, and reachability prediction;
 - regulatory-error -> affect/salience coupling without changing proposition confidence;
-- body-schema prediction -> world-model forecast ancestry with observed/generated lineage preserved.
+- body-schema prediction -> world-model forecast ancestry with observed/generated lineage preserved;
+- uncertainty-bearing empathic hypotheses and simulated-other predictions;
+- direct correction from the modeled agent superseding contradicted local inference without erasing history;
+- scoped relationship privacy, local social norms, and downgraded group priors;
+- explicit pragmatic communicative force distinguishing discussion, requests, assertions, correction, warning, play, and repair;
+- social response modulation that does not mutate identity or truth.
 
 ## Current test surface
 
@@ -24,17 +29,18 @@ Fresh exact candidate gate:
 
 - reference kernel: 79 tests;
 - architecture conformance: 29 tests;
-- cognitive runtime: 53 tests;
-- combined: 161 tests, 0 failures;
+- cognitive runtime: 63 tests;
+- combined: 171 tests, 0 failures;
 - Python compilation: PASS;
 - `git diff --check`: PASS.
 
-The cognitive 53 are:
+The cognitive 63 are:
 - 18 integrated-loop tests;
 - 8 world-model tests;
 - 8 deep-memory tests;
 - 7 metacognition tests;
-- 12 homeostasis/somatics/integration tests.
+- 12 homeostasis/somatics/integration tests;
+- 10 empathy/social/pragmatics tests.
 
 ## Key executable boundaries
 
@@ -69,7 +75,7 @@ Major remaining runtime gaps include:
 - large-scale associative memory indexing and replay scheduling;
 - richer allostatic adaptation and long-timescale regulatory learning;
 - motor planning/control and embodiment-specific kinesis;
-- empathy, social modelling, pragmatics, and interactive language use;
+- richer social learning, multi-party interaction, and language-generation integration beyond the bounded social-pragmatics slice;
 - distributed multi-process Noöplex execution;
 - physical resource/fault management;
 - behavioral qualification beyond unit/integration tests.

@@ -34,3 +34,4 @@ jobs:
           runtime.cognitive_core.test_deep_memory
           runtime.cognitive_core.test_metacognition
           runtime.cognitive_core.test_homeostasis_somatics
+          runtime.cognitive_core.test_social_pragmatics

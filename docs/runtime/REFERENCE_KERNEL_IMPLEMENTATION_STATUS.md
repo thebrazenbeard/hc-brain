@@ -52,7 +52,7 @@ The cognitive core adds tested integration for:
 - morphology-neutral body-schema calibration, pose update, and reachability prediction;
 - regulatory-to-affect/salience coupling and body-prediction-to-world-model lineage;
 - empathy/social hypotheses, direct-correction precedence, scoped relationship privacy, local norms, pragmatic force, and response modulation;
-- calibrated motor planning, reach constraints, trajectory prediction, stale-plan invalidation, bounded local stabilization, and observed-outcome motor-skill learning.
+- calibrated motor planning, reach constraints, trajectory prediction, stale-plan invalidation, bounded local stabilization planning, and observed-outcome motor-skill learning.
 
 See `docs/runtime/EXECUTABLE_COGNITIVE_CORE_STATUS_2026-09-18.md`.
 

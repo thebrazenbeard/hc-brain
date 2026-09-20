@@ -131,14 +131,15 @@ class MotorControlRuntimeTests(unittest.TestCase):
             max_adjustment=0.2,
             basis_refs=("safety:arm-stabilizer",),
         )
-        adjustment = self.runtime.apply_local_stabilization(
+        adjustment = self.runtime.plan_local_stabilization(
             effector="arm",
             adjustment=0.1,
             reason_refs=("sensor:pose-error",),
         )
-        self.assertEqual(adjustment.status, "APPLIED_LOCAL_STABILIZATION")
+        self.assertEqual(adjustment.status, "PLANNED_LOCAL_STABILIZATION_NO_EFFECT")
+        self.assertEqual(dict(self.kernel.effect_receipts), {})
         with self.assertRaises(PermissionError):
-            self.runtime.apply_local_stabilization(
+            self.runtime.plan_local_stabilization(
                 effector="leg",
                 adjustment=0.1,
                 reason_refs=("sensor:pose-error",),

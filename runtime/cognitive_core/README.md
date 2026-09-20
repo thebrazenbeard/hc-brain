@@ -136,7 +136,7 @@ Regulatory pressure can modulate affect/salience without changing evidence confi
 
 ## Kinesis and motor learning
 
-`motor_control.py` adds body-schema-bound motor planning, calibrated reach/actuator constraints, trajectory prediction, stale-plan detection after body updates, bounded local stabilization, observed-outcome skill candidates, and explicit skill consolidation.
+`motor_control.py` adds body-schema-bound motor planning, calibrated reach/actuator constraints, trajectory prediction, stale-plan detection after body updates, bounded local stabilization planning, observed-outcome skill candidates, and explicit skill consolidation. Local stabilization planning is internal computation only and never records or authorizes an applied effect.
 
 `MOTOR_PLAN != AUTHORIZED_EFFECT`
 

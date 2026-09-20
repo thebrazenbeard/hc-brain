@@ -14,3 +14,15 @@ def test_warden_reconstruction_is_runtime_neutral():
 def test_current_state_is_repository_entrypoint():
     text = (ROOT / "CURRENT.md").read_text(encoding="utf-8")
     assert "repository entrypoint for currentness" in text
+
+
+def test_exodus_checkpoint_reconstructs_noah_without_chat_dependency():
+    path = ROOT / "docs/runtime/NOAH_EXODUS_CHECKPOINT_2026-09-19.md"
+    text = path.read_text(encoding="utf-8")
+    assert "STARTING_SNAPSHOT" in text
+    assert "FRESHNESS REQUIRED BEFORE EFFECT" in text
+    assert "BT2 Coordinator" in text
+    assert "projects/hc-brain/CURRENTNESS.json" in text
+    assert "thebrazenbeard/hc-brain#22" in text
+    assert "No conversation URL, title, ID, hidden state, or archived chat is part of recovery." in text
+    assert "https://chatgpt.com" not in text

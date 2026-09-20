@@ -24,7 +24,7 @@ The current cognitive runtime candidate extends canonical HC cognition with:
 - social response modulation that does not mutate identity or truth;
 - body-schema-bound motor planning with calibrated reach/actuator constraints;
 - trajectory prediction and stale-plan invalidation after body-schema change;
-- bounded local stabilization separate from general effect authority;
+- bounded local stabilization planning separate from general effect authority;
 - observed-outcome motor-skill candidates and explicit consolidation.
 
 ## Current test surface

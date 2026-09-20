@@ -45,7 +45,7 @@ from .metacognition import (
     StrategyOutcome,
 )
 from .motor_control import (
-    LocalStabilization,
+    LocalStabilizationPlan,
     LocalStabilizer,
     MotorControlRuntime,
     MotorPlan,
@@ -116,7 +116,7 @@ __all__ = [
     "MetacognitiveTrace",
     "Recommendation",
     "StrategyOutcome",
-    "LocalStabilization",
+    "LocalStabilizationPlan",
     "LocalStabilizer",
     "MotorControlRuntime",
     "MotorPlan",

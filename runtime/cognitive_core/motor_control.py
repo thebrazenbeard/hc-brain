@@ -71,12 +71,12 @@ class LocalStabilizer:
 
 
 @dataclass(frozen=True)
-class LocalStabilization:
+class LocalStabilizationPlan:
     adjustment_id: str
     effector: str
     adjustment: float
     reason_refs: Tuple[str, ...]
-    status: str = "APPLIED_LOCAL_STABILIZATION"
+    status: str = "PLANNED_LOCAL_STABILIZATION_NO_EFFECT"
 
 
 @dataclass(frozen=True)
@@ -100,7 +100,7 @@ class MotorControlRuntime:
         self.plans: dict[str, MotorPlan] = {}
         self.trajectories: dict[str, TrajectoryPrediction] = {}
         self.stabilizers: dict[str, LocalStabilizer] = {}
-        self.stabilization_history: list[LocalStabilization] = []
+        self.stabilization_history: list[LocalStabilizationPlan] = []
         self.skills: dict[str, MotorSkill] = {}
         self._serial = 0
 
@@ -250,13 +250,13 @@ class MotorControlRuntime:
         self.stabilizers[effector] = stabilizer
         return stabilizer
 
-    def apply_local_stabilization(
+    def plan_local_stabilization(
         self,
         *,
         effector: str,
         adjustment: float,
         reason_refs: Iterable[str],
-    ) -> LocalStabilization:
+    ) -> LocalStabilizationPlan:
         stabilizer = self.stabilizers.get(effector)
         if stabilizer is None:
             raise PermissionError("no registered local stabilizer for effector")
@@ -266,7 +266,7 @@ class MotorControlRuntime:
         reasons = _strings(reason_refs, "reason_refs")
         if not reasons:
             raise ValueError("local stabilization requires reason_refs")
-        item = LocalStabilization(
+        item = LocalStabilizationPlan(
             adjustment_id=self._id("stabilization"),
             effector=effector,
             adjustment=adjustment,

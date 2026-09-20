@@ -44,6 +44,16 @@ from .metacognition import (
     Recommendation,
     StrategyOutcome,
 )
+from .motor_control import (
+    LocalStabilization,
+    LocalStabilizer,
+    MotorControlRuntime,
+    MotorPlan,
+    MotorPlanState,
+    MotorSkill,
+    SkillState,
+    TrajectoryPrediction,
+)
 from .social_pragmatics import (
     CommunicativeForce,
     EmpathicHypothesis,
@@ -106,6 +116,14 @@ __all__ = [
     "MetacognitiveTrace",
     "Recommendation",
     "StrategyOutcome",
+    "LocalStabilization",
+    "LocalStabilizer",
+    "MotorControlRuntime",
+    "MotorPlan",
+    "MotorPlanState",
+    "MotorSkill",
+    "SkillState",
+    "TrajectoryPrediction",
     "CommunicativeForce",
     "EmpathicHypothesis",
     "EmpathicState",

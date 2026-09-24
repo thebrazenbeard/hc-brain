@@ -51,7 +51,8 @@ The cognitive core adds tested integration for:
 - narrow local protective control;
 - morphology-neutral body-schema calibration, pose update, and reachability prediction;
 - regulatory-to-affect/salience coupling and body-prediction-to-world-model lineage;
-- empathy/social hypotheses, direct-correction precedence, scoped relationship privacy, local norms, pragmatic force, and response modulation.
+- empathy/social hypotheses, direct-correction precedence, scoped relationship privacy, local norms, pragmatic force, and response modulation;
+- calibrated motor planning, reach constraints, trajectory prediction, stale-plan invalidation, bounded local stabilization, and observed-outcome motor-skill learning.
 
 See `docs/runtime/EXECUTABLE_COGNITIVE_CORE_STATUS_2026-09-18.md`.
 
@@ -63,8 +64,8 @@ Fresh verification on that workspace:
 
 - hardened reference-kernel suite: **79/79 PASS**;
 - architecture-conformance suite: **29/29 PASS**;
-- cognitive-core suite: **63/63 PASS** (18 integrated-loop + 8 world-model + 8 deep-memory + 7 metacognition + 12 homeostasis/somatics + 10 social/pragmatics);
-- combined repository gate: **171 tests, 0 failures**;
+- cognitive-core candidate suite: **73/73 PASS** expected after final exact-tree verification (18 integrated-loop + 8 world-model + 8 deep-memory + 7 metacognition + 12 homeostasis/somatics + 10 social/pragmatics + 10 kinesis/motor-control);
+- combined repository candidate gate: **181 tests**;
 - Python compilation: PASS;
 - `git diff --check`: PASS.
 
@@ -94,9 +95,9 @@ The current executable layers do not yet establish:
 - learned relational/causal model discovery beyond explicit model proposals;
 - large-scale associative deep-memory indexing and bounded replay scheduling;
 - richer allostatic learning and long-timescale homeostatic dynamics beyond the bounded reference slice;
-- motor-control/body-schema calibration beyond reachability prediction;
+- richer body/motor calibration, balance, collision, continuous control, and physical feedback beyond the bounded body-schema/kinesis slices;
 - richer multi-party social learning and pragmatic/language-generation behavior beyond the bounded social-pragmatics slice;
-- full kinesis/embodiment;
+- richer embodiment-specific effect execution, actuator control, balance/collision handling, and physical feedback beyond the bounded kinesis slice;
 - resource/power/thermal runtime;
 - distributed multi-constituent fault/recovery behavior;
 - general intelligence;

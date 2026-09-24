@@ -134,6 +134,20 @@ Regulatory pressure can modulate affect/salience without changing evidence confi
 
 `SOCIAL_EXPECTATION != ACTION_AUTHORIZATION`
 
+## Kinesis and motor learning
+
+`motor_control.py` adds body-schema-bound motor planning, calibrated reach/actuator constraints, trajectory prediction, stale-plan detection after body updates, bounded local stabilization, observed-outcome skill candidates, and explicit skill consolidation.
+
+`MOTOR_PLAN != AUTHORIZED_EFFECT`
+
+`PREDICTED_TRAJECTORY != CURRENT_POSE`
+
+`SIMULATED_OUTCOME != MOTOR_SKILL_EVIDENCE`
+
+`BODY_SCHEMA_CHANGE -> PLAN_REVALIDATION`
+
+`LOCAL_STABILIZATION != GENERAL_ACTION_AUTHORITY`
+
 ## Test surface
 
 `test_cognitive_loop.py` currently covers the integrated loop, epistemic/conative separation, authority separation, coalition expiry, memory/identity admission gates, plasticity consolidation, affect decay, concern lifecycle, semantic ambiguity, and developmental qualification state.
@@ -149,7 +163,7 @@ It does not establish:
 - complete deep-memory consolidation/retrieval;
 - full world modelling or planning;
 - richer multi-party social cognition and language-generation integration beyond the bounded social-pragmatics slice;
-- embodiment-specific motor control beyond the bounded body-schema slice;
+- full physical embodiment/effect execution and richer motor control beyond the bounded kinesis slice;
 - general intelligence;
 - consciousness or phenomenal experience;
 - biological equivalence.

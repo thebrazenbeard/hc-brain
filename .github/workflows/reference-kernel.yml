@@ -10,19 +10,19 @@ on:
       - "runtime/reference_kernel/**"
       - ".github/workflows/reference-kernel.yml"
 
+permissions:
+  contents: read
+
 jobs:
   unittest:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone current repository state
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-          COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: |
-          git clone --no-checkout "https://x-access-token:${GITHUB_TOKEN}@github.com/${REPOSITORY}.git" repo
-          cd repo
-          git checkout --detach "${COMMIT_SHA}"
+      - name: Checkout exact workflow subject
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: repo
+          persist-credentials: false
       - name: Run reference-kernel tests
         working-directory: repo/runtime/reference_kernel
         run: >-

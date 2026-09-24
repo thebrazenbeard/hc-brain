@@ -12,6 +12,9 @@ on:
       - "runtime/reference_kernel/**"
       - ".github/workflows/cognitive-core.yml"
 
+permissions:
+  contents: read
+
 jobs:
   unittest:
     runs-on: ubuntu-latest

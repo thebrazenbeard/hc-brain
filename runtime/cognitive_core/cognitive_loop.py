@@ -16,8 +16,10 @@ from runtime.reference_kernel.hc_kernel import (
 
 
 def _bounded(value: float, low: float = 0.0, high: float = 1.0) -> float:
+    if isinstance(value, bool):
+        raise ValueError("boolean is not a numeric value")
     value = float(value)
-    if value < low or value > high:
+    if not low <= value <= high:
         raise ValueError(f"value {value} outside [{low}, {high}]")
     return value
 
@@ -68,10 +70,14 @@ class AffectState:
     source_refs: Tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
-        if not -1.0 <= float(self.valence) <= 1.0:
+        if isinstance(self.valence, bool):
+            raise ValueError("boolean is not a numeric valence")
+        valence = float(self.valence)
+        if not -1.0 <= valence <= 1.0:
             raise ValueError("valence must be within [-1, 1]")
-        _bounded(self.arousal)
-        _bounded(self.threat)
+        object.__setattr__(self, "valence", valence)
+        object.__setattr__(self, "arousal", _bounded(self.arousal))
+        object.__setattr__(self, "threat", _bounded(self.threat))
 
 
 @dataclass(frozen=True)
@@ -85,7 +91,7 @@ class Concern:
     def __post_init__(self) -> None:
         if not self.concern_id or not self.target_concept:
             raise ValueError("concern identity and target_concept are required")
-        _bounded(self.strength)
+        object.__setattr__(self, "strength", _bounded(self.strength))
 
 
 @dataclass(frozen=True)
@@ -549,6 +555,9 @@ class CognitiveRuntime:
         action_options: Tuple[Mapping[str, Any], ...] = (),
     ) -> CognitiveCycleResult:
         confidence = _bounded(confidence)
+        novelty = _bounded(novelty)
+        contradiction = _bounded(contradiction)
+        uncertainty = _bounded(uncertainty)
         concern_strength = self._concern_strength(concept_id)
 
         observation = self.kernel.observe(

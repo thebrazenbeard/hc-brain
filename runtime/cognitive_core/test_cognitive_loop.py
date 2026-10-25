@@ -14,6 +14,90 @@ class CognitiveRuntimeTests(unittest.TestCase):
         self.kernel = ReferenceKernel()
         self.runtime = CognitiveRuntime(self.kernel)
 
+    def test_nonfinite_affect_and_concern_are_rejected_before_admission(self):
+        for invalid in (float("nan"), float("inf"), float("-inf")):
+            for field in ("arousal", "threat"):
+                with self.subTest(field=field, invalid=repr(invalid)):
+                    with self.assertRaises(ValueError):
+                        AffectState(**{field: invalid})
+            with self.subTest(field="strength", invalid=repr(invalid)):
+                with self.assertRaises(ValueError):
+                    Concern(
+                        concern_id="concern:bad",
+                        target_concept="concept:x",
+                        strength=invalid,
+                        state=ConcernState.PRESENT,
+                    )
+
+    def test_boolean_affect_and_concern_are_not_numeric_state(self):
+        for invalid in (True, False):
+            for field in ("valence", "arousal", "threat"):
+                with self.subTest(field=field, invalid=invalid):
+                    with self.assertRaises(ValueError):
+                        AffectState(**{field: invalid})
+            with self.subTest(field="strength", invalid=invalid):
+                with self.assertRaises(ValueError):
+                    Concern(
+                        concern_id="concern:bad",
+                        target_concept="concept:x",
+                        strength=invalid,
+                        state=ConcernState.PRESENT,
+                    )
+
+    def test_boolean_observation_confidence_is_rejected_before_evidence(self):
+        for invalid in (True, False):
+            with self.subTest(invalid=invalid):
+                before = len(self.kernel.evidence)
+                with self.assertRaises(ValueError):
+                    self.runtime.process_observation(
+                        producer="sensor:test",
+                        payload={"cue": "x"},
+                        concept_id="concept:x",
+                        proposition="x",
+                        confidence=invalid,
+                    )
+                self.assertEqual(len(self.kernel.evidence), before)
+
+    def test_nonfinite_salience_input_does_not_append_evidence(self):
+        for field in ("novelty", "contradiction", "uncertainty"):
+            with self.subTest(field=field):
+                before = len(self.kernel.evidence)
+                with self.assertRaises(ValueError):
+                    self.runtime.process_observation(
+                        producer="sensor:test",
+                        payload={"cue": "x"},
+                        concept_id="concept:x",
+                        proposition="x",
+                        confidence=0.8,
+                        **{field: float("nan")},
+                    )
+                self.assertEqual(len(self.kernel.evidence), before)
+
+    def test_coerced_affect_and_concern_are_stored_as_finite_floats(self):
+        affect = AffectState(valence="-0.3", arousal="0.5", threat="0.1")
+        for component in (affect.valence, affect.arousal, affect.threat):
+            self.assertIsInstance(component, float)
+        self.runtime.set_affect(affect)
+        self.runtime.advance_cycle()
+        self.assertAlmostEqual(self.runtime.affect.arousal, 0.5 * 0.85)
+
+        concern = Concern(
+            concern_id="concern:test",
+            target_concept="concept:x",
+            strength="0.8",
+            state=ConcernState.PRESENT,
+        )
+        self.assertIsInstance(concern.strength, float)
+        self.runtime.set_concern(concern)
+        result = self.runtime.process_observation(
+            producer="sensor:test",
+            payload={"cue": "x"},
+            concept_id="concept:x",
+            proposition="x",
+            confidence=0.8,
+        )
+        self.assertGreater(result.attention.score, 0.0)
+
     def test_observation_becomes_inferred_hypothesis_and_working_memory(self):
         result = self.runtime.process_observation(
             producer="sensor:vision",

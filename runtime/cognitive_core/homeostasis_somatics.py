@@ -203,6 +203,11 @@ class RegulatoryRuntime:
                 raise ValueError(f"unknown internal observation: {oid}")
             if record.channel != variable:
                 raise ValueError("observation channel does not match estimate variable")
+            # A recorded sensor fault/staleness is evidence of its own degraded
+            # state, not a calibrated measurement. Preserve the observation for
+            # diagnosis without promoting it to a high-confidence estimate.
+            if record.signal_state is not InternalSignalState.AGREEMENT:
+                raise ValueError("degraded sensor state cannot enter regulatory estimate")
             records.append(record)
 
         total_weight = sum(item.reliability for item in records)

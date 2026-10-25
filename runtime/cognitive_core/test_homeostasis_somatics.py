@@ -65,6 +65,39 @@ class RegulatoryRuntimeTests(unittest.TestCase):
         self.assertEqual(estimate.signal_state, InternalSignalState.SENSOR_CONFLICT)
         self.assertLess(estimate.confidence, 0.9)
 
+    def test_degraded_observations_cannot_supply_authoritative_estimates(self):
+        """Known-bad sensor states must not masquerade as fresh agreement."""
+        degraded_states = (
+            InternalSignalState.SENSOR_CONFLICT,
+            InternalSignalState.CALIBRATION_SUSPECT,
+            InternalSignalState.SOURCE_UNAVAILABLE,
+            InternalSignalState.STALE_STATE,
+            InternalSignalState.SATURATED,
+            InternalSignalState.FAULTED,
+            InternalSignalState.UNRESOLVED,
+        )
+        healthy = self.runtime.observe_internal(
+            channel="temperature", source="sensor:healthy", value=0.40,
+            units="fraction", reliability=0.9,
+        )
+        for state in degraded_states:
+            with self.subTest(state=state):
+                flagged = self.runtime.observe_internal(
+                    channel="temperature", source="sensor:flagged", value=0.99,
+                    units="fraction", reliability=1.0, signal_state=state,
+                )
+                with self.assertRaisesRegex(ValueError, "degraded sensor state"):
+                    self.runtime.estimate(
+                        variable="temperature",
+                        observation_ids=(flagged.observation_id,),
+                    )
+                with self.assertRaisesRegex(ValueError, "degraded sensor state"):
+                    self.runtime.estimate(
+                        variable="temperature",
+                        observation_ids=(healthy.observation_id, flagged.observation_id),
+                    )
+        self.assertFalse(self.runtime.estimates)
+
     def test_urgency_does_not_authorize_external_action(self):
         obs = self.runtime.observe_internal(
             channel="energy",

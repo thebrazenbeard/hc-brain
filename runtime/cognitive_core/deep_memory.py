@@ -151,6 +151,24 @@ class DeepMemoryRuntime:
         missing_memories = [mid for mid in parent_memories if mid not in self.memories]
         if missing_memories:
             raise ValueError(f"unknown source memories: {missing_memories}")
+        # A derived memory retains the source-information restrictions of every
+        # private parent.  The explicit declassification path described by the
+        # architecture is not implemented by this reference runtime.
+        restricted_parents = [
+            self.memories[mid].privacy_scopes
+            for mid in parent_memories
+            if self.memories[mid].privacy_scopes
+        ]
+        if restricted_parents:
+            allowed = set(restricted_parents[0])
+            for scopes in restricted_parents[1:]:
+                allowed.intersection_update(scopes)
+            if not allowed:
+                raise ValueError("source memories have disjoint privacy scopes")
+            if privacy and not set(privacy).issubset(allowed):
+                raise ValueError("derived memory cannot broaden source privacy scopes")
+            if not privacy:
+                privacy = tuple(scope for scope in restricted_parents[0] if scope in allowed)
         if essential and durability not in self.INTERNAL_DURABILITY:
             raise ValueError(
                 "essential durable memory requires HC-internal or distributed-constituent durability"

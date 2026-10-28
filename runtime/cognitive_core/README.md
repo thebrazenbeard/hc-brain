@@ -90,6 +90,15 @@ Explicit qualification evidence can move a capability to `ACTIVE / STABLE_WITHIN
 
 `deep_memory.py` adds HC-owned durable admission, integrity metadata, privacy-scoped retrieval, provenance-preserving consolidation, and contradiction records. Retrieval remains a candidate operation rather than automatic truth/currentness admission.
 
+When a new memory declares parent `source_memory_ids`, this reference runtime
+inherits the intersection of their non-public retrieval scopes. Public parents
+add no restriction, disjoint private scopes fail admission, and callers cannot
+widen an inherited scope. This is a conservative source-information gate, not a
+declassification mechanism. It traces only explicitly supplied parent memory
+IDs: direct reuse of private evidence without a parent memory reference is **not**
+protected by this narrow gate. Wider ancestry tracking and qualified
+declassification remain unimplemented.
+
 `EXTERNAL_REPLICA_WRITE != DURABLE_MEMORY_ADMISSION`
 
 `RETRIEVED != ADMITTED_AS_TRUE`

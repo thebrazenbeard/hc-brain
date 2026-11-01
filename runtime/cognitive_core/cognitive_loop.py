@@ -89,8 +89,21 @@ class Concern:
     provenance: Tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
-        if not self.concern_id or not self.target_concept:
+        if (
+            type(self.concern_id) is not str
+            or not self.concern_id.strip()
+            or type(self.target_concept) is not str
+            or not self.target_concept.strip()
+        ):
             raise ValueError("concern identity and target_concept are required")
+        # A frozen dataclass does not freeze mutable values supplied by a
+        # caller.  Keeping a list here would let a caller silently rewrite
+        # already-recorded concern history after admission.
+        if (
+            type(self.provenance) is not tuple
+            or any(type(ref) is not str or not ref.strip() for ref in self.provenance)
+        ):
+            raise ValueError("concern provenance must be an immutable tuple of references")
         object.__setattr__(self, "strength", _bounded(self.strength))
 
 
@@ -287,11 +300,27 @@ class CognitiveRuntime:
         )
         return self._affect
 
-    def set_concern(self, concern: Concern) -> None:
+    def _record_concern(self, concern: Concern) -> None:
         self._concerns[concern.concern_id] = concern
         history = self._concern_history.setdefault(concern.concern_id, [])
         if not history or history[-1] != concern:
             history.append(concern)
+
+    def set_concern(self, concern: Concern) -> None:
+        """Admit a new concern, never a forged lifecycle transition.
+
+        Existing concerns can only change through transition_concern(), which
+        checks the state graph and the evidence behind a transition.
+        """
+        if type(concern) is not Concern or type(concern.state) is not ConcernState:
+            raise ValueError("concern and state must be canonical types")
+        current = self._concerns.get(concern.concern_id)
+        if current is None:
+            if concern.state not in (ConcernState.EMERGING, ConcernState.PRESENT):
+                raise ValueError("new concerns must begin EMERGING or PRESENT")
+        elif concern != current:
+            raise ValueError("existing concerns require a guarded transition")
+        self._record_concern(concern)
 
     def concern_history(self, concern_id: str) -> Tuple[Concern, ...]:
         return tuple(self._concern_history.get(concern_id, ()))
@@ -303,8 +332,13 @@ class CognitiveRuntime:
         *,
         reason_refs: Tuple[str, ...],
     ) -> Concern:
-        if not reason_refs:
-            raise ValueError("concern transition requires reason_refs")
+        if (
+            type(new_state) is not ConcernState
+            or type(reason_refs) is not tuple
+            or not reason_refs
+            or any(type(ref) is not str or not ref.strip() for ref in reason_refs)
+        ):
+            raise ValueError("concern transition requires an enum state and nonempty reason refs")
         current = self._concerns.get(concern_id)
         if current is None:
             raise ValueError("unknown concern")
@@ -316,7 +350,7 @@ class CognitiveRuntime:
             state=new_state,
             provenance=tuple(dict.fromkeys((*current.provenance, *reason_refs))),
         )
-        self.set_concern(updated)
+        self._record_concern(updated)
         return updated
 
     def advance_cycle(self) -> None:

@@ -35,3 +35,5 @@ jobs:
           runtime.cognitive_core.test_metacognition
           runtime.cognitive_core.test_homeostasis_somatics
           runtime.cognitive_core.test_social_pragmatics
+          runtime.cognitive_core.test_concern_admission_guard
+          runtime.cognitive_core.test_concern_hostile

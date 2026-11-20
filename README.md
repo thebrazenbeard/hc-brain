@@ -84,3 +84,9 @@ For an authorized private, noncommercial evaluation:
 4. Record your implementation subject, tests, limits and provenance. Do not claim a system-wide pass from a passing reference slice.
 
 The repository's [governance roles](WARDEN.md) are project-maintenance roles, **not** identities installed in a derived cognitive system. Reuse and distribution remain subject to [LICENSE](LICENSE).
+
+## Editor startup containment — tracked source (2026-11-20)
+
+The tracked `main` source formerly contained a concealed VS Code `folderOpen` task invoking obfuscated `.vscode/ini` through Node. The task list is now empty, `task.allowAutomaticTasks` is explicitly `"off"`, and the obfuscated file is removed from this source tree. Historical Git source remains for investigation.
+
+**Limits:** This is source-only containment, not proof that older checkouts, editor extensions, user/global settings, local credentials, or any previous host execution are safe. Do not execute historical suspect assets.
